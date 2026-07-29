@@ -35,14 +35,18 @@ const reviewScheduleBaseSchema = z.object({
 });
 
 /**
- * Persisted schedules permit an unseen learning item to have a zero interval.
+ * Persisted schedules permit an unseen or suspended item to have a zero interval.
  * Every schedule returned after a review event must use a positive interval.
  */
 export const reviewScheduleSchema = reviewScheduleBaseSchema.superRefine((schedule, context) => {
-  if (schedule.intervalMinutes === 0 && schedule.state !== 'learning') {
+  if (
+    schedule.intervalMinutes === 0 &&
+    schedule.state !== 'learning' &&
+    schedule.state !== 'suspended'
+  ) {
     context.addIssue({
       code: 'custom',
-      message: 'A zero interval is only valid for an unreviewed learning item.',
+      message: 'A zero interval is only valid before review or while an item is suspended.',
       path: ['intervalMinutes'],
     });
   }

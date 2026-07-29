@@ -40,6 +40,9 @@ describe('review submission contract', () => {
 
     expect(reviewScheduleSchema.safeParse(unseenSchedule).success).toBe(true);
     expect(reviewNextScheduleSchema.safeParse(unseenSchedule).success).toBe(false);
+    expect(reviewScheduleSchema.safeParse({ ...unseenSchedule, state: 'suspended' }).success).toBe(
+      true,
+    );
     expect(reviewScheduleSchema.safeParse({ ...unseenSchedule, state: 'review' }).success).toBe(
       false,
     );
