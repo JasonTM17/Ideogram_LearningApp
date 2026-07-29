@@ -1,7 +1,7 @@
 ---
 phase: 3
 title: "Learning Domain and Content"
-status: pending
+status: in_progress
 effort: "8–10 engineer-days"
 ---
 
@@ -20,12 +20,13 @@ server, not a device, remains canonical for progress and scheduling.
 
 Create:
 
-- `supabase/migrations/0003_language-content-schema.sql`
-- `supabase/migrations/0004_learning-progress-and-review.sql`
-- `supabase/tests/learning-rls.sql`, `supabase/tests/review-idempotency.sql`
+- `supabase/migrations/20260729190000_language_content_schema.sql`
+- `supabase/migrations/20260729190001_learning_progress_and_review.sql`
+- `supabase/tests/learning_rls_test.sql`, `supabase/tests/review_idempotency_test.sql`
 - `packages/contracts/src/content/*`, `packages/contracts/src/learning/*`
 - `packages/learning-engine/src/*`, `packages/learning-engine/test/*`
 - `packages/api-client/src/learning/*`
+- `scripts/content-lint.mjs`, `scripts/content-lint.test.mjs`
 - `content/japanese/v1/manifest.json`, `content/japanese/v1/*`
 - `content/contract-fixtures/{chinese,korean}/*`
 - `content/licenses/manifest.md`, `docs/content-governance.md`,
@@ -33,6 +34,12 @@ Create:
   updates to `docs/api-contract.md`
 
 All listed paths are planned creates; no production content exists today.
+
+Phase 3 owns pure contracts, database policies/private transactional helpers,
+content fixtures, and client request builders. It does **not** create Next.js
+route handlers: `/api/v1/learning/*` remains Phase 4 ownership after the server
+contracts below are frozen. This avoids a web-route ownership collision while
+keeping the Next host canonical.
 
 ## Requirements and architecture
 
@@ -82,7 +89,9 @@ All listed paths are planned creates; no production content exists today.
    timezone-safe due calculation, operation-id de-duplication and algorithm
    version. Keep provider/database I/O outside these functions.
 5. Add a transactional server entry point/RPC for submitting an activity or
-   review event so retries cannot double increment progress.
+   review event so retries cannot double increment progress. Keep it in the
+   private schema for trusted Next/worker callers rather than exposing direct
+   database writes to web/mobile clients.
 6. Author/import the approved Japanese pilot BOM, review it through
    the content schema, and create deterministic fixture data separate from
    production seed material.

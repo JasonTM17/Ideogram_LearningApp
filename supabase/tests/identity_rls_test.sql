@@ -1,6 +1,6 @@
 begin;
 
-select plan(49);
+select plan(56);
 
 select ok(
   (select relrowsecurity from pg_class where oid = 'public.profiles'::regclass),
@@ -395,6 +395,34 @@ select throws_ok(
   'a request cannot be enqueued from an expired reauthentication event'
 );
 
+insert into public.learner_proficiency_snapshots (
+  user_id,
+  language_code,
+  level_code,
+  objective_key,
+  evidence_source,
+  confidence,
+  evidence
+)
+values (
+  '00000000-0000-0000-0000-000000000001',
+  'ja',
+  'N5',
+  'exam',
+  'manual',
+  0.5,
+  '{"reason":"deletion-lifecycle-test"}'::jsonb
+);
+select throws_ok(
+  $$
+    delete from public.learner_proficiency_snapshots
+    where user_id = '00000000-0000-0000-0000-000000000001'
+  $$,
+  '42501',
+  'Learner event history is append-only.',
+  'learning evidence cannot be deleted outside an authorized privacy purge'
+);
+
 insert into public.data_subject_requests (
   request_id,
   user_id,
@@ -597,10 +625,86 @@ select throws_ok(
 );
 select lives_ok(
   $$
-    select private.complete_data_subject_request(
+    select private.purge_learner_learning_data(
       '00000000-0000-0000-0000-0000000000a1',
       5,
-      '00000000-0000-0000-0000-0000000000f2',
+      '00000000-0000-0000-0000-0000000000f2'
+    )
+  $$,
+  'the deletion worker records a learning-data purge before final completion'
+);
+select is(
+  (
+    select count(*)
+    from public.learner_proficiency_snapshots
+    where user_id = '00000000-0000-0000-0000-000000000001'
+  ),
+  0::bigint,
+  'the authorized purge removes learner proficiency evidence'
+);
+select is(
+  (
+    select count(*)
+    from private.learning_data_purge_receipts
+    where request_id = '00000000-0000-0000-0000-0000000000a1'
+      and purge_counts ->> 'proficiencySnapshots' = '1'
+  ),
+  1::bigint,
+  'the privacy worker retains a minimal counted purge receipt'
+);
+insert into private.data_subject_request_worker_operations (
+  request_id,
+  operation,
+  worker_id,
+  transaction_id
+)
+values (
+  '00000000-0000-0000-0000-0000000000a1',
+  'reclaim',
+  '00000000-0000-0000-0000-0000000000f2',
+  pg_catalog.txid_current()
+);
+update public.data_subject_requests
+set
+  worker_claimed_at = clock_timestamp() - interval '6 minutes',
+  lease_expires_at = clock_timestamp() - interval '1 minute'
+where request_id = '00000000-0000-0000-0000-0000000000a1';
+select lives_ok(
+  $$
+    select private.reclaim_expired_data_subject_request(
+      '00000000-0000-0000-0000-0000000000a1',
+      6,
+      '00000000-0000-0000-0000-0000000000f3',
+      300
+    )
+  $$,
+  'a new worker can reclaim a lease that expired after learning data was purged'
+);
+select lives_ok(
+  $$
+    select private.purge_learner_learning_data(
+      '00000000-0000-0000-0000-0000000000a1',
+      7,
+      '00000000-0000-0000-0000-0000000000f3'
+    )
+  $$,
+  'a replacement worker can reuse the completed learning-data purge receipt'
+);
+select is(
+  (
+    select worker_id::text
+    from private.learning_data_purge_receipts
+    where request_id = '00000000-0000-0000-0000-0000000000a1'
+  ),
+  '00000000-0000-0000-0000-0000000000f2',
+  'the purge receipt preserves its original worker audit attribution'
+);
+select lives_ok(
+  $$
+    select private.complete_data_subject_request(
+      '00000000-0000-0000-0000-0000000000a1',
+      7,
+      '00000000-0000-0000-0000-0000000000f3',
       'test-deletion-completion-receipt'
     )
   $$,
@@ -612,7 +716,7 @@ select is(
     from public.data_subject_requests
     where request_id = '00000000-0000-0000-0000-0000000000a1'
   ),
-  'completed:6',
+  'completed:8',
   'a worker completion retains the monotonic request history'
 );
 
