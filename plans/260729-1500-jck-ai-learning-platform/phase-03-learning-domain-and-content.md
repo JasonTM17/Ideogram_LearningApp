@@ -38,6 +38,9 @@ All listed paths are planned creates; no production content exists today.
 
 - Model `language_pack → objective → level → path → unit → lesson → activity`
   plus skill, script, CEFR/exam mapping and content version metadata.
+- Freeze level families for the product contract: Japanese JLPT N5→N1,
+  Chinese HSK 1→6 and Korean TOPIK 1→6 (TOPIK I/II grouping). Placement and
+  mastery may map to these targets but never claim an official exam result.
 - Build a small original/licensed Japanese N5 pilot corpus. Store provenance,
   author/reviewer/version/status for every publishable item; never ingest
   copyrighted tests or audio without a license record.

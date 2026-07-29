@@ -1,7 +1,7 @@
 ---
 phase: 1
 title: "Foundation and Delivery"
-status: pending
+status: in_progress
 effort: "3–5 engineer-days"
 ---
 
@@ -22,7 +22,7 @@ Create or verify/extend only in this phase:
 
 - Root: `README.md`, `package.json`, `pnpm-workspace.yaml`, `turbo.json`,
   `tsconfig.base.json`, `eslint.config.mjs`, `prettier.config.mjs`, `.gitignore`,
-  `.env.example`, `.nvmrc`, `pnpm-lock.yaml`, `commitlint.config.*`,
+  `.gitattributes`, `.env.example`, `.nvmrc`, `pnpm-lock.yaml`, `commitlint.config.*`,
   `scripts/check-env.mjs`.
 - Workspace skeleton: `apps/web/`, `apps/mobile/`, `apps/worker/`,
   `packages/config/`, `packages/contracts/`, `packages/design-tokens/`,
@@ -35,8 +35,9 @@ Create or verify/extend only in this phase:
   `docs/api-contract.md`, `docs/mobile-support-policy.md`,
   `docs/external-dependency-matrix.md`,
   `docs/execution-capacity-and-load-assumptions.md`,
+  `docs/diagrams/*`, `docs/media/*`,
   `docs/product-decisions/adult-eligibility.md`,
-  `docs/architecture-decisions/adr-006-direct-ai-streaming.md`,
+  `docs/architecture-decisions/adr-001-modular-monolith-workspace.md` through
   `docs/architecture-decisions/adr-007-canonical-api-host.md`.
 
 Existing `docs/design-guidelines.md` and `design-system/.../MASTER.md` are
@@ -63,7 +64,8 @@ read-only inputs in this phase.
 - `.env.example` fixes the non-secret DeepSeek contract; a rotated real key is
   injected only through local ignored env or protected deployment secrets.
 - Document local bootstrap, Supabase local workflow, branch/commit policy,
-  architecture decisions and the design handoff location.
+  architecture decisions and the design handoff location. README embeds a
+  source-controlled architecture SVG/PNG and an actual Stitch-screen GIF.
 
 ## Implementation steps
 
@@ -79,9 +81,9 @@ read-only inputs in this phase.
    web build. Commit an integrity-checked lockfile; pin actions by commit SHA,
    set least-privilege workflow permissions, isolate fork PRs from secrets and
    fail approved high/critical dependency thresholds.
-5. Add the documentation set, linking the existing research and Stitch
-   artifacts; record ADR-01 through ADR-07, including direct SSE for live AI
-   and Next.js as the canonical versioned API host.
+5. Add the documentation set plus Mermaid source, reviewed SVG/PNG architecture
+   and optimized Stitch-screen GIF; record ADR-01 through ADR-07, including
+   direct SSE for live AI and Next.js as the canonical versioned API host.
 6. Add environment template, local Supabase configuration and secret-ignore
    rules; test that accidental `.env` files are ignored.
 7. Complete dependency matrix for Supabase staging, domains/email/OAuth,
@@ -96,6 +98,8 @@ read-only inputs in this phase.
 - `pnpm --filter @ideogram/web build` and an Expo static/type check.
 - Fresh clone can follow `README.md` to install, copy `.env.example`, start
   local Supabase and launch both empty shells without a secret committed.
+- README image/GIF links resolve locally and the architecture source can be
+  regenerated without downloading third-party artwork.
 - CI runs the same commands from a clean runner.
 - Endpoint matrix has one owner/consumer set per route; support/capacity docs
   contain numeric beta load and cost ceilings before dependent phases start.
@@ -115,9 +119,9 @@ read-only inputs in this phase.
 
 ## Completion checklist
 
-- [ ] Workspace and app skeletons run from a clean checkout.
+- [x] Workspace and app skeletons run from a clean checkout.
 - [ ] CI, formatting, type and test gates are green.
-- [ ] Required docs and environment template are accurate.
+- [x] Required docs and environment template are accurate.
 - [ ] Adult eligibility, API host, mobile support and workload gates are signed.
-- [ ] Lockfile/action pinning and fork secret isolation are enforced.
-- [ ] Three or fewer focused conventional commits are created.
+- [x] Lockfile/action pinning and fork secret isolation are enforced.
+- [x] Three or fewer focused conventional commits are created.

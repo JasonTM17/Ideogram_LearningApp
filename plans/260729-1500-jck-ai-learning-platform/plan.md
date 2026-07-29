@@ -1,7 +1,7 @@
 ---
 title: "JCK AI Learning Platform"
 description: "Nền tảng web/mobile Vietnamese-first học Nhật–Trung–Hàn, launch Japanese-first với AI tutor đáng tin cậy."
-status: pending
+status: in_progress
 priority: P1
 effort: "16–23 engineer-weeks + content/pedagogy/legal/store lead time"
 branch: "main"
@@ -28,7 +28,7 @@ Auth/Postgres/Storage/RLS và worker nhỏ cho job nặng. Japanese là launch c
 schema, AI configuration và content pipeline mở được Chinese/Korean sau quality
 gate riêng.
 
-- **In scope:** auth + placement, lesson/retrieval/SRS, audio, AI tutor tiếng Việt, progress, offline-safe review, CMS-lite, accessibility, observability và CI/CD.
+- **In scope:** auth + placement, multi-level JLPT N5–N1/HSK 1–6/TOPIK 1–6, lesson/retrieval/SRS, audio, AI tutor tiếng Việt, progress, offline-safe review, CMS-lite, accessibility, observability và CI/CD.
 - **Not launch scope:** community, marketplace, user-generated courses, full ZH/KO corpus, lời hứa điểm thi, microservice fleet.
 
 ## Architecture and execution
@@ -57,7 +57,7 @@ gate riêng.
 
 | Phase | Name | Status |
 |-------|------|--------|
-| 1 | [Foundation and Delivery](./phase-01-foundation-and-delivery.md) | Pending |
+| 1 | [Foundation and Delivery](./phase-01-foundation-and-delivery.md) | In progress |
 | 2 | [Identity Data and Security](./phase-02-identity-data-and-security.md) | Pending |
 | 3 | [Learning Domain and Content](./phase-03-learning-domain-and-content.md) | Pending |
 | 4 | [Web Learning Experience](./phase-04-web-learning-experience.md) | Pending |
@@ -72,7 +72,15 @@ gate riêng.
 - Dependencies: none; repo is greenfield.
 - Session 1 (2026-07-29): 4-lens red-team, static verification and consistency sweep passed; 14 findings accepted, 1 rejected.
 - User confirmed DeepSeek V4 Flash; remaining answers: age/legal, auth providers, DPA/retention/budget, human review and hosting/store ownership.
-- `/ck:cook` waits for plan approval; deploy, purchase, real secrets and store publication require separate authority.
+- Session 2 (2026-07-29): `/ck:cook` foundation execution produced
+  `45a4260` (workspace/delivery) and `b0e3f29` (application shells); local
+  install, env, format, lint, type, test, build, audit, Supabase and security
+  gates pass. Evidence: [second-pass review](./reports/foundation-code-review-second-pass.md),
+  [test report](./reports/foundation-test-report.md),
+  [security scan](./reports/security-scan-2026-07-29-foundation.md) and
+  [progress report](./reports/pm-260729-foundation-progress.md).
+- The approved plan is executing. Deploy, purchase, real secrets and store
+  publication still require their named authority.
 
 ## Red Team Review
 

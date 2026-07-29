@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title description">
+  <title id="title">Ideogram Learning system architecture</title>
+  <desc id="description">Web, mobile and admin use the Next.js API; learning uses Supabase; live AI uses a gateway and heavy jobs use a worker.</desc>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#17202a" flood-opacity="0.10"/>
+    </filter>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#c86b39"/>
+    </marker>
+    <marker id="arrow-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#667085"/>
+    </marker>
+    <style>
+      .title { font: 700 28px Arial, sans-serif; fill: #17202a; }
+      .subtitle { font: 400 14px Arial, sans-serif; fill: #667085; }
+      .lane { font: 700 12px Arial, sans-serif; letter-spacing: 1px; fill: #667085; }
+      .node-title { font: 700 15px Arial, sans-serif; fill: #17202a; }
+      .node-copy { font: 400 12px Arial, sans-serif; fill: #667085; }
+      .label { font: 700 11px Arial, sans-serif; fill: #344054; }
+      .legend { font: 400 11px Arial, sans-serif; fill: #475467; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="720" rx="28" fill="#fbf8f1"/>
+  <text class="title" x="60" y="54">Ideogram Learning · System Architecture</text>
+  <text class="subtitle" x="60" y="80">Vietnamese-first · Japanese-first launch · Web + Mobile + AI tutor</text>
+
+  <rect x="48" y="108" width="1104" height="104" rx="20" fill="#ffffff" stroke="#e4dfd5"/>
+  <text class="lane" x="68" y="132">CLIENTS</text>
+  <g filter="url(#shadow)">
+    <rect x="120" y="148" width="220" height="44" rx="12" fill="#f1f6ef" stroke="#b7ccb2"/>
+    <rect x="490" y="148" width="220" height="44" rx="12" fill="#f1f6ef" stroke="#b7ccb2"/>
+    <rect x="860" y="148" width="220" height="44" rx="12" fill="#f1f6ef" stroke="#b7ccb2"/>
+  </g>
+  <text class="node-title" x="230" y="175" text-anchor="middle">Next.js Web</text>
+  <text class="node-title" x="600" y="175" text-anchor="middle">Expo iOS / Android</text>
+  <text class="node-title" x="970" y="175" text-anchor="middle">Admin CMS-lite</text>
+
+  <path d="M230 192 V238 H470" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <path d="M600 192 V238" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <path d="M970 192 V238 H730" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="430" y="236" width="340" height="72" rx="16" fill="#ffffff" stroke="#c86b39" stroke-width="2"/>
+  </g>
+  <text class="node-title" x="600" y="264" text-anchor="middle">Canonical API · Next.js Route Handlers</text>
+  <text class="node-copy" x="600" y="287" text-anchor="middle">/api/v1 · auth boundary · validation · idempotency</text>
+
+  <rect x="48" y="338" width="1104" height="170" rx="20" fill="#ffffff" stroke="#e4dfd5"/>
+  <text class="lane" x="68" y="362">MODULAR CORE</text>
+  <g filter="url(#shadow)">
+    <rect x="90" y="392" width="280" height="82" rx="16" fill="#eef4ff" stroke="#9fc0ef"/>
+    <rect x="460" y="392" width="280" height="82" rx="16" fill="#fff3eb" stroke="#dfa47d"/>
+    <rect x="830" y="392" width="280" height="82" rx="16" fill="#f4f3f8" stroke="#bbb5cc"/>
+  </g>
+  <text class="node-title" x="230" y="420" text-anchor="middle">Learning Domain</text>
+  <text class="node-copy" x="230" y="443" text-anchor="middle">Placement · Lesson · SRS</text>
+  <text class="node-copy" x="230" y="460" text-anchor="middle">Mastery · Progress · Multi-level</text>
+  <text class="node-title" x="600" y="420" text-anchor="middle">AI Gateway</text>
+  <text class="node-copy" x="600" y="443" text-anchor="middle">Grounding · Safety · Usage</text>
+  <text class="node-copy" x="600" y="460" text-anchor="middle">Vietnamese tutoring profiles</text>
+  <text class="node-title" x="970" y="420" text-anchor="middle">Outbox Worker</text>
+  <text class="node-copy" x="970" y="443" text-anchor="middle">Embedding · Media</text>
+  <text class="node-copy" x="970" y="460" text-anchor="middle">Heavy grading · Retry / lease</text>
+
+  <path d="M520 308 V350 H230 V392" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <path d="M600 308 V392" fill="none" stroke="#c86b39" stroke-width="2.5" marker-end="url(#arrow-orange)"/>
+  <path d="M370 450 V492 H590 A10 10 0 0 1 610 492 H830 V450" fill="none" stroke="#667085" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow-gray)"/>
+  <rect x="648" y="480" width="166" height="22" rx="8" fill="#ffffff" opacity="0.96"/>
+  <text class="label" x="731" y="495" text-anchor="middle">transactional outbox</text>
+
+  <rect x="48" y="538" width="1104" height="118" rx="20" fill="#ffffff" stroke="#e4dfd5"/>
+  <text class="lane" x="68" y="562">DATA &amp; PROVIDERS</text>
+  <g filter="url(#shadow)">
+    <rect x="110" y="584" width="260" height="48" rx="14" fill="#f1f6ef" stroke="#b7ccb2"/>
+    <rect x="470" y="584" width="260" height="48" rx="14" fill="#f1f6ef" stroke="#b7ccb2"/>
+    <rect x="830" y="584" width="260" height="48" rx="14" fill="#fff3eb" stroke="#dfa47d"/>
+  </g>
+  <text class="node-title" x="240" y="605" text-anchor="middle">Supabase Postgres + RLS</text>
+  <text class="node-copy" x="240" y="622" text-anchor="middle">FTS · pgvector · audit</text>
+  <text class="node-title" x="600" y="605" text-anchor="middle">Private Storage</text>
+  <text class="node-copy" x="600" y="622" text-anchor="middle">audio · published content</text>
+  <text class="node-title" x="960" y="605" text-anchor="middle">DeepSeek V4 Flash</text>
+  <text class="node-copy" x="960" y="622" text-anchor="middle">server-only provider</text>
+
+  <path d="M230 474 V584" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <path d="M970 474 V530 H600 V584" fill="none" stroke="#667085" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow-gray)"/>
+  <path d="M600 474 V520 H960 V584" fill="none" stroke="#c86b39" stroke-width="2.5" marker-end="url(#arrow-orange)"/>
+  <rect x="723" y="506" width="114" height="22" rx="8" fill="#ffffff" opacity="0.96"/>
+  <text class="label" x="780" y="521" text-anchor="middle">live SSE</text>
+
+  <line x1="65" y1="687" x2="105" y2="687" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <text class="legend" x="115" y="691">request / data</text>
+  <line x1="260" y1="687" x2="300" y2="687" stroke="#c86b39" stroke-width="2.5" marker-end="url(#arrow-orange)"/>
+  <text class="legend" x="310" y="691">AI streaming</text>
+  <line x1="455" y1="687" x2="495" y2="687" stroke="#667085" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arrow-gray)"/>
+  <text class="legend" x="505" y="691">async outbox</text>
+  <text class="legend" x="1135" y="691" text-anchor="end">No client-side AI secret</text>
+</svg>
