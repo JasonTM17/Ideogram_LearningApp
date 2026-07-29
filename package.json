@@ -12,6 +12,7 @@
     "check:boundaries": "node scripts/check-import-boundaries.mjs",
     "check:env": "node scripts/check-env.mjs --target workspace",
     "commitlint": "commitlint --from=HEAD~1 --to=HEAD",
+    "content:lint": "node scripts/content-lint.mjs",
     "dev": "turbo run dev --parallel",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -20,7 +21,7 @@
     "supabase:status": "supabase status",
     "supabase:stop": "supabase stop",
     "test": "pnpm test:root && turbo run test",
-    "test:root": "vitest run scripts/environment-contract.test.mjs",
+    "test:root": "vitest run scripts/environment-contract.test.mjs scripts/content-lint.test.mjs",
     "typecheck": "turbo run typecheck"
   },
   "devDependencies": {
