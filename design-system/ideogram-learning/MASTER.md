@@ -1,137 +1,85 @@
-# Ideogram Learning — Design System
+# Ideogram Learning Design System
 
-> Version 0.2 · 2026-07-29  
-> Working product name only.  
-> Stitch project: `projects/11429302359379765748`.  
-> Stitch design system: `assets/3415345924425844809` (version 2).
+> Source of truth for web and native implementation. A page-specific file in
+> `pages/` may refine these rules, but may not weaken accessibility, privacy, or
+> platform conventions.
 
-When building a page, read this file first, then check
-`design-system/ideogram-learning/pages/<page-name>.md`. A page file overrides
-only the rules it explicitly replaces.
+## Product character
 
-## Creative direction
+Ideogram Learning helps Vietnamese adults make steady progress in Japanese,
+Chinese, and Korean. The visual language is paper-light, editorial, calm, and
+content-first. It should feel focused and encouraging rather than childish,
+gamified, or like a dense enterprise dashboard.
 
-**Direction:** Editorial Scholar.
+- One primary learning action per screen.
+- Progress explains the next useful decision; it is never decorative noise.
+- AI is an evidence-aware coach. Show source, uncertainty, and recovery states.
+- Use real Vietnamese and CJK examples; do not use emoji as structural icons.
 
-The product should feel like a calm, credible study workspace for Vietnamese
-adults. It combines editorial reading quality with the clarity of a focused
-productivity tool. Progress is visible because it guides the next learning
-decision, not because it creates noise.
+## Semantic tokens
 
-Keywords for design and generation:
+| Family | Light | Dark | Purpose |
+|---|---:|---:|---|
+| `canvas` | `#F8FAFC` | `#0B1220` | application background |
+| `surface` | `#FFFFFF` | `#111827` | reading and card surface |
+| `surface-subtle` | `#EEF2FF` | `#1F2937` | selected context and quiet grouping |
+| `surface-raised` | `#FFFFFF` | `#172033` | menu, sheet, dialog |
+| `border-subtle` | `#E2E8F0` | `#334155` | quiet separation |
+| `text-primary` | `#0F172A` | `#F1F5F9` | primary reading text |
+| `text-secondary` | `#475569` | `#CBD5E1` | supporting text |
+| `text-tertiary` | `#64748B` | `#94A3B8` | metadata with verified contrast |
+| `action-primary` | `#1E40AF` | `#60A5FA` | start, submit, selected |
+| `on-action-primary` | `#FFFFFF` | `#0B1220` | text and icons on primary action |
+| `action-secondary` | `#0F766E` | `#2DD4BF` | contextual learning action |
+| `accent-warm` | `#C2410C` | `#F59E0B` | restrained attention and CTA |
+| `success` | `#15803D` | `#4ADE80` | confirmed success or mastery |
+| `warning` | `#B45309` | `#FBBF24` | review due or attention needed |
+| `focus-ring` | `#2563EB` | `#93C5FD` | visible keyboard focus |
+| `danger` | `#B91C1C` | `#FCA5A5` | destructive action with text/icon |
 
-`editorial`, `calm`, `multilingual`, `Vietnamese-first`, `adult learning`,
-`content-first`, `study mode`, `spaced repetition`, `audio practice`,
-`paper-like surfaces`, `soft indigo and teal`, `accessible`, `CJK-safe`,
-`light and dark themes`, `native mobile`.
+Use semantic names in components, not raw hex values. Every text pair must meet
+WCAG AA (4.5:1 for normal text, 3:1 for large text and UI glyphs). Dark mode is
+a designed palette, not an inversion.
 
-## Product principles
+## Type and content
 
-1. One primary learning action per screen.
-2. Explanation and recall take priority over decorative progress.
-3. AI responses remain visually distinct from verified curriculum content.
-4. Vietnamese copy is plain, respectful, and specific.
-5. Web and native mobile share tokens and hierarchy, not page implementations.
-6. Every asynchronous or network-dependent view has loading, empty, error, and
-   offline states.
-7. Japanese, Chinese, and Korean use neutral labels and script samples; never
-   use flags to represent languages.
+- UI Vietnamese: `Be Vietnam Pro`, fallback `Noto Sans`.
+- Learning text: `Noto Sans JP`, `Noto Sans SC`, or `Noto Sans KR` per language
+  pack, with the normal system fallback stack.
+- Load only the active CJK language family on a route. Apply it through `lang`
+  metadata; never force every CJK family into the initial bundle.
 
-## Color tokens
+| Token | Size / line height | Weight | Use |
+|---|---|---:|---|
+| `display` | `32 / 42` | 700 | one page-level statement |
+| `heading-lg` | `24 / 34` | 650 | lesson or task heading |
+| `heading-md` | `20 / 30` | 600 | section heading |
+| `body-lg` | `18 / 30` | 400 | key instruction |
+| `body` | `16 / 26` | 400 | normal learning copy and inputs |
+| `body-sm` | `14 / 22` | 400 | support copy |
+| `label` | `14 / 20` | 600 | controls and metadata label |
+| `caption` | `12 / 18` | 500 | quiet metadata |
 
-Use semantic tokens in implementation. Raw values are reference values, not
-component-level API.
+Body and inputs are at least 16px. CJK learning text uses a 1.65–1.75
+line-height, natural wrapping, and no justification. Support ruby/furigana
+without collapsing the line box. Dynamic Type/font scale must work to 200%
+without hiding essential content.
 
-### Light
+## Layout and navigation
 
-| Token | Value | Use |
-|---|---:|---|
-| `canvas` | `#F8FAFC` | App background |
-| `surface` | `#FFFFFF` | Reading and task surfaces |
-| `surface-subtle` | `#EEF2FF` | Selected context and quiet grouping |
-| `surface-raised` | `#FFFFFF` | Sheet, menu, dialog |
-| `text-primary` | `#0F172A` | Main text |
-| `text-secondary` | `#475569` | Supporting text |
-| `text-tertiary` | `#64748B` | Metadata with verified contrast |
-| `border-subtle` | `#CBD5E1` | Dividers and input borders |
-| `action-primary` | `#1E40AF` | Primary action and active navigation |
-| `on-action-primary` | `#FFFFFF` | Text/icon on primary |
-| `action-secondary` | `#0F766E` | Secondary action and AI context |
-| `accent-warm` | `#C2410C` | Sparse emphasis; never body text on white |
-| `success` | `#15803D` | Confirmed success/mastery |
-| `warning` | `#B45309` | Attention/review due |
-| `danger` | `#B91C1C` | Errors/destructive actions |
-| `focus-ring` | `#2563EB` | Keyboard and accessibility focus |
+| Viewport | Navigation | Content rule |
+|---|---|---|
+| 320–767 | labelled five-item bottom tab | one-column, 16–20px gutter, task flow hides tab bar |
+| 768–1023 | compact rail + contextual sheet | prioritize lesson content and transcript |
+| >=1024 | 248–280px sidebar | main lesson measure max 760px; secondary context in a side panel |
 
-### Dark
-
-| Token | Value | Use |
-|---|---:|---|
-| `canvas` | `#0B1220` | App background |
-| `surface` | `#111827` | Reading and task surfaces |
-| `surface-subtle` | `#1F2937` | Selected context and quiet grouping |
-| `surface-raised` | `#243044` | Sheet, menu, dialog |
-| `text-primary` | `#F1F5F9` | Main text |
-| `text-secondary` | `#CBD5E1` | Supporting text |
-| `text-tertiary` | `#94A3B8` | Metadata |
-| `border-subtle` | `#475569` | Dividers and input borders |
-| `action-primary` | `#60A5FA` | Primary action and active navigation |
-| `on-action-primary` | `#0B1220` | Text/icon on primary |
-| `action-secondary` | `#2DD4BF` | Secondary action and AI context |
-| `accent-warm` | `#F59E0B` | Sparse emphasis |
-| `success` | `#4ADE80` | Confirmed success/mastery |
-| `warning` | `#FBBF24` | Attention/review due |
-| `danger` | `#F87171` | Errors/destructive actions |
-| `focus-ring` | `#93C5FD` | Keyboard and accessibility focus |
-
-All production pairs must be checked at rendered size. Normal text needs 4.5:1;
-large text and meaningful UI graphics need 3:1. Color never carries meaning
-without text, shape, or icon.
-
-## Typography
-
-### Families
-
-- UI and Vietnamese: `"Be Vietnam Pro", "Noto Sans", system-ui, sans-serif`.
-- Japanese content: `"Noto Sans JP", "Noto Sans", sans-serif`.
-- Simplified Chinese content: `"Noto Sans SC", "Noto Sans", sans-serif`.
-- Korean content: `"Noto Sans KR", "Noto Sans", sans-serif`.
-- Data/code only: `"Noto Sans Mono", ui-monospace, monospace`.
-
-Apply locale families with `lang` metadata. Do not load every CJK family on
-every route; load the active language pack. Mobile may use platform CJK
-fallbacks when they preserve metrics and glyph quality.
-
-### Scale
-
-| Token | Size / line height | Weight |
-|---|---|---:|
-| `display` | `32 / 42` | 700 |
-| `heading-lg` | `24 / 34` | 650 |
-| `heading-md` | `20 / 30` | 600 |
-| `body-lg` | `18 / 30` | 400 |
-| `body` | `16 / 26` | 400 |
-| `body-sm` | `14 / 22` | 400 |
-| `label` | `14 / 20` | 600 |
-| `caption` | `12 / 18` | 500 |
-
-Target-language sentences use a 1.65–1.75 line-height. Do not justify CJK text.
-Support ruby/furigana without collapsing line boxes. Respect browser zoom and
-native font scaling up to 200%.
-
-## Layout and spacing
-
-- Base spacing unit: 4; preferred rhythm: 8, 12, 16, 24, 32, 48.
-- Phone gutters: 16–20; tablet: 24; desktop: 32.
-- Desktop reading column: 680–760px.
-- Desktop sidebar: 264px; tablet navigation rail: 72px.
-- Surface radius: 12px; control radius: 10px; compact chip radius: 999px.
-- Shadows are reserved for menus, sheets, and dialogs:
-  `0 8px 24px rgb(15 23 42 / 0.10)`.
-- Cards use tonal surfaces and borders before shadows.
-- Breakpoints to verify: 320, 375, 768, 1024, and 1440px.
-
-## Navigation
+Use a 4/8pt spacing scale. Preferred rhythm: 8, 12, 16, 24, 32, and 48.
+Reserve space for fixed navigation and native safe areas. Use a 12px surface
+radius, 10px control radius, and 999px compact-chip radius. Cards favour tonal
+surfaces and borders before shadows; reserve `0 8px 24px rgb(15 23 42 / 0.10)`
+for menus, sheets, and dialogs. Verify 320, 375, 768, 1024, and 1440px. Do not
+create horizontal scrolling or put a desktop dashboard unchanged inside a phone
+layout.
 
 Top-level destinations are fixed:
 
@@ -141,94 +89,74 @@ Top-level destinations are fixed:
 4. Tiến độ
 5. Bạn
 
-Desktop uses one sidebar. Mobile uses one labelled bottom tab bar. Lesson and
-review task flows temporarily hide top-level navigation and preserve predictable
-system back behavior. Never mix sidebar and bottom navigation at the same
-hierarchy level.
+## Components and states
 
-## Component rules
+Build app bar, side/bottom navigation, buttons, forms, lesson blocks, review
+cards, audio/transcript controls, AI responses, progress indicators, sheets,
+dialogs, banners, and skeletons from the shared token system.
 
-- Buttons: primary, secondary, ghost, and destructive; minimum 44pt iOS /
-  48dp Android; async state prevents double submit while keeping a readable
-  label.
-- Inputs: visible label, helper/error text, 16px minimum input text, validation
-  after blur, visible focus.
-- Lesson block: clearly identifies verified curriculum, target language, skill,
-  and activity position.
-- Review card: one recall decision at a time; no swipe-only required action.
-- Audio control: play/pause, replay, speed, transcript, elapsed state, and
-  permission/error messaging. Never autoplay.
-- AI response: marked as AI, shows context/source boundary, uncertainty and
-  retry; actions include save to review or inspect the related lesson.
-- Progress: insight plus next action. Charts have a text summary and accessible
-  data alternative.
-- Banner/toast: announces status without stealing focus; errors always offer a
-  recovery path.
+- Every interactive component has default, hover (web), focus-visible, pressed,
+  selected, disabled, loading, error, and success states where applicable.
+- Keep touch targets >=44x44pt on iOS and >=48x48dp on Android, with >=8px gap.
+- Use Lucide-outline semantics on web and an equivalent native vector icon map.
+- Loading over 300ms uses a skeleton or progress indication; errors name a
+  recovery action; destructive actions require confirmation.
+- Motion uses opacity/transform for 150–300ms, has a meaningful cause, and
+  respects reduced motion. Never use autoplay decoration, confetti, mascots,
+  or streak mechanics as a primary visual device.
 
-Every interactive component supports default, hover where relevant,
-focus-visible, pressed, selected, disabled, loading, error, and success states.
+Component-specific requirements:
 
-## Motion
+- Buttons include primary, secondary, ghost, and destructive variants; async
+  states prevent double submit while leaving a readable label.
+- Inputs have a visible label, helper/error text, validation after blur, and a
+  visible focus state.
+- Lesson blocks state verified curriculum, target language, skill, and activity
+  position. Review cards present one recall decision at a time; no swipe-only
+  required action.
+- Audio includes play/pause, replay, speed, transcript, elapsed state, and
+  permission/error messaging. It never autoplays.
+- Progress combines a useful insight with the next action; charts have a text
+  summary and accessible data alternative.
+- Banners/toasts announce status without stealing focus, and every error offers
+  a recovery path.
 
-- Feedback appears within 100ms.
-- Micro-interactions last 150–300ms; exits are shorter than entrances.
-- Animate opacity and transform, not layout dimensions.
-- Motion communicates navigation or state change; no confetti, parallax, or
-  decorative infinite animation.
-- Reduced-motion mode removes spatial motion without hiding state changes.
+## Accessibility and trust gates
 
-## Accessibility
-
-- WCAG 2.2 AA target for web; equivalent VoiceOver/TalkBack semantics on mobile.
-- Logical focus/read order, skip link on web, route-change focus management.
-- Vector icons from one outline family, with labels for icon-only controls.
-- Touch targets and safe areas are mandatory on both platforms.
-- Dynamic Type/font scale, landscape, keyboard navigation, and screen readers
-  are release checks.
-- Audio includes transcript; microphone use requires rationale, consent,
-  recording indicator, stop, playback, and delete.
+- Web uses semantic landmarks, a skip link, visible 2–4px focus, predictable
+  focus management, keyboard equivalents, and explicit labels for icon buttons.
+- Native uses platform controls, safe areas, accessibility roles/labels/hints,
+  and predictable system back gestures.
+- Never communicate state with color alone. Provide text/icon support, live
+  announcements for errors, captions/transcripts for audio, and explicit mic
+  consent with stop/delete controls.
+- AI output must distinguish facts/rubrics from suggestions, cite its learning
+  context when available, and give a safe retry/fallback state.
 
 ## Platform boundaries
 
-Share:
-
-- design tokens, copy taxonomy, icon names, validation, component state models,
-  analytics events, and deep-link contracts.
-
-Implement separately:
-
-- web sidebar and native tab bar;
-- DOM dialogs and platform sheets;
-- web audio element and native media recorder/player;
-- desktop tables/charts and mobile drill-down summaries;
-- page and screen shells.
-
-## Stitch generation contract
-
-Each prompt must state:
-
-- adult Vietnamese learner and active language pack;
-- one primary task;
-- exact desktop or mobile device class;
-- Editorial Scholar direction and this token system;
-- real Vietnamese plus Japanese/Chinese/Korean sample content;
-- loading, empty, error, and offline behavior;
-- platform navigation, safe areas, focus/accessibility, and reduced motion;
-- no mascot, flags, emoji icons, childish fonts, neumorphism, glass-heavy
-  surfaces, or gamification clutter.
-
-Required first-pass frames:
-
-- Mobile: Hôm nay, review card, AI tutor, progress, Bạn.
-- Desktop: Hôm nay, lesson, review queue, AI tutor, progress.
+Share design tokens, copy taxonomy, icon names, validation, component-state
+models, analytics events, and deep-link contracts. Implement DOM dialogs and
+native sheets, web audio and native recording/player controls, desktop data
+views and mobile drill-down summaries, plus the page/screen shells separately.
 
 ## Anti-patterns
 
-- No country flags for language selection.
-- No mascot-first identity or copied competitor patterns.
-- No newsletter landing-page pattern inside the authenticated product.
-- No Baloo, Comic Neue, handwritten display font, or neon body copy.
-- No hover-only action, swipe-only action, hidden labels, or focus removal.
-- No dense card wall, random gradients, oversized progress rings, or fake data
-  presented as real learner history.
-- No direct HTML-to-native screen conversion.
+- Do not use country flags for language selection, mascot-first identity, or
+  copied competitor patterns.
+- Do not put newsletter-landing-page conventions inside the authenticated app.
+- Do not use childish display fonts, neon body copy, glass-heavy surfaces,
+  hover-only actions, swipe-only required actions, hidden labels, or removed
+  focus rings.
+- Do not present fake learner history as real data or copy Stitch HTML directly
+  into a native screen.
+
+## Stitch handoff rules
+
+Stitch HTML is a visual reference only; it is never copied directly into Next.js
+or Expo. Rebuild each screen with these tokens, semantic structure, responsive
+rules, and platform-native navigation.
+
+For every planned screen, include the main task plus loading, empty, error,
+offline, focus/accessibility, and reduced-motion behavior. Exported reference:
+[`plans/260729-1500-jck-ai-learning-platform/designs/dashboard-today/`](../../plans/260729-1500-jck-ai-learning-platform/designs/dashboard-today/).
