@@ -338,14 +338,15 @@ select is(
   1::bigint,
   'an active learner can read a path only after its release is published'
 );
-select is(
-  (
+select throws_ok(
+  $$
     select count(*)
     from public.activities
     where content_release_id = 'ja-n5-rls-test-v1'
-  ),
-  1::bigint,
-  'an active learner can read activities in the published release'
+  $$,
+  '42501',
+  null,
+  'an active learner cannot read raw activity payloads directly'
 );
 select is(
   (select count(*) from public.learner_enrollments),
