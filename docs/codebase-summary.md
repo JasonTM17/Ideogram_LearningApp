@@ -1,10 +1,14 @@
 # Codebase Summary
 
-Generated from the current workspace on 2026-07-29 after a repository pack pass.
+Generated from the current workspace on 2026-07-29 after a repository pack pass
+and the Phase 2 identity/privacy implementation.
 
 ## Snapshot
 
-The repository is a greenfield learning-platform workspace with three runnable app shells, four shared packages, baseline docs, and phase-planning artifacts. The product surface is intentionally small right now: only the web health route is implemented as an API endpoint.
+The repository is a greenfield learning-platform workspace with three runnable
+app shells, six shared packages, local Supabase migrations/RLS tests, baseline
+docs, and phase-planning artifacts. The product surface is intentionally small:
+only the web health route is implemented as an API endpoint.
 
 ## Top-level layout
 
@@ -17,6 +21,9 @@ The repository is a greenfield learning-platform workspace with three runnable a
 | `packages/design-tokens` | Editorial palette, spacing, and radius tokens                           |
 | `packages/config`        | Shared runtime/platform guard helpers                                   |
 | `packages/testing`       | Shared testing support placeholder                                      |
+| `packages/auth`          | PKCE, callback, verified-nonce exchange, and session lifecycle helpers  |
+| `packages/api-client`    | Planned auth/privacy request builders                                   |
+| `supabase`               | Local Auth configuration, identity/privacy migrations, RLS, and pgTAP   |
 | `docs`                   | Design, architecture, policy, and summary docs                          |
 | `plans`                  | Product planning and research artifacts                                 |
 
@@ -28,11 +35,19 @@ The repository is a greenfield learning-platform workspace with three runnable a
 - Mobile shows an internal beta foundation screen, not a consumer learning flow.
 - Worker currently boots a health object and logs readiness.
 - Shared tokens are editorial and currently expose paper, ink, muted, accent, sage, card radius, control radius, and spacing steps.
+- Self-service Supabase signup is disabled. Approved registrations, profile and
+  role state, consent history, data-subject requests, private Storage policies,
+  and RLS are implemented and tested locally.
+- Shared auth contracts guard PKCE entropy/digests, atomic state-plus-redirect
+  consumption, nonce verification after adapter-level ID-token verification,
+  and local sign-out cleanup.
 
 ## What is only planned
 
 - Placement, lesson, SRS, tutoring, progress, offline sync, and admin workflows
-- Multi-step auth, content authoring, and production release flows
+- Auth route handlers, secure native credential storage, and an authoritative
+  session revocation adapter
+- Content authoring and production release flows
 - Search, embeddings, and AI orchestration beyond the current contract baseline
 
 ## Evidence boundary

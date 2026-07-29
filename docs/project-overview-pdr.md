@@ -2,7 +2,11 @@
 
 ## Overview
 
-Ideogram Learning is a Vietnamese-first AI learning platform for Japanese-first launch, with later support planned for Chinese and Korean. The repository currently contains only the foundation layer: workspace shells, shared contracts, design tokens, and one health endpoint.
+Ideogram Learning is a Vietnamese-first AI learning platform for Japanese-first
+launch, with later support planned for Chinese and Korean. The repository now
+contains the foundation layer plus a tested local identity/privacy boundary:
+workspace shells, shared contracts, design tokens, Supabase migrations/RLS, and
+one implemented health endpoint.
 
 ## Product requirements
 
@@ -21,6 +25,8 @@ Ideogram Learning is a Vietnamese-first AI learning platform for Japanese-first 
 ### In scope for the foundation
 
 - Workspace structure and shared package boundaries
+- Adult-only registration approval, identity/profile/role/privacy contracts,
+  private Storage policies, and local RLS tests
 - Versioned API contract surface
 - Documentation baseline
 - Mobile support policy and dependency matrix
