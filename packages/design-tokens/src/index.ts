@@ -1,23 +1,34 @@
+import {
+  webColorTokens,
+  webDesignTokens,
+  webLayoutTokens,
+  webMotionTokens,
+  webTypographyTokens,
+} from './web';
+
 export const editorialTokens = {
   color: {
-    accent: '#C86B39',
-    ink: '#17202A',
-    muted: '#667085',
-    paper: '#FBF8F1',
-    sage: '#D8E4D4',
+    accent: webColorTokens.accentWarm.light,
+    ink: webColorTokens.textPrimary.light,
+    muted: webColorTokens.textTertiary.light,
+    paper: webColorTokens.canvas.light,
+    sage: webColorTokens.surfaceSubtle.light,
   },
   radius: {
-    card: 18,
-    control: 12,
+    card: webLayoutTokens.radius.surface,
+    control: webLayoutTokens.radius.control,
   },
   space: {
-    1: 4,
-    2: 8,
-    3: 12,
-    4: 16,
-    6: 24,
-    8: 32,
+    1: webLayoutTokens.spacing[1],
+    2: webLayoutTokens.spacing[2],
+    3: webLayoutTokens.spacing[3],
+    4: webLayoutTokens.spacing[4],
+    6: webLayoutTokens.spacing[6],
+    8: webLayoutTokens.spacing[8],
   },
 } as const;
 
+export { webColorTokens, webDesignTokens, webLayoutTokens, webMotionTokens, webTypographyTokens };
+
 export type EditorialTokens = typeof editorialTokens;
+export type WebDesignTokens = typeof webDesignTokens;
