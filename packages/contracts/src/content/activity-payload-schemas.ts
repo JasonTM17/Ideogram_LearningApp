@@ -27,18 +27,42 @@ const exampleSchema = z.object({
   value: z.string().min(1).max(1_000),
 });
 
+const listeningPayloadSchema = z
+  .object({
+    audioAssetPath: z.string().min(1).max(500),
+    audioProductionStatus: z.enum(['planned', 'recorded']),
+    audioSha256: z
+      .string()
+      .regex(/^[a-f0-9]{64}$/u)
+      .optional(),
+    questions: z.array(objectiveQuestionSchema).min(1).max(12),
+    transcript: z.string().min(1).max(12_000),
+    transcriptVietnamese: z.string().min(1).max(12_000),
+  })
+  .superRefine((payload, context) => {
+    if (payload.audioProductionStatus === 'recorded' && !payload.audioSha256) {
+      context.addIssue({
+        code: 'custom',
+        message: 'Recorded audio requires an integrity checksum.',
+        path: ['audioSha256'],
+      });
+    }
+    if (payload.audioProductionStatus === 'planned' && payload.audioSha256) {
+      context.addIssue({
+        code: 'custom',
+        message: 'Planned audio must not claim a recording checksum.',
+        path: ['audioSha256'],
+      });
+    }
+  });
+
 export const activityPayloadSchemas = {
   grammar: z.object({
     explanationVietnamese: z.string().min(1).max(4_000),
     examples: z.array(exampleSchema).min(1).max(8),
     grammarPoint: z.string().min(1).max(200),
   }),
-  listening: z.object({
-    audioAssetPath: z.string().min(1).max(500),
-    questions: z.array(objectiveQuestionSchema).min(1).max(12),
-    transcript: z.string().min(1).max(12_000),
-    transcriptVietnamese: z.string().min(1).max(12_000),
-  }),
+  listening: listeningPayloadSchema,
   objective_quiz: z.object({
     questions: z.array(objectiveQuestionSchema).min(1).max(20),
   }),
