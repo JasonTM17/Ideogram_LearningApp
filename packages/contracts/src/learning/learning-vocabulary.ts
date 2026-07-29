@@ -1,5 +1,7 @@
 export const reviewGrades = ['again', 'hard', 'good', 'easy'] as const;
 export const reviewItemStates = ['learning', 'review', 'relearning', 'suspended'] as const;
+export const reviewAlgorithmVersions = ['srs-v1'] as const;
+export const maxReviewIntervalMinutes = 10 * 365 * 24 * 60;
 export const activityAttemptStates = ['submitted', 'completed', 'needs_review'] as const;
 export const lessonProgressStates = ['not_started', 'in_progress', 'completed'] as const;
 export const placementSessionStatuses = ['draft', 'submitted', 'scored', 'abandoned'] as const;
@@ -11,6 +13,7 @@ export type LessonProgressState = (typeof lessonProgressStates)[number];
 export type PlacementSessionStatus = (typeof placementSessionStatuses)[number];
 export type ReviewGrade = (typeof reviewGrades)[number];
 export type ReviewItemState = (typeof reviewItemStates)[number];
+export type ReviewAlgorithmVersion = (typeof reviewAlgorithmVersions)[number];
 
 export const reviewGradeScores: Record<ReviewGrade, number> = {
   again: 0,

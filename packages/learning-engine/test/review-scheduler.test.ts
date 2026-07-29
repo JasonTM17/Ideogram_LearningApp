@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { maxReviewIntervalMinutes } from '@ideogram/contracts';
+
 import { calculateNextReviewSchedule } from '../src/review-scheduler';
 
 describe('review scheduler', () => {
@@ -36,5 +38,47 @@ describe('review scheduler', () => {
     expect(calculateNextReviewSchedule({ currentSchedule, grade: 'good', now })).toEqual(
       calculateNextReviewSchedule({ currentSchedule, grade: 'good', now }),
     );
+  });
+
+  it('uses cent-rounded ease factors and a deterministic relearning graduation step', () => {
+    let currentSchedule = null;
+
+    for (let attempt = 0; attempt < 4; attempt += 1) {
+      currentSchedule = calculateNextReviewSchedule({
+        currentSchedule,
+        grade: 'again',
+        now,
+      });
+    }
+
+    const graduatedSchedule = calculateNextReviewSchedule({
+      currentSchedule,
+      grade: 'good',
+      now,
+    });
+
+    expect(graduatedSchedule).toMatchObject({
+      easeFactor: 1.55,
+      intervalMinutes: 20,
+      state: 'learning',
+    });
+  });
+
+  it('caps long-running review chains before their interval can overflow', () => {
+    const schedule = calculateNextReviewSchedule({
+      currentSchedule: {
+        algorithmVersion: 'srs-v1',
+        dueAt: '2026-03-07T06:55:00.000Z',
+        easeFactor: 3.5,
+        intervalMinutes: maxReviewIntervalMinutes,
+        lapseCount: 0,
+        repetitionCount: 20,
+        state: 'review',
+      },
+      grade: 'easy',
+      now,
+    });
+
+    expect(schedule.intervalMinutes).toBe(maxReviewIntervalMinutes);
   });
 });

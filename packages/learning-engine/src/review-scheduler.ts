@@ -1,3 +1,5 @@
+import { maxReviewIntervalMinutes } from '@ideogram/contracts';
+
 import type { ReviewGrade, ReviewSchedule } from '@ideogram/contracts';
 
 export interface ReviewSchedulerInput {
@@ -9,7 +11,12 @@ export interface ReviewSchedulerInput {
 const minute = 60 * 1_000;
 const day = 24 * 60 * minute;
 
-const clampEaseFactor = (value: number): number => Math.min(3.5, Math.max(1.3, value));
+const clampEaseFactor = (value: number): number => {
+  const valueInHundredths = Math.round(value * 100);
+  return Math.min(350, Math.max(130, valueInHundredths)) / 100;
+};
+const clampIntervalMinutes = (value: number): number =>
+  Math.min(maxReviewIntervalMinutes, Math.max(1, value));
 
 interface ScheduleParts {
   dueAt: Date;
@@ -47,7 +54,7 @@ export const calculateNextReviewSchedule = ({
   now,
 }: ReviewSchedulerInput): ReviewSchedule => {
   const currentInterval = currentSchedule?.intervalMinutes ?? 0;
-  const currentEase = currentSchedule?.easeFactor ?? 2.3;
+  const currentEase = clampEaseFactor(currentSchedule?.easeFactor ?? 2.3);
   const currentRepetitions = currentSchedule?.repetitionCount ?? 0;
   const currentLapses = currentSchedule?.lapseCount ?? 0;
 
@@ -64,10 +71,11 @@ export const calculateNextReviewSchedule = ({
   }
 
   if (grade === 'hard') {
-    const intervalMinutes =
+    const intervalMinutes = clampIntervalMinutes(
       currentInterval === 0
         ? 24 * 60
-        : Math.max(24 * 60, Math.round(Math.max(currentInterval, 24 * 60) * 1.2));
+        : Math.max(24 * 60, Math.round(Math.max(currentInterval, 24 * 60) * 1.2)),
+    );
     return toSchedule({
       dueAt: new Date(now.getTime() + intervalMinutes * minute),
       easeFactor: clampEaseFactor(currentEase - 0.15),
@@ -78,12 +86,25 @@ export const calculateNextReviewSchedule = ({
     });
   }
 
+  if (grade === 'good' && currentSchedule?.state === 'relearning') {
+    const intervalMinutes = 20;
+    return toSchedule({
+      dueAt: new Date(now.getTime() + intervalMinutes * minute),
+      easeFactor: clampEaseFactor(currentEase + 0.05),
+      intervalMinutes,
+      lapseCount: currentLapses,
+      repetitionCount: currentRepetitions + 1,
+      state: 'learning',
+    });
+  }
+
   const initialInterval = grade === 'easy' ? 4 * day : day;
   const multiplier = grade === 'easy' ? 3 : currentEase;
-  const intervalMinutes =
+  const intervalMinutes = clampIntervalMinutes(
     currentInterval === 0
       ? Math.round(initialInterval / minute)
-      : Math.round((currentInterval * multiplier) / 10) * 10;
+      : Math.round((currentInterval * multiplier) / 10) * 10,
+  );
 
   return toSchedule({
     dueAt: new Date(now.getTime() + intervalMinutes * minute),
