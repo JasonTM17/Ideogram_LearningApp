@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Trợ lý - Editorial Scholar</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#d5e3fc",
+                        "tertiary": "#641b00",
+                        "inverse-on-surface": "#eaf1ff",
+                        "primary-fixed-dim": "#b8c4ff",
+                        "on-secondary-fixed-variant": "#00504a",
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#9cf2e8",
+                        "primary": "#00288e",
+                        "secondary": "#006a63",
+                        "primary-fixed": "#dde1ff",
+                        "on-tertiary-container": "#ffa588",
+                        "surface-container-low": "#eff4ff",
+                        "surface-dim": "#ccdbf3",
+                        "surface-container": "#e6eeff",
+                        "outline": "#757684",
+                        "on-secondary-fixed": "#00201d",
+                        "on-background": "#0d1c2e",
+                        "on-tertiary-fixed-variant": "#832600",
+                        "primary-container": "#1e40af",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#dce9ff",
+                        "surface-tint": "#3755c3",
+                        "on-primary-container": "#a8b8ff",
+                        "inverse-surface": "#233144",
+                        "secondary-fixed-dim": "#80d5cb",
+                        "background": "#f8f9ff",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#f8f9ff",
+                        "secondary-container": "#99efe5",
+                        "surface": "#f8f9ff",
+                        "tertiary-fixed-dim": "#ffb59d",
+                        "tertiary-fixed": "#ffdbd0",
+                        "on-primary-fixed-variant": "#173bab",
+                        "surface-variant": "#d5e3fc",
+                        "on-error": "#ffffff",
+                        "outline-variant": "#c4c5d5",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#006f67",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#444653",
+                        "on-surface": "#0d1c2e",
+                        "tertiary-container": "#8b2900",
+                        "on-tertiary-fixed": "#390c00",
+                        "inverse-primary": "#b8c4ff",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed": "#001453"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                    fontFamily: {
+                        headline: ["Be Vietnam Pro", "sans-serif"],
+                        display: ["Be Vietnam Pro", "sans-serif"],
+                        body: ["Be Vietnam Pro", "sans-serif"],
+                        label: ["Be Vietnam Pro", "sans-serif"],
+                        cjk: ["Noto Sans JP", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .font-cjk { font-family: 'Noto Sans JP', sans-serif; }
+        .typing-dot { animation: typing 1.4s infinite ease-in-out; }
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+        /* Scrollbar hiding for clean UI */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body h-screen flex flex-col antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopAppBar (Hidden on MD for sidebar, but this is a mobile-first context based on prompt) -->
+<header class="flex justify-between items-center w-full px-6 py-3 h-16 bg-surface border-b border-outline-variant flat no shadows docked full-width top-0 z-40 relative sticky top-0 shrink-0">
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional, well-lit studio portrait of a Vietnamese student learning Japanese. The student looks focused and calm. Light mode aesthetic with soft whites, pale blues, and subtle warm skin tones. Minimalist background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQklzd_9XTLs6lZ_3jBkWk40JkrN_ksjuCw8Byb6m9WPdIaKIXK3caVsPg-NA_OToBt97apDu77CAuShVA6SFdAN8EsX-NUXU6pybWhjP9pq4OcM17Kf1unNdveW59KF0xIF-AEuNGhI2cUlZlLGRbuRdeSr-B7M48WbYfgmc3FMpVxqKtjVDNocEcRs_mx9A9s0B3YA-d_R2gWKEXV9UxWKWNnn2kiUFEmYC1v2ewocPxzLANSxcNwc7Vak-W-LX9oGMNLo-c0xw-"/>
+</div>
+<h1 class="font-headline text-headline-sm font-semibold tracking-tight text-primary">Editorial Scholar</h1>
+</div>
+<button aria-label="Settings" class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</header>
+<!-- Main Chat Canvas -->
+<main class="flex-1 overflow-y-auto no-scrollbar relative flex flex-col pb-[120px] pt-4 px-4 sm:px-6 md:px-8 max-w-3xl mx-auto w-full">
+<!-- Date Header -->
+<div class="text-center my-4">
+<span class="text-xs font-label font-medium tracking-wide text-on-surface-variant bg-surface-container-low px-3 py-1 rounded-full">Hôm nay</span>
+</div>
+<!-- User Message -->
+<div class="flex flex-col items-end mb-6 w-full">
+<div class="max-w-[85%] bg-primary-container text-on-primary-container rounded-2xl rounded-tr-sm px-4 py-3 shadow-sm border border-primary-fixed-dim/30">
+<p class="text-sm md:text-base leading-relaxed">Khi nào thì dùng <span class="font-cjk font-medium text-on-primary">は</span> (wa) và khi nào dùng <span class="font-cjk font-medium text-on-primary">が</span> (ga) vậy? Khó quá.</p>
+</div>
+</div>
+<!-- AI Tutor Response (Completed) -->
+<div class="flex flex-col items-start mb-6 w-full gap-2">
+<div class="flex items-center gap-2 ml-2 mb-1">
+<div class="w-6 h-6 rounded-full bg-surface-container-high flex items-center justify-center text-primary border border-outline-variant">
+<span class="material-symbols-outlined text-[14px]">smart_toy</span>
+</div>
+<span class="text-xs font-label font-medium text-on-surface-variant">Trợ lý</span>
+</div>
+<div class="max-w-[95%] sm:max-w-[85%] bg-surface-container-lowest border border-outline-variant rounded-2xl rounded-tl-sm shadow-sm overflow-hidden flex flex-col">
+<!-- Response Header / Status -->
+<div class="bg-surface-container-low px-4 py-2 border-b border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[18px]">school</span>
+<span class="text-xs font-bold uppercase tracking-wider">Phân tích ngữ pháp</span>
+</div>
+</div>
+<div class="p-4 sm:p-5 flex flex-col gap-5">
+<!-- Intro -->
+<p class="text-sm md:text-base leading-relaxed text-on-surface">Chào bạn. Câu hỏi này rất phổ biến! Điểm khác biệt lớn nhất nằm ở <strong>trọng tâm của thông tin</strong> trong câu.</p>
+<!-- Explanation Section -->
+<div class="flex flex-col gap-3 border-l-2 border-primary pl-4">
+<h4 class="font-bold text-primary text-sm tracking-wide">1. Trọng tâm thông tin</h4>
+<div class="text-sm text-on-surface space-y-2 leading-relaxed">
+<p><strong>は (wa):</strong> Nhấn mạnh phần <em>sau</em> nó. Dùng để nói về chủ đề đã biết.</p>
+<p><strong>が (ga):</strong> Nhấn mạnh phần <em>trước</em> nó. Dùng để giới thiệu thông tin mới hoặc chỉ định cụ thể ai/cái gì.</p>
+</div>
+</div>
+<!-- Examples Section (Bento-ish) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+<!-- Wa Example -->
+<div class="bg-surface-container px-4 py-3 rounded-xl border border-outline-variant/50">
+<div class="flex justify-between items-start mb-1">
+<span class="font-cjk text-lg font-bold text-on-surface">私は学生です</span>
+<span class="text-xs font-bold text-primary bg-primary-fixed px-2 py-0.5 rounded">は</span>
+</div>
+<p class="text-xs text-on-surface-variant mb-2 font-cjk">Watashi wa gakusei desu</p>
+<p class="text-sm text-on-surface leading-tight">"Tôi là <strong class="text-primary">học sinh</strong>." (Nhấn mạnh nghề nghiệp)</p>
+</div>
+<!-- Ga Example -->
+<div class="bg-surface-container px-4 py-3 rounded-xl border border-outline-variant/50">
+<div class="flex justify-between items-start mb-1">
+<span class="font-cjk text-lg font-bold text-on-surface">私が学生です</span>
+<span class="text-xs font-bold text-secondary bg-secondary-fixed px-2 py-0.5 rounded">が</span>
+</div>
+<p class="text-xs text-on-surface-variant mb-2 font-cjk">Watashi ga gakusei desu</p>
+<p class="text-sm text-on-surface leading-tight">"<strong class="text-secondary">Chính tôi</strong> là học sinh." (Ai là học sinh? Là tôi)</p>
+</div>
+</div>
+<!-- Common Mistakes -->
+<div class="bg-error-container/30 border border-error-container rounded-xl p-4 mt-2">
+<div class="flex items-center gap-2 text-error mb-2">
+<span class="material-symbols-outlined text-[18px]">warning</span>
+<span class="text-sm font-bold">Lỗi người Việt hay gặp</span>
+</div>
+<p class="text-sm text-on-surface leading-relaxed">Người Việt thường dịch cả hai là "thì/là/mà" nên dễ nhầm. Hãy nhớ: <br/>Câu hỏi bắt đầu bằng từ để hỏi (Ai, Cái gì - 誰, 何) <span class="material-symbols-outlined text-[14px] align-middle mx-1">arrow_right_alt</span> Luôn đi với <strong>が</strong>.</p>
+</div>
+</div>
+<!-- Action Footer -->
+<div class="bg-surface-bright border-t border-outline-variant px-4 py-3 flex justify-between items-center">
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 text-sm font-medium">
+<span class="material-symbols-outlined text-[18px]">volume_up</span>
+<span class="sr-only">Nghe</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-on-primary rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">bookmark_add</span>
+                        Lưu để ôn
+                    </button>
+</div>
+</div>
+</div>
+<!-- System Prompt / Loading State (Streaming simulation) -->
+<div class="flex flex-col items-center mb-6 w-full text-center opacity-80 mt-4">
+<div class="inline-flex items-center gap-3 bg-surface-container-high px-4 py-2 rounded-full border border-outline-variant text-sm font-medium text-on-surface-variant">
+<div class="flex gap-1">
+<div class="w-1.5 h-1.5 rounded-full bg-primary typing-dot"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-primary typing-dot"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-primary typing-dot"></div>
+</div>
+<span>Trợ lý đang phân tích thêm...</span>
+<button class="ml-2 text-error hover:text-error/80 transition-colors font-bold text-xs uppercase tracking-wider">Hủy</button>
+</div>
+</div>
+</main>
+<!-- Input Area (Docked above bottom nav) -->
+<div class="fixed bottom-[80px] left-0 w-full bg-surface border-t border-outline-variant/50 p-3 sm:px-6 z-40 shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.05)]">
+<div class="max-w-3xl mx-auto flex items-end gap-2 relative">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors rounded-full mb-1 shrink-0">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+<div class="relative w-full">
+<textarea class="w-full bg-surface-container-lowest border border-outline-variant rounded-2xl py-3 pl-4 pr-12 text-sm text-on-surface placeholder-on-surface-variant focus:ring-1 focus:ring-primary focus:border-primary resize-none no-scrollbar shadow-inner" placeholder="Hỏi thêm về ngữ pháp này..." rows="1"></textarea>
+<button class="absolute right-2 bottom-1.5 p-1.5 bg-primary text-on-primary rounded-full hover:bg-primary/90 transition-colors flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">arrow_upward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-safe h-20 bg-surface border-t border-outline-variant docked full-width bottom-0 flat no shadows md:hidden">
+<!-- Hôm nay (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors group w-16" href="#">
+<div class="mb-1 p-1 rounded-full group-hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">home_app_logo</span>
+</div>
+<span class="font-label text-[11px] font-medium tracking-wide">Hôm nay</span>
+</a>
+<!-- Ôn tập (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors group w-16" href="#">
+<div class="mb-1 p-1 rounded-full group-hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">auto_stories</span>
+</div>
+<span class="font-label text-[11px] font-medium tracking-wide">Ôn tập</span>
+</a>
+<!-- Trợ lý (ACTIVE) -->
+<a class="flex flex-col items-center justify-center text-primary font-bold scale-95 transition-transform duration-150 w-16" href="#">
+<div class="mb-1 p-1 rounded-full bg-primary-container text-on-primary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<span class="font-label text-[11px] font-medium tracking-wide">Trợ lý</span>
+</a>
+<!-- Tiến độ (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors group w-16" href="#">
+<div class="mb-1 p-1 rounded-full group-hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">analytics</span>
+</div>
+<span class="font-label text-[11px] font-medium tracking-wide">Tiến độ</span>
+</a>
+<!-- Bạn (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors group w-16" href="#">
+<div class="mb-1 p-1 rounded-full group-hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">person</span>
+</div>
+<span class="font-label text-[11px] font-medium tracking-wide">Bạn</span>
+</a>
+</nav>
+</body></html>

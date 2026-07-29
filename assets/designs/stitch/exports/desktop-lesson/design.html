@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Editorial Scholar - Lesson Workspace</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&amp;family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface": "#f8f9ff",
+                        "secondary": "#006a63",
+                        "on-primary-container": "#a8b8ff",
+                        "on-tertiary-fixed-variant": "#832600",
+                        "primary": "#00288e",
+                        "on-tertiary-container": "#ffa588",
+                        "tertiary-container": "#8b2900",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#1e40af",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#641b00",
+                        "primary-fixed": "#dde1ff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-primary-fixed": "#001453",
+                        "on-secondary-fixed-variant": "#00504a",
+                        "inverse-primary": "#b8c4ff",
+                        "surface-tint": "#3755c3",
+                        "on-primary-fixed-variant": "#173bab",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#9cf2e8",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#93000a",
+                        "on-background": "#0d1c2e",
+                        "on-secondary": "#ffffff",
+                        "background": "#f8f9ff",
+                        "on-tertiary-fixed": "#390c00",
+                        "secondary-fixed-dim": "#80d5cb",
+                        "outline-variant": "#c4c5d5",
+                        "outline": "#757684",
+                        "primary-fixed-dim": "#b8c4ff",
+                        "on-secondary-fixed": "#00201d",
+                        "on-surface": "#0d1c2e",
+                        "on-secondary-container": "#006f67",
+                        "surface-container-low": "#eff4ff",
+                        "surface-container-highest": "#d5e3fc",
+                        "surface-container-high": "#dce9ff",
+                        "inverse-surface": "#233144",
+                        "secondary-container": "#99efe5",
+                        "surface-dim": "#ccdbf3",
+                        "on-surface-variant": "#444653",
+                        "surface-bright": "#f8f9ff",
+                        "error": "#ba1a1a",
+                        "surface-container": "#e6eeff",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb59d",
+                        "tertiary-fixed": "#ffdbd0",
+                        "surface-variant": "#d5e3fc"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    fontFamily: {
+                        "headline": ["Be Vietnam Pro", "sans-serif"],
+                        "display": ["Be Vietnam Pro", "sans-serif"],
+                        "body": ["Be Vietnam Pro", "sans-serif"],
+                        "label": ["Be Vietnam Pro", "sans-serif"],
+                        "jp": ["Noto Sans JP", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; }
+        .font-jp { font-family: 'Noto Sans JP', sans-serif; }
+        
+        /* Furigana Toggle Logic */
+        .furigana-hidden rt {
+            visibility: hidden;
+        }
+        ruby {
+            ruby-align: center;
+        }
+        rt {
+            font-size: 0.5em;
+            color: #757684; /* outline color */
+            transform: translateY(2px);
+        }
+        
+        /* Smooth transitions */
+        .btn-press {
+            transition: transform 0.15s ease-in-out, background-color 0.2s;
+        }
+        .btn-press:active {
+            transform: scale(0.96);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- Shared Component: SideNavBar -->
+<nav class="hidden md:flex fixed left-0 top-0 h-full w-[280px] bg-surface flex-col py-6 border-r border-outline-variant z-50">
+<!-- Header -->
+<div class="px-6 mb-8 flex flex-col gap-1">
+<h1 class="font-headline text-xl font-bold tracking-tight text-primary">Editorial Scholar</h1>
+<span class="text-sm text-on-surface-variant">Japanese JLPT N5</span>
+</div>
+<!-- Tabs -->
+<div class="flex-1 flex flex-col w-full">
+<!-- Active Tab: Hôm nay -->
+<a class="flex items-center gap-3 px-4 py-3 text-primary font-bold border-r-4 border-primary bg-surface-container-low group cursor-pointer w-full relative" href="#">
+<span class="material-symbols-outlined shrink-0" style="font-variation-settings: 'FILL' 1;">today</span>
+<span class="font-body text-base leading-relaxed tracking-tight">Hôm nay</span>
+<div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-colors pointer-events-none"></div>
+</a>
+<!-- Inactive Tabs -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-lowest w-full group" href="#">
+<span class="material-symbols-outlined shrink-0">history_edu</span>
+<span class="font-body text-base leading-relaxed tracking-tight group-active:scale-95 duration-150 ease-in-out">Ôn tập</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-lowest w-full group" href="#">
+<span class="material-symbols-outlined shrink-0">psychology</span>
+<span class="font-body text-base leading-relaxed tracking-tight group-active:scale-95 duration-150 ease-in-out">Trợ lý</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-lowest w-full group" href="#">
+<span class="material-symbols-outlined shrink-0">leaderboard</span>
+<span class="font-body text-base leading-relaxed tracking-tight group-active:scale-95 duration-150 ease-in-out">Tiến độ</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-lowest w-full group" href="#">
+<span class="material-symbols-outlined shrink-0">person</span>
+<span class="font-body text-base leading-relaxed tracking-tight group-active:scale-95 duration-150 ease-in-out">Bạn</span>
+</a>
+</div>
+<!-- CTA & Footer Tabs -->
+<div class="mt-auto px-4 flex flex-col gap-2">
+<button class="w-full py-3 bg-primary text-on-primary rounded-xl font-medium tracking-wide btn-press shadow-sm hover:shadow-md mb-4 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">play_arrow</span>
+                Bắt đầu bài học
+            </button>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-lowest w-full rounded-lg" href="#">
+<span class="material-symbols-outlined shrink-0 text-sm">settings</span>
+<span class="font-body text-sm leading-relaxed tracking-tight">Cài đặt</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-lowest w-full rounded-lg" href="#">
+<span class="material-symbols-outlined shrink-0 text-sm">help_outline</span>
+<span class="font-body text-sm leading-relaxed tracking-tight">Trợ giúp</span>
+</a>
+</div>
+</nav>
+<!-- Shared Component: TopAppBar -->
+<header class="hidden md:flex fixed top-0 right-0 left-[280px] h-16 bg-surface/80 backdrop-blur-md border-b border-outline-variant items-center justify-end px-8 w-full z-40">
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-secondary transition-colors p-2 rounded-full hover:bg-surface-container-highest active:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-[20px]">sync</span>
+</button>
+<button class="text-on-surface-variant hover:text-secondary transition-colors p-2 rounded-full hover:bg-surface-container-highest active:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-[20px]">cloud_done</span>
+</button>
+<button class="text-on-surface-variant hover:text-secondary transition-colors p-1 rounded-full hover:bg-surface-container-highest active:opacity-80 transition-opacity ml-2">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Workspace Area -->
+<main class="md:ml-[280px] md:mt-16 pt-4 pb-24 md:pb-28 min-h-screen flex flex-col lg:flex-row relative bg-surface-bright">
+<!-- Central Column (Reading Area) -->
+<div class="flex-1 max-w-[720px] mx-auto px-4 md:px-8 flex flex-col w-full lg:w-2/3">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 text-xs md:text-sm text-outline font-medium tracking-wide mb-8 uppercase pt-2">
+<a class="hover:text-primary transition-colors" href="#">Bài học</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">Tiếng Nhật N5</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-on-surface-variant">Bài 10</span>
+</nav>
+<!-- Learning Canvas -->
+<div class="flex flex-col gap-6 w-full flex-grow">
+<!-- Main Sentence Card -->
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/40 shadow-[0_2px_8px_rgba(0,0,0,0.02)] p-10 md:p-16 flex flex-col items-center justify-center min-h-[320px] relative overflow-hidden group">
+<!-- Subtle decorative background element -->
+<div class="absolute -top-12 -right-12 w-48 h-48 bg-primary-container/10 rounded-full blur-3xl pointer-events-none"></div>
+<h2 class="text-4xl md:text-5xl font-jp text-on-surface leading-[2.5] tracking-wide text-center" id="japanese-sentence">
+<ruby>駅<rt>えき</rt></ruby>で<ruby>友<rt>とも</rt></ruby>だちを<ruby>待<rt>ま</rt></ruby>ちます
+                    </h2>
+</div>
+<!-- Interactive Controls -->
+<div class="flex items-center justify-center gap-4 md:gap-6 mt-4">
+<!-- Audio Button -->
+<button aria-label="Phát âm thanh" class="w-14 h-14 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center hover:bg-primary hover:text-on-primary transition-colors btn-press shadow-sm">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div class="h-8 w-px bg-outline-variant/50"></div>
+<!-- Furigana Toggle -->
+<button class="px-5 py-2.5 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface-variant font-medium text-sm hover:bg-surface-container-low hover:text-primary transition-colors flex items-center gap-2 btn-press" id="furigana-toggle">
+<span class="material-symbols-outlined text-[18px]">aod</span>
+                        Ẩn/Hiện Furigana
+                    </button>
+<!-- Transcript Toggle -->
+<button class="px-5 py-2.5 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface-variant font-medium text-sm hover:bg-surface-container-low hover:text-primary transition-colors flex items-center gap-2 btn-press">
+<span class="material-symbols-outlined text-[18px]">subtitles</span>
+                        Dịch nghĩa
+                    </button>
+</div>
+</div>
+</div>
+<!-- Right Panel (Contextual Explanation) -->
+<aside class="w-full lg:w-[340px] xl:w-[400px] border-t lg:border-t-0 lg:border-l border-outline-variant/40 bg-surface-container-lowest/50 p-6 md:p-8 flex flex-col gap-6 mt-8 lg:mt-0">
+<div class="flex items-center gap-2 text-secondary mb-2">
+<span class="material-symbols-outlined text-[20px]">lightbulb</span>
+<h3 class="font-headline font-bold text-sm tracking-wide uppercase">Giải thích ngữ pháp</h3>
+</div>
+<!-- Grammar Point 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/30 shadow-sm flex flex-col gap-3">
+<div class="flex items-start justify-between">
+<span class="font-jp text-lg font-bold text-primary bg-primary-container/20 px-2 py-0.5 rounded text-on-primary-fixed">で (de)</span>
+<span class="text-xs font-medium text-outline bg-surface-container px-2 py-1 rounded">Trợ từ</span>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                    Chỉ địa điểm diễn ra một hành động. Trong câu này, <span class="font-jp font-medium text-on-surface">駅 (えき)</span> là "nhà ga", hành động chờ đợi diễn ra tại nhà ga.
+                </p>
+</div>
+<!-- Grammar Point 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/30 shadow-sm flex flex-col gap-3">
+<div class="flex items-start justify-between">
+<span class="font-jp text-lg font-bold text-primary bg-primary-container/20 px-2 py-0.5 rounded text-on-primary-fixed">を (o)</span>
+<span class="text-xs font-medium text-outline bg-surface-container px-2 py-1 rounded">Trợ từ</span>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                    Chỉ đối tượng trực tiếp của hành động. <span class="font-jp font-medium text-on-surface">友だち</span> (bạn bè) là đối tượng của hành động <span class="font-jp font-medium text-on-surface">待ちます</span> (chờ).
+                </p>
+</div>
+</aside>
+</main>
+<!-- Bottom Action Bar (Fixed) -->
+<div class="fixed bottom-0 left-0 md:left-[280px] right-0 bg-surface-container-lowest border-t border-outline-variant/40 px-6 py-4 z-40 flex flex-col md:flex-row items-center justify-between gap-4 shadow-[0_-4px_16px_rgba(0,0,0,0.02)]">
+<!-- Progress Bar -->
+<div class="w-full md:w-1/3 lg:w-1/4 flex flex-col gap-2">
+<div class="flex justify-between text-xs font-medium text-on-surface-variant">
+<span>Tiến trình bài học</span>
+<span>65%</span>
+</div>
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 65%;"></div>
+</div>
+</div>
+<!-- Next Action -->
+<button class="w-full md:w-auto px-10 py-3.5 bg-primary text-on-primary font-headline font-bold rounded-xl btn-press shadow-md hover:shadow-lg hover:bg-on-primary-fixed-variant transition-all flex items-center justify-center gap-2">
+            Tiếp theo
+            <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+<script>
+        // Simple Furigana Toggle Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('furigana-toggle');
+            const sentenceContainer = document.getElementById('japanese-sentence');
+            
+            toggleBtn.addEventListener('click', () => {
+                sentenceContainer.classList.toggle('furigana-hidden');
+                
+                // Toggle active visual state of button
+                if(sentenceContainer.classList.contains('furigana-hidden')) {
+                    toggleBtn.classList.remove('text-primary', 'bg-surface-container-low');
+                    toggleBtn.classList.add('text-on-surface-variant');
+                } else {
+                    toggleBtn.classList.add('text-primary', 'bg-surface-container-low');
+                    toggleBtn.classList.remove('text-on-surface-variant');
+                }
+            });
+        });
+    </script>
+</body></html>

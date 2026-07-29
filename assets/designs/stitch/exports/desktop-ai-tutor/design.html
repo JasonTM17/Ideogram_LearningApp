@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Trợ lý AI - Editorial Scholar</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&amp;family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f8f9ff",
+                        "secondary": "#006a63",
+                        "on-primary-container": "#a8b8ff",
+                        "on-tertiary-fixed-variant": "#832600",
+                        "primary": "#00288e",
+                        "on-tertiary-container": "#ffa588",
+                        "tertiary-container": "#8b2900",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#1e40af",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#641b00",
+                        "primary-fixed": "#dde1ff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-primary-fixed": "#001453",
+                        "on-secondary-fixed-variant": "#00504a",
+                        "inverse-primary": "#b8c4ff",
+                        "surface-tint": "#3755c3",
+                        "on-primary-fixed-variant": "#173bab",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#9cf2e8",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#93000a",
+                        "on-background": "#0d1c2e",
+                        "on-secondary": "#ffffff",
+                        "background": "#f8f9ff",
+                        "on-tertiary-fixed": "#390c00",
+                        "secondary-fixed-dim": "#80d5cb",
+                        "outline-variant": "#c4c5d5",
+                        "outline": "#757684",
+                        "primary-fixed-dim": "#b8c4ff",
+                        "on-secondary-fixed": "#00201d",
+                        "on-surface": "#0d1c2e",
+                        "on-secondary-container": "#006f67",
+                        "surface-container-low": "#eff4ff",
+                        "surface-container-highest": "#d5e3fc",
+                        "surface-container-high": "#dce9ff",
+                        "inverse-surface": "#233144",
+                        "secondary-container": "#99efe5",
+                        "surface-dim": "#ccdbf3",
+                        "on-surface-variant": "#444653",
+                        "surface-bright": "#f8f9ff",
+                        "error": "#ba1a1a",
+                        "surface-container": "#e6eeff",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb59d",
+                        "tertiary-fixed": "#ffdbd0",
+                        "surface-variant": "#d5e3fc"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Be Vietnam Pro", "sans-serif"],
+                        "display": ["Be Vietnam Pro", "sans-serif"],
+                        "body": ["Be Vietnam Pro", "sans-serif"],
+                        "label": ["Be Vietnam Pro", "sans-serif"],
+                        "jp": ["Noto Sans JP", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #f8f9ff;
+            color: #0d1c2e;
+        }
+        .font-jp {
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c4c5d5;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #757684;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface h-screen overflow-hidden flex font-body">
+<!-- SideNavBar -->
+<nav class="hidden md:flex fixed left-0 top-0 h-full w-[280px] flex-col py-6 bg-surface border-r border-outline-variant z-50">
+<div class="px-8 mb-10">
+<h1 class="font-headline text-xl font-bold tracking-tight text-primary">Editorial Scholar</h1>
+<p class="text-sm text-on-surface-variant mt-1 font-medium">Japanese JLPT N5</p>
+</div>
+<div class="flex flex-col flex-1 px-4 gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-lowest transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">today</span>
+<span class="font-medium">Hôm nay</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-lowest transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">history_edu</span>
+<span class="font-medium">Ôn tập</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-primary font-bold border-r-4 border-primary bg-surface-container-low transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">psychology</span>
+<span>Trợ lý</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-lowest transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">leaderboard</span>
+<span class="font-medium">Tiến độ</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-primary hover:bg-surface-container-lowest transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="font-medium">Bạn</span>
+</a>
+</div>
+<div class="px-8 mt-auto mb-6">
+<button class="w-full bg-primary text-on-primary py-3 rounded-xl font-bold text-sm tracking-wide shadow-sm hover:bg-primary/90 transition-colors flex justify-center items-center gap-2">
+                Bắt đầu bài học
+            </button>
+</div>
+<div class="flex flex-col px-4 gap-1 border-t border-outline-variant pt-4 mx-4">
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-primary hover:bg-surface-container-lowest transition-all rounded-lg text-sm" href="#">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 0;">settings</span>
+<span>Cài đặt</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-primary hover:bg-surface-container-lowest transition-all rounded-lg text-sm" href="#">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 0;">help_outline</span>
+<span>Trợ giúp</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col md:ml-[280px] h-screen overflow-hidden">
+<!-- TopAppBar -->
+<header class="flex items-center justify-end px-8 w-full h-16 z-40 bg-surface/80 backdrop-blur-md border-b border-outline-variant shrink-0">
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-secondary transition-colors p-2 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined">sync</span>
+</button>
+<button class="text-on-surface-variant hover:text-secondary transition-colors p-2 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined">cloud_done</span>
+</button>
+<button class="text-on-surface-variant hover:text-secondary transition-colors p-2 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-2xl">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Workspace (Split View) -->
+<main class="flex-1 flex overflow-hidden bg-background">
+<!-- Left Column: Context (40%) -->
+<section class="w-[40%] flex flex-col border-r border-outline-variant bg-surface-container-lowest overflow-y-auto">
+<div class="p-8">
+<div class="flex items-center gap-2 mb-6 text-on-surface-variant text-sm font-medium">
+<span class="material-symbols-outlined text-lg">contextual_token</span>
+<span>Ngữ cảnh học tập hiện tại</span>
+</div>
+<div class="bg-surface-container rounded-2xl p-6 border border-outline-variant/30 mb-8 shadow-sm">
+<h2 class="font-jp text-3xl font-bold text-primary mb-2 tracking-tight">「は」 vs 「が」</h2>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6">Chủ đề (Topic) và Chủ ngữ (Subject) trong tiếng Nhật.</p>
+<div class="space-y-4">
+<div class="bg-surface-container-lowest rounded-xl p-4 border border-outline-variant/50">
+<div class="flex items-start gap-3">
+<div class="bg-primary-container text-on-primary-container w-8 h-8 rounded-full flex items-center justify-center font-jp font-bold shrink-0">は</div>
+<div>
+<h3 class="font-semibold text-on-surface mb-1 text-sm">Trợ từ chủ đề (Topic Marker)</h3>
+<p class="text-sm text-on-surface-variant">Dùng để đánh dấu chủ đề của câu, thường dịch là "thì, là, ở". Nhấn mạnh phần thông tin phía sau.</p>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-4 border border-outline-variant/50">
+<div class="flex items-start gap-3">
+<div class="bg-secondary-container text-on-secondary-container w-8 h-8 rounded-full flex items-center justify-center font-jp font-bold shrink-0">が</div>
+<div>
+<h3 class="font-semibold text-on-surface mb-1 text-sm">Trợ từ chủ ngữ (Subject Marker)</h3>
+<p class="text-sm text-on-surface-variant">Dùng để đánh dấu chủ ngữ ngữ pháp, nhấn mạnh chính chủ thể thực hiện hành động hoặc tính chất.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="space-y-6">
+<h3 class="font-bold text-lg text-on-surface flex items-center gap-2 border-b border-outline-variant pb-2">
+<span class="material-symbols-outlined text-secondary text-xl">history</span>
+                            Lịch sử truy vấn
+                        </h3>
+<ul class="space-y-3">
+<li class="p-3 bg-surface rounded-lg border border-outline-variant/40 hover:border-primary/50 cursor-pointer transition-colors">
+<p class="text-sm font-medium text-on-surface truncate">Khi nào dùng に và で chỉ địa điểm?</p>
+<p class="text-xs text-on-surface-variant mt-1">Hôm qua</p>
+</li>
+<li class="p-3 bg-surface rounded-lg border border-outline-variant/40 hover:border-primary/50 cursor-pointer transition-colors">
+<p class="text-sm font-medium text-on-surface truncate">Phân biệt あります và います</p>
+<p class="text-xs text-on-surface-variant mt-1">3 ngày trước</p>
+</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- Right Column: AI Chat (60%) -->
+<section class="w-[60%] flex flex-col bg-surface relative">
+<!-- Chat Header -->
+<div class="px-8 py-5 border-b border-outline-variant bg-surface/90 backdrop-blur z-10 flex justify-between items-center shrink-0">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary border border-primary/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<div>
+<h2 class="font-bold text-on-surface tracking-tight">Trợ lý Ngữ pháp</h2>
+<p class="text-xs text-secondary font-medium flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-secondary"></span> Đang kết nối
+                            </p>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-lg hover:bg-surface-container-lowest border border-transparent hover:border-outline-variant">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<!-- Chat History -->
+<div class="flex-1 overflow-y-auto p-8 space-y-8 scroll-smooth" id="chat-container">
+<!-- User Message -->
+<div class="flex justify-end">
+<div class="bg-primary text-on-primary rounded-2xl rounded-tr-sm px-5 py-3 max-w-[80%] shadow-sm">
+<p class="text-[15px] leading-relaxed">Cô ơi, em hay nhầm は và が quá. Làm sao để phân biệt dễ nhất khi làm bài thi N5 ạ?</p>
+</div>
+</div>
+<!-- AI Response -->
+<div class="flex justify-start items-start gap-4 max-w-[90%]">
+<div class="w-8 h-8 mt-1 rounded-full bg-primary-fixed flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant/60 rounded-2xl rounded-tl-sm px-6 py-5 shadow-sm space-y-6 text-[15px] leading-relaxed text-on-surface">
+<p>Chào em, lỗi nhầm lẫn giữa <span class="font-jp font-bold text-primary">は</span> và <span class="font-jp font-bold text-secondary">が</span> là cực kỳ phổ biến. Cô sẽ giúp em phân biệt một cách có cấu trúc nhé.</p>
+<!-- Structured Response Sections -->
+<!-- Đúng / Sai -->
+<div>
+<h4 class="font-bold text-primary flex items-center gap-2 mb-3 text-sm uppercase tracking-wider">
+<span class="material-symbols-outlined text-base">rule</span> Quy tắc cơ bản (Đúng/Sai)
+                                </h4>
+<ul class="space-y-2 pl-2">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-lg shrink-0 mt-0.5">check_circle</span>
+<span>Dùng <strong>は</strong> để nói về chủ đề <strong>cũ</strong>, thông tin đã biết, nhấn mạnh phần vị ngữ (phía sau は).</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-lg shrink-0 mt-0.5">check_circle</span>
+<span>Dùng <strong>が</strong> để giới thiệu thông tin <strong>mới</strong>, nhấn mạnh chính chủ ngữ (phía trước が).</span>
+</li>
+<li class="flex items-start gap-2 text-error">
+<span class="material-symbols-outlined text-error text-lg shrink-0 mt-0.5">cancel</span>
+<span>Tuyệt đối không dùng <strong>は</strong> sau từ để hỏi (誰, 何, どこ...). Từ để hỏi luôn đi với <strong>が</strong>.</span>
+</li>
+</ul>
+</div>
+<hr class="border-outline-variant/40"/>
+<!-- Vì sao -->
+<div>
+<h4 class="font-bold text-secondary flex items-center gap-2 mb-3 text-sm uppercase tracking-wider">
+<span class="material-symbols-outlined text-base">lightbulb</span> Vì sao lại thế?
+                                </h4>
+<p class="bg-surface-container p-4 rounded-xl text-sm border-l-4 border-secondary">
+                                    Người Nhật dùng <strong>は</strong> như việc "cầm một cái biển chủ đề" lên cho người nghe thấy ("À, chúng ta đang nói về cái này nhé"). Còn <strong>が</strong> giống như một cái "đèn spotlight" chiếu thẳng vào chủ thể ("Chính là cái này/người này, không phải ai khác").
+                                </p>
+</div>
+<!-- Ví dụ -->
+<div>
+<h4 class="font-bold text-primary flex items-center gap-2 mb-3 text-sm uppercase tracking-wider">
+<span class="material-symbols-outlined text-base">chat</span> Ví dụ đối chiếu
+                                </h4>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-3 rounded-lg border border-outline-variant/30">
+<p class="font-jp text-lg font-medium mb-1">わたし<span class="text-primary font-bold">は</span>学生です。</p>
+<p class="text-xs text-on-surface-variant">(Tôi là học sinh)</p>
+<p class="text-xs mt-2 italic text-on-surface-variant">-&gt; Nhấn mạnh thông tin "là học sinh".</p>
+</div>
+<div class="bg-surface-container-low p-3 rounded-lg border border-outline-variant/30">
+<p class="font-jp text-lg font-medium mb-1">わたし<span class="text-secondary font-bold">が</span>学生です。</p>
+<p class="text-xs text-on-surface-variant">(Chính tôi là học sinh)</p>
+<p class="text-xs mt-2 italic text-on-surface-variant">-&gt; Trả lời cho câu hỏi "Ai là học sinh?". Nhấn mạnh "chính tôi".</p>
+</div>
+</div>
+</div>
+<!-- Lỗi hay gặp -->
+<div>
+<h4 class="font-bold text-tertiary-container flex items-center gap-2 mb-3 text-sm uppercase tracking-wider">
+<span class="material-symbols-outlined text-base">warning</span> Lỗi người Việt hay gặp
+                                </h4>
+<div class="bg-error-container/20 p-4 rounded-xl text-sm border border-error-container/50 text-on-surface">
+<p>Học viên Việt Nam hay dịch cả は và が là "thì, là, mà" dẫn đến dùng lẫn lộn. Đặc biệt trong mẫu câu Miêu tả: <br/>
+                                    ❌ <span class="font-jp">象<strong>は</strong>鼻<strong>は</strong>長いです。</span> <br/>
+                                    ✅ <span class="font-jp">象<strong>は</strong>鼻<strong>が</strong>長いです。</span> (Voi thì vòi dài - "Voi" là chủ đề lớn, "vòi" là chủ ngữ nhỏ).</p>
+</div>
+</div>
+<!-- Action Bar -->
+<div class="flex items-center gap-3 pt-2">
+<button class="flex items-center gap-1.5 px-3 py-1.5 bg-primary-container/10 text-primary-container hover:bg-primary-container/20 rounded-md text-xs font-semibold transition-colors border border-primary-container/20">
+<span class="material-symbols-outlined text-[16px]">bookmark_add</span>
+                                    Lưu để ôn
+                                </button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-md text-xs font-medium transition-colors">
+<span class="material-symbols-outlined text-[16px]">volume_up</span>
+                                    Đọc to
+                                </button>
+<button class="p-1.5 text-on-surface-variant hover:text-on-surface rounded-md hover:bg-surface-container ml-auto" title="Retry">
+<span class="material-symbols-outlined text-[18px]">refresh</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Input Area -->
+<div class="p-6 bg-surface border-t border-outline-variant shrink-0 relative z-20">
+<div class="relative flex items-end gap-2 bg-surface-container-lowest border border-outline-variant rounded-2xl p-2 shadow-sm focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+<button class="p-2 text-outline hover:text-primary transition-colors rounded-xl hover:bg-surface-container-low shrink-0 h-10">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+<textarea class="w-full bg-transparent border-none focus:ring-0 resize-none text-on-surface py-2.5 px-1 max-h-32 text-sm" placeholder="Hỏi trợ lý AI về ngữ pháp, từ vựng..." rows="1"></textarea>
+<button class="p-2 bg-primary text-on-primary hover:bg-primary-container transition-colors rounded-xl shrink-0 h-10 w-10 flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+<div class="flex justify-between items-center mt-3 px-2">
+<p class="text-[11px] text-on-surface-variant">Nhấn Enter để gửi, Shift + Enter để xuống dòng.</p>
+<button class="text-[11px] text-on-surface-variant hover:text-error flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[14px]">cancel</span> Hủy tạo
+                        </button>
+</div>
+</div>
+</section>
+</main>
+</div>
+</body></html>

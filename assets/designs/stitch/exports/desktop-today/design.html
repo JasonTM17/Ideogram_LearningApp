@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Editorial Scholar - Hôm nay</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f8f9ff",
+                        "secondary": "#006a63",
+                        "on-primary-container": "#a8b8ff",
+                        "on-tertiary-fixed-variant": "#832600",
+                        "primary": "#00288e",
+                        "on-tertiary-container": "#ffa588",
+                        "tertiary-container": "#8b2900",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#1e40af",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#641b00",
+                        "primary-fixed": "#dde1ff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-primary-fixed": "#001453",
+                        "on-secondary-fixed-variant": "#00504a",
+                        "inverse-primary": "#b8c4ff",
+                        "surface-tint": "#3755c3",
+                        "on-primary-fixed-variant": "#173bab",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#9cf2e8",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#93000a",
+                        "on-background": "#0d1c2e",
+                        "on-secondary": "#ffffff",
+                        "background": "#f8f9ff",
+                        "on-tertiary-fixed": "#390c00",
+                        "secondary-fixed-dim": "#80d5cb",
+                        "outline-variant": "#c4c5d5",
+                        "outline": "#757684",
+                        "primary-fixed-dim": "#b8c4ff",
+                        "on-secondary-fixed": "#00201d",
+                        "on-surface": "#0d1c2e",
+                        "on-secondary-container": "#006f67",
+                        "surface-container-low": "#eff4ff",
+                        "surface-container-highest": "#d5e3fc",
+                        "surface-container-high": "#dce9ff",
+                        "inverse-surface": "#233144",
+                        "secondary-container": "#99efe5",
+                        "surface-dim": "#ccdbf3",
+                        "on-surface-variant": "#444653",
+                        "surface-bright": "#f8f9ff",
+                        "error": "#ba1a1a",
+                        "surface-container": "#e6eeff",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb59d",
+                        "tertiary-fixed": "#ffdbd0",
+                        "surface-variant": "#d5e3fc"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Be Vietnam Pro", "sans-serif"],
+                        "display": ["Be Vietnam Pro", "sans-serif"],
+                        "body": ["Be Vietnam Pro", "sans-serif"],
+                        "label": ["Be Vietnam Pro", "sans-serif"],
+                        "jp": ["Noto Sans JP", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body antialiased min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-[280px] h-16 bg-surface/80 dark:bg-surface-container-low/80 backdrop-blur-md border-b border-outline-variant dark:border-outline flat no shadows flex items-center justify-end px-8 z-40">
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant dark:text-outline hover:text-secondary dark:hover:text-secondary-fixed transition-colors">
+<span class="material-symbols-outlined text-2xl">sync</span>
+</button>
+<button class="text-on-surface-variant dark:text-outline hover:text-secondary dark:hover:text-secondary-fixed transition-colors">
+<span class="material-symbols-outlined text-2xl">cloud_done</span>
+</button>
+<button class="text-on-surface-variant dark:text-outline hover:text-secondary dark:hover:text-secondary-fixed transition-colors">
+<span class="material-symbols-outlined text-2xl">account_circle</span>
+</button>
+</div>
+</header>
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-full w-[280px] bg-surface dark:bg-surface-container-low border-r border-outline-variant dark:border-outline flat no shadows flex flex-col h-full py-6 z-50">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-xl">
+                E
+            </div>
+<div>
+<h1 class="font-headline text-xl font-bold tracking-tight text-primary dark:text-primary-fixed">Editorial Scholar</h1>
+<p class="text-sm text-on-surface-variant dark:text-outline">Japanese JLPT N5</p>
+</div>
+</div>
+<div class="flex flex-col gap-1 flex-1 px-3">
+<a class="flex items-center gap-3 px-4 py-3 text-primary dark:text-primary-fixed font-bold border-r-4 border-primary dark:border-primary-fixed bg-surface-container-low dark:bg-surface-container-high hover:bg-surface-container-lowest dark:hover:bg-surface-container transition-all active:scale-95 duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">today</span>
+<span>Hôm nay</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed transition-colors hover:bg-surface-container-lowest dark:hover:bg-surface-container transition-all active:scale-95 duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined">history_edu</span>
+<span>Ôn tập</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed transition-colors hover:bg-surface-container-lowest dark:hover:bg-surface-container transition-all active:scale-95 duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span>Trợ lý</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed transition-colors hover:bg-surface-container-lowest dark:hover:bg-surface-container transition-all active:scale-95 duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span>Tiến độ</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed transition-colors hover:bg-surface-container-lowest dark:hover:bg-surface-container transition-all active:scale-95 duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined">person</span>
+<span>Bạn</span>
+</a>
+</div>
+<div class="px-6 mb-6">
+<button class="w-full py-3 bg-primary text-on-primary rounded-xl font-bold hover:bg-primary/90 transition-colors">Bắt đầu bài học</button>
+</div>
+<div class="flex flex-col gap-1 px-3 mt-auto">
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed transition-colors text-sm" href="#">
+<span class="material-symbols-outlined text-xl">settings</span>
+<span>Cài đặt</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed transition-colors text-sm" href="#">
+<span class="material-symbols-outlined text-xl">help_outline</span>
+<span>Trợ giúp</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="ml-[280px] pt-24 px-12 pb-12 max-w-[1280px] mx-auto min-h-screen flex flex-col gap-8">
+<!-- Header -->
+<div>
+<h2 class="font-headline text-3xl font-bold text-on-surface tracking-tight mb-2">Chào buổi sáng, Học giả.</h2>
+<p class="text-on-surface-variant text-lg">Bạn có 24 mục cần ôn tập hôm nay.</p>
+</div>
+<!-- Top Bento Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Primary Action Card (Spans 2 columns) -->
+<div class="lg:col-span-2 rounded-2xl bg-gradient-to-br from-primary-container to-primary overflow-hidden relative group cursor-pointer shadow-sm hover:shadow-md transition-all duration-300">
+<div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="p-8 h-full flex flex-col justify-between relative z-10 text-on-primary-container">
+<div>
+<span class="inline-block px-3 py-1 bg-surface-container/20 rounded-full text-xs font-semibold mb-4 backdrop-blur-sm uppercase tracking-wider text-on-primary">Khuyến nghị</span>
+<h3 class="font-headline text-3xl font-bold text-on-primary mb-2">Bắt đầu bài 10 phút</h3>
+<p class="text-on-primary/80 max-w-md">Tiếp tục hành trình N5 với các mẫu ngữ pháp mới và luyện nghe hội thoại thực tế.</p>
+</div>
+<div class="mt-8 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-primary">schedule</span>
+<span class="font-medium text-on-primary">10 phút</span>
+</div>
+<button class="bg-surface text-primary px-6 py-3 rounded-full font-bold hover:bg-surface-container-lowest transition-colors flex items-center gap-2">
+<span>Học ngay</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Vertical Stack: Review & Goal -->
+<div class="flex flex-col gap-6">
+<!-- Review Card -->
+<div class="flex-1 rounded-2xl bg-surface-container-low border border-outline-variant/30 p-6 flex flex-col justify-between hover:border-secondary-fixed-dim/50 transition-colors cursor-pointer group">
+<div class="flex items-start justify-between">
+<div>
+<h4 class="font-bold text-on-surface mb-1">Ôn tập</h4>
+<p class="text-sm text-on-surface-variant">SRS đến hạn</p>
+</div>
+<div class="w-10 h-10 rounded-full bg-secondary-container/30 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+</div>
+<div>
+<div class="flex items-baseline gap-2 mb-2">
+<span class="text-4xl font-headline font-bold text-secondary">24</span>
+<span class="text-on-surface-variant text-sm">từ vựng</span>
+</div>
+<div class="w-full bg-surface-variant h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 60%"></div>
+</div>
+</div>
+</div>
+<!-- Goal Card -->
+<div class="flex-1 rounded-2xl bg-surface-container-low border border-outline-variant/30 p-6 flex flex-col justify-between hover:border-primary-fixed-dim/50 transition-colors group">
+<div class="flex items-start justify-between">
+<div>
+<h4 class="font-bold text-on-surface mb-1">Mục tiêu tuần</h4>
+<p class="text-sm text-on-surface-variant">Thói quen học tập</p>
+</div>
+<div class="w-10 h-10 rounded-full bg-primary-container/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">flag</span>
+</div>
+</div>
+<div>
+<div class="flex gap-2 justify-between mb-3">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-xs font-bold">T2</div>
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-xs font-bold">T3</div>
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-xs font-bold">T4</div>
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-xs font-bold ring-2 ring-primary ring-offset-2 ring-offset-surface">T5</div>
+<div class="w-8 h-8 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center text-xs">T6</div>
+<div class="w-8 h-8 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center text-xs">T7</div>
+<div class="w-8 h-8 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center text-xs">CN</div>
+</div>
+<p class="text-sm font-medium text-on-surface">4/5 ngày hoàn thành</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Editorial Section -->
+<div class="mt-4">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline text-xl font-bold text-on-surface">Khám phá nội dung mới</h3>
+<button class="text-primary font-medium hover:text-primary-container transition-colors text-sm">Xem tất cả</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Editorial Card 1 -->
+<div class="group cursor-pointer">
+<div class="rounded-2xl overflow-hidden aspect-[16/9] mb-4 relative bg-surface-variant">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A serene, high-quality photograph of a traditional Japanese tea ceremony setting. Minimalist aesthetics, featuring a tatami mat room, a handcrafted ceramic matcha bowl, and a bamboo whisk. Soft, natural daylight streaming through shoji screens creates a calming, light-mode suitable atmosphere with subtle teal and warm natural wood tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBM7AcjVwXsyd2CSt4GlYhVycpIdSUHZhvqb0PxahKZfyVv-9WvD6jsKPnfZLz7lDHonlTmovIavVn2_OLXxIVFM6kOFW_wNF-mA2t7Z-KBmEt3NU8ehieYvjP_Y9dqpjLs9lxmlkpOS2hERkR_2WCeymfC6_w--SwRa4dAfft69lMiE5JAzhu0AAvNFEW4HnNGCaU6-4GaEgULkYP6GncjUVex8tVc2q5Zfk6sleBSDwsUuIo0iAm54zH7VxsMqyWpBPAadJR1aht9"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="px-2">
+<span class="text-xs font-bold text-secondary uppercase tracking-wider mb-2 block">Văn hóa</span>
+<h4 class="font-headline text-lg font-bold text-on-surface group-hover:text-primary transition-colors">Nghệ thuật Trà đạo</h4>
+<p class="font-jp text-sm text-on-surface-variant mt-1">茶道 (Sadō) - Con đường của trà</p>
+</div>
+</div>
+<!-- Editorial Card 2 -->
+<div class="group cursor-pointer">
+<div class="rounded-2xl overflow-hidden aspect-[16/9] mb-4 relative bg-surface-variant">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A clean, modern, and stylized photograph representing global logistics and shipping. A pristine cargo port environment seen from a slightly abstract angle, featuring neatly stacked shipping containers in cool blues and muted whites. The lighting is crisp and professional, fitting a high-end corporate or educational aesthetic, free from clutter." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTQMRcTBULwP4BwJY7_XbRwOrgznaBTDKRXngF1TqvpIqcHau7xNctterfvFVvmkeKHH7my0A6u_v_6t6e8uhQtKjsVlaVYocukqXtscXxTK89o1F1urCb_bC6C8WdlzY2MLE3n9H4cSsSLdMaGngIcVpEZFEMUiC06biROqhqr8Jmtf7JjijcdvwlCnfIzcpXlZKjQIf5huaayUnbO8cYj998F_z5SMD0E9N5cvKHd6J2vDWOLjLH1xjHkSKQ7s6Bce8OHxYsCYSC"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="px-2">
+<span class="text-xs font-bold text-primary uppercase tracking-wider mb-2 block">Kinh tế</span>
+<h4 class="font-headline text-lg font-bold text-on-surface group-hover:text-primary transition-colors">Thuật ngữ vận tải &amp; logistics</h4>
+<p class="font-jp text-sm text-on-surface-variant mt-1">物流 (Butsuryū) - Lưu thông hàng hóa</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>
