@@ -1,6 +1,14 @@
-import { activityAttemptInputSchema, reviewSubmissionInputSchema } from '@ideogram/contracts';
+import {
+  activityAttemptInputSchema,
+  learnerCatalogResponseSchema,
+  reviewSubmissionInputSchema,
+} from '@ideogram/contracts';
 
-import type { ActivityAttemptInput, ReviewSubmissionInput } from '@ideogram/contracts';
+import type {
+  ActivityAttemptInput,
+  LearnerCatalogResponse,
+  ReviewSubmissionInput,
+} from '@ideogram/contracts';
 
 export const plannedLearningApiRoutes = {
   catalog: '/api/v1/learning/catalog',
@@ -14,11 +22,21 @@ export interface ActivityAttemptApiRequest {
   path: typeof plannedLearningApiRoutes.activitySubmit;
 }
 
+export interface LearnerCatalogApiRequest {
+  method: 'GET';
+  path: typeof plannedLearningApiRoutes.catalog;
+}
+
 export interface ReviewSubmissionApiRequest {
   body: ReviewSubmissionInput;
   method: 'POST';
   path: typeof plannedLearningApiRoutes.reviewSubmit;
 }
+
+export const createLearnerCatalogApiRequest = (): LearnerCatalogApiRequest => ({
+  method: 'GET',
+  path: plannedLearningApiRoutes.catalog,
+});
 
 /**
  * Web and native submit the same response envelope. The server binds the
@@ -41,3 +59,6 @@ export const createReviewSubmissionApiRequest = (input: unknown): ReviewSubmissi
   method: 'POST',
   path: plannedLearningApiRoutes.reviewSubmit,
 });
+
+export const parseLearnerCatalogApiResponse = (input: unknown): LearnerCatalogResponse =>
+  learnerCatalogResponseSchema.parse(input);
