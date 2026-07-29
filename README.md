@@ -7,8 +7,9 @@ Ideogram Learning is a Vietnamese-first language learning platform for Japanese-
 - Web: Next.js App Router shell in `apps/web`
 - Mobile: Expo shell in `apps/mobile`
 - Worker: Node worker stub in `apps/worker`
-- Shared packages: `packages/contracts`, `packages/design-tokens`, `packages/config`, `packages/testing`
+- Shared packages: `packages/contracts`, `packages/design-tokens`, `packages/config`, `packages/testing`, `packages/auth`, `packages/api-client`, `packages/learning-engine`
 - Implemented API route: `GET /api/v1/health`
+- Phase 3 learning persistence: Supabase migrations and private helpers now implement the learning content catalog, placement flow, activity attempts, review engine, and purge receipts. No Next.js learning route handlers exist yet.
 
 ## Visual references
 
@@ -28,6 +29,7 @@ Design handoff and Stitch exports:
 - Current product state: internal beta foundation only
 - Launch language priority: Japanese first
 - Supported exam contracts: JLPT N5-N1, HSK 1-6, TOPIK 1-6, including TOPIK I/II grouping
+- Active language-pack state: Japanese is active; Chinese and Korean are seeded as hidden packs until later release gates. The authored Japanese N5 corpus remains review-only until content, pedagogy, and audio gates pass.
 - No claim of official exam certification
 - Adult-only closed beta is fail-closed pending named product/legal sign-off
 - Minors require a separate approved plan before any launch consideration
@@ -69,7 +71,8 @@ pnpm supabase:stop
 
 ## What is not implemented yet
 
-- Placement, lessons, SRS, AI tutor, offline sync, progress tracking, and admin workflows
+- Next.js learning route handlers and user-facing learning screens
+- AI tutor/chatbot, offline sync, progress tracking, and admin workflows
 - Production deployment or cloud provisioning
 - Any endpoint beyond `GET /api/v1/health`
 
@@ -90,4 +93,7 @@ pnpm supabase:stop
 - [Execution capacity and load assumptions](docs/execution-capacity-and-load-assumptions.md)
 - [Deployment guide](docs/deployment-guide.md)
 - [Project roadmap](docs/project-roadmap.md)
+- [Content governance](docs/content-governance.md)
+- [Learning engine contract](docs/learning-engine-contract.md)
+- [Review and sync contract](docs/review-and-sync-contract.md)
 - [Foundation engineering journal](docs/journals/2026-07-29-foundation-safety-rails.md)

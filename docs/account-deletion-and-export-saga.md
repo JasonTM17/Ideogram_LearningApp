@@ -3,8 +3,9 @@
 ## Status
 
 The database state machine exists now, but the user-facing enqueue path and the
-worker implementation are not fully wired yet. This document describes the
-intended and verified state progression.
+worker integration are not fully wired yet. The deletion path now also covers
+learning-state purge receipts, so account completion cannot happen until the
+learning purge helper has finished and left an auditable receipt.
 
 ## State machine
 
@@ -44,6 +45,12 @@ stateDiagram-v2
 - A frozen deletion request cannot be cancelled. It changes the profile to
   `pending_deletion`, blocks learner access, and stays locked if the worker
   fails until controlled remediation is implemented.
+- `private.purge_learner_learning_data()` deletes learner review, progress,
+  placement, enrollment, and event history, then writes one purge receipt per
+  request. If the worker retries after the receipt exists, the helper returns
+  the recorded counts instead of deleting the same rows twice.
+- A deletion request cannot transition to `completed` until a matching
+  `private.learning_data_purge_receipts` row exists.
 
 ## Operational steps
 
@@ -58,8 +65,8 @@ stateDiagram-v2
 ## Notes
 
 - Deletion should win over export when both are in flight for the same subject.
-- The current SQL tests prove the state machine and ownership boundaries, not
-  provider-side deletion or signed URL revocation.
+- The current SQL tests prove the state machine, learning purge receipt gate,
+  and ownership boundaries, not provider-side deletion or signed URL revocation.
 - Do not acknowledge completion until the purge and verification steps are done.
 
 ## Open questions

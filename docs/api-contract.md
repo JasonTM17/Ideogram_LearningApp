@@ -29,14 +29,35 @@ The route handler at `apps/web/src/app/api/v1/health/route.ts` returns this shar
 
 That error shape is not yet used by any implemented route.
 
-## Planned endpoints
+## Implemented learning database contracts
 
-No other endpoint is implemented today. Any future route should be versioned under `/api/v1` and documented here only after it exists in source.
+Phase 3 added database-private learning helpers. They are not HTTP endpoints yet, but they are the current truth for learning persistence.
 
-## Planned auth and privacy contracts
+| Surface                               | Caller boundary             | Purpose                                                                  | Status                |
+| ------------------------------------- | --------------------------- | ------------------------------------------------------------------------ | --------------------- |
+| `private.start_placement_session`     | `app_learning_api_executor` | Create a draft placement session for an owned learner                    | Implemented DB helper |
+| `private.record_placement_answer`     | `app_learning_api_executor` | Record a learner placement answer with idempotency and device sequencing | Implemented DB helper |
+| `private.submit_placement_session`    | `app_learning_api_executor` | Finalize a placement session after at least one answer exists            | Implemented DB helper |
+| `private.submit_activity_attempt`     | `app_learning_api_executor` | Submit a learner activity attempt and recompute lesson progress          | Implemented DB helper |
+| `private.submit_review_event`         | `app_learning_api_executor` | Submit a learner review event with deterministic scheduling and receipts | Implemented DB helper |
+| `private.enroll_learner_in_release`   | `app_learning_api_executor` | Enroll a learner in an active published release                          | Implemented DB helper |
+| `private.initialize_review_item`      | `app_learning_api_executor` | Create a review item for a learner and release                           | Implemented DB helper |
+| `private.score_placement_session`     | `service_role`              | Worker-only placement scoring and outcome writeback                      | Implemented DB helper |
+| `private.get_placement_scoring_input` | `service_role`              | Worker-only read path for placement scoring input                        | Implemented DB helper |
+| `private.purge_learner_learning_data` | `service_role`              | Worker-only purge path for learner learning state                        | Implemented DB helper |
 
-The shared client contracts already define request shapes for routes that are
-not implemented yet:
+Notes:
+
+- These are Postgres helpers, not route handlers. No `/api/v1/learning/*` HTTP route exists yet.
+- The migration defines `app_learning_api_executor` as the narrow app executor boundary and grants it to `postgres` locally so pgTAP can `SET LOCAL ROLE` during tests. Production provisioning still needs a real login role.
+- Placement answers are replay-safe after session submission when the idempotency key and payload match; new answers still require a draft session.
+- Review events are replay-safe when the payload matches, and the database assigns the server receipt sequence.
+
+## Planned HTTP endpoints
+
+Any future route should be versioned under `/api/v1` and documented here only after it exists in source.
+
+The shared client contracts already define request shapes for routes that are not implemented yet:
 
 | Method | Path                                    | Purpose                                                      | Status                |
 | ------ | --------------------------------------- | ------------------------------------------------------------ | --------------------- |

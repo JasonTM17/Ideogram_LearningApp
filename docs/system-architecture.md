@@ -12,7 +12,22 @@ The platform is designed as a modular monolith with three client runtimes and on
 
 ## Current state
 
-The implementation is still at the foundation stage. The only implemented API route today is `GET /api/v1/health`, and the web/mobile/worker apps are shells.
+The implementation is still at the foundation stage for user-facing apps. The only implemented HTTP API route today is `GET /api/v1/health`, but Phase 3 has now added the learning persistence layer in Supabase: catalog tables, placement helpers, review helpers, activity attempt helpers, and purge receipts. Those learning operations are database private helpers, not Next.js route handlers yet.
+
+## Learning persistence boundary
+
+| Caller / runtime            | Allowed surface                       | Notes                                                                               |
+| --------------------------- | ------------------------------------- | ----------------------------------------------------------------------------------- |
+| Web / mobile client         | None directly                         | No direct learner writes to Postgres from the client runtime                        |
+| `app_learning_api_executor` | Learner-safe private RPCs             | Trusted application boundary for placement, activity, review, and enrollment writes |
+| `service_role`              | Worker-only scoring and purge helpers | Used for placement scoring and privacy purge; not for learner write paths           |
+| `app_security_definer`      | Narrow definer-owned helpers          | Owns the database helpers and policies; cannot log in or bypass RLS                 |
+
+## Learning content posture
+
+- Japanese (`ja`) is the active language pack; its authored N5 source corpus is still review-only and has no learner-visible published release.
+- Chinese (`zh`) and Korean (`ko`) are seeded as hidden packs and fail closed in RLS and publish checks.
+- Published releases are immutable once live; archival closes access without deleting history.
 
 ## Identity and privacy boundary
 
@@ -73,6 +88,7 @@ flowchart TB
 - Direct SSE is the preferred shape for live AI tutor responses.
 - Heavy jobs such as transcription, embeddings, and grading belong in the worker path.
 - Search is planned as a hybrid of FTS and pgvector.
+- `/api/v1/learning/*` route handlers remain planned work for Phase 4; the learning rules documented here are the database contract they will call.
 - Canonical route documentation should continue to live under `docs/api-contract.md`.
 - Auth and privacy contracts are documented separately in
   `docs/authentication-guide.md`, `docs/security-and-privacy-baseline.md`, and
@@ -87,6 +103,9 @@ flowchart TB
 - [Data lifecycle matrix](./data-lifecycle-matrix.md)
 - [Account deletion and export saga](./account-deletion-and-export-saga.md)
 - [API contract](./api-contract.md)
+- [Content governance](./content-governance.md)
+- [Learning engine contract](./learning-engine-contract.md)
+- [Review and sync contract](./review-and-sync-contract.md)
 - [Mobile support policy](./mobile-support-policy.md)
 - [External dependency matrix](./external-dependency-matrix.md)
 - [Execution capacity and load assumptions](./execution-capacity-and-load-assumptions.md)

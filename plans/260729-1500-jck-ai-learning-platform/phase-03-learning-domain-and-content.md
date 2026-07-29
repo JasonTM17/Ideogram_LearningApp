@@ -127,8 +127,14 @@ keeping the Next host canonical.
 
 ## Completion checklist
 
-- [ ] Japanese N5 pilot content validates with provenance.
+Technical implementation is complete enough to unblock Phase 4, but Phase 3
+remains `in_progress` because real rights/editorial/audio approvals are an
+external release gate. The N5 source stays `review`, every activity stays
+`draft`, every product-right flag stays `false`, and all 40 audio assets stay
+`planned` until evidence is recorded.
+
+- [x] Japanese N5 pilot content validates with provenance.
 - [ ] Content BOM, ownership, license rights and reviewer capacity are approved.
-- [ ] Shared language-pack and learning contracts compile in both app targets.
-- [ ] Review submission is idempotent and deterministic.
-- [ ] Thin ZH/KO fixtures pass while unfinished packs remain inaccessible.
+- [x] Shared language-pack and learning contracts compile in both app targets.
+- [x] Review submission is idempotent and deterministic.
+- [x] Thin ZH/KO fixtures pass while unfinished packs remain inaccessible.
