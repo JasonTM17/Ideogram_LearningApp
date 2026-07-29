@@ -53,8 +53,9 @@ flowchart LR
   M[Expo Mobile] --> API
   API --> DB[(Supabase Postgres + RLS)]
   API --> ST[(Supabase Storage)]
-  API --> Q[Worker Queue]
-  Q --> AI[LLM/TTS/STT Providers]
+  API --> AI[LLM live chat]
+  API --> Q[Async Worker Queue]
+  Q --> AI2[Embedding/TTS/STT/Heavy Grading Providers]
   Q --> OBS[Logs/Tracing/Analytics]
   DB --> V[pgvector + FTS]
 ```
@@ -80,7 +81,7 @@ flowchart LR
 2. App calls TS API/client helpers.
 3. Reads/writes go to Postgres with RLS; files go to private Storage buckets.
 4. Search uses FTS + pgvector hybrid search.
-5. AI/speech requests enqueue jobs; worker streams provider events back to app when needed.
+5. Live tutor chat streams synchronously through the authenticated API boundary. Only embeddings, audio, transcription and heavy grading enqueue idempotent worker jobs.
 6. Analytics/observability emit from app + worker, not from DB triggers except lightweight audit.
 
 ## Deployment & Tiers
@@ -107,6 +108,8 @@ flowchart LR
 - ADR-03: 1 worker service cho job nặng, không microservices.
 - ADR-04: Share tokens/types, không share full UI runtime.
 - ADR-05: Search strategy = FTS + pgvector hybrid.
+- ADR-06: Live AI chat streams directly; worker queue handles heavy async jobs only.
+- ADR-07: Next.js hosts the canonical versioned API consumed by web/mobile/admin.
 
 ## Kết Luận
 - Chọn A. Đây là phương án cân bằng nhất giữa tốc độ MVP, khả năng ship mobile thật, chi phí, và khả năng mở rộng vừa đủ.
