@@ -1,7 +1,7 @@
 ---
 phase: 2
 title: "Identity Data and Security"
-status: pending
+status: in_progress
 effort: "5–7 engineer-days"
 ---
 
@@ -20,9 +20,9 @@ truth for every exposed table and private Storage object.
 
 Create:
 
-- `supabase/migrations/0001_identity-baseline.sql`
-- `supabase/migrations/0002_identity-rls-storage.sql`
-- `supabase/tests/identity-rls.sql`, `supabase/tests/storage-rls.sql`
+- `supabase/migrations/20260729102624_identity_baseline.sql`
+- `supabase/migrations/20260729102626_identity_rls_storage.sql`
+- `supabase/tests/identity_rls_test.sql`, `supabase/tests/storage_rls_test.sql`
 - `packages/contracts/src/auth/*`, `packages/contracts/src/profile/*`
 - `packages/auth/src/*`, `packages/api-client/src/auth/*`
 - `docs/security-and-privacy-baseline.md`, `docs/authentication-guide.md`,
@@ -42,7 +42,7 @@ the reason in that commit.
   claimed HTTPS links, PKCE, random state/nonce, one-use code exchange and never
   places access/refresh bearer tokens in URLs.
 - Create minimal `profiles`, `account_roles`, `consent_records`,
-  `data_deletion_requests` and immutable security/audit event structures.
+  `data_subject_requests` and immutable security/audit event structures.
 - RLS must be enabled on all `public` tables. Policies explicitly scope
   `SELECT`, `INSERT`, `UPDATE` and `DELETE` to `auth.uid()`/approved role; no
   mutable `user_metadata` is used for authorization.
@@ -73,14 +73,14 @@ the reason in that commit.
    exact callback allowlist, refresh rotation/revocation, expired-session and
    sign-out behavior for native.
 4. Define consent versions and auditable acceptance/revocation; define a
-   request queue for deletion/export rather than deleting records inline.
+   request queue for `data_subject_requests` rather than deleting records inline.
 5. Implement `role_epoch`/`revoked_at` or equivalent current-state check for
    every privileged mutation; queued jobs carry actor and reauthorize at claim.
 6. Create private Storage bucket policies for `{user_id}/...` prefixes and
    narrowly authorized export/worker paths.
 7. Write database tests for cross-user read/write, role escalation, anonymous
    access, every privileged RPC/view/function, Storage traversal/signed URL,
-   revocation and deletion-request ownership.
+   revocation and `data_subject_requests` ownership.
 8. Specify the deletion/export state machine, store inventory, SLA and backup
    expiry; include job cancellation and offline tombstone behavior.
 9. Document threat model, secret handling, auth recovery and incident contact

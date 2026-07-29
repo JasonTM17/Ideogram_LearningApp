@@ -29,7 +29,7 @@
 
 ### Cấu trúc nội dung
 
-`Language pack` → `Mục tiêu` (JLPT/giao tiếp) → `Level` → `Lộ trình` → `Unit` → `Lesson` → `Activity`.
+Gói ngôn ngữ → mục tiêu (JLPT/giao tiếp) → cấp độ → lộ trình → đơn vị học → bài học → hoạt động.
 
 - Một learner chỉ có một pack đang học chính; đổi pack là hành động có xác nhận vì hàng đợi SRS, mục tiêu và tiến độ tách theo pack.
 - Bất cứ activity nào cũng hiển thị ngôn ngữ, skill, độ khó, nguồn/rubric nếu AI chấm, và đường quay lại lộ trình.

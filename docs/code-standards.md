@@ -11,12 +11,16 @@
 | `packages/design-tokens` | Shared semantic color, spacing, and radius tokens         | Active           |
 | `packages/config`        | Shared runtime/config helpers                             | Active           |
 | `packages/testing`       | Shared test helpers and setup                             | Active           |
+| `packages/auth`          | Auth session, PKCE, and callback helpers                  | Active           |
+| `packages/api-client`    | Planned auth and privacy request contracts                | Active           |
 
 ## Standards
 
 - Keep server-only code out of mobile and browser public bundles.
 - Prefer small, explicit contracts over inferred behavior.
 - Keep shared packages platform-neutral.
+- Treat auth and privacy as database-first concerns; do not use mutable
+  `user_metadata` for authorization decisions.
 - `pnpm lint` runs executable import-boundary probes before package linting;
   mobile and shared packages must reject Node, server-only, cross-app, dynamic
   non-literal, and CommonJS loader imports.
@@ -29,6 +33,9 @@
 
 - `packages/contracts` owns shared API types.
 - `GET /api/v1/health` is the only implemented route today.
+- Planned auth and privacy contracts live in `packages/api-client/src/auth`.
+- `public.data_subject_requests` is the canonical terminology for export and
+  deletion requests in the current phase work.
 - Future endpoints should be versioned under `/api/v1`.
 - Error payloads should use the shared error payload shape from contracts.
 
@@ -47,6 +54,7 @@
 - Web and mobile should follow the shared design tokens, not copied DOM shells.
 - Use the editorial token set for current foundation screens.
 - Keep platform-specific navigation and media controls native to each runtime.
+- Keep security-sensitive state changes in the server or worker path only.
 
 ## Testing and validation
 

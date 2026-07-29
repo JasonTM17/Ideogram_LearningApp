@@ -52,13 +52,15 @@ gate riêng.
 - DeepSeek budget/DPA/retention, rotated-key owner và production secret store.
 - Human-review threshold cho speaking/writing score.
 - Hosting/store budget và credential owner.
+- Docker Hub namespace/visibility, scoped token owner/rotation, target runtime
+  architecture and protected release-environment reviewers.
 
 ## Phases
 
 | Phase | Name | Status |
 |-------|------|--------|
-| 1 | [Foundation and Delivery](./phase-01-foundation-and-delivery.md) | In progress |
-| 2 | [Identity Data and Security](./phase-02-identity-data-and-security.md) | Pending |
+| 1 | [Foundation and Delivery](./phase-01-foundation-and-delivery.md) | Complete |
+| 2 | [Identity Data and Security](./phase-02-identity-data-and-security.md) | In progress |
 | 3 | [Learning Domain and Content](./phase-03-learning-domain-and-content.md) | Pending |
 | 4 | [Web Learning Experience](./phase-04-web-learning-experience.md) | Pending |
 | 5 | [Mobile Learning Experience](./phase-05-mobile-learning-experience.md) | Pending |
