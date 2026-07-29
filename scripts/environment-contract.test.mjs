@@ -67,6 +67,60 @@ describe('environment contract', () => {
     ).not.toThrow();
   });
 
+  it('allows a Supabase service credential only in the worker dotenv boundary', () => {
+    writeFileSync(
+      path.join(workspaceRoot, 'apps', 'worker', '.env.local'),
+      'SUPABASE_SERVICE_ROLE_KEY=worker-only-placeholder',
+    );
+
+    expect(() =>
+      inspectEnvironmentContract({
+        runtimeEnvironment: {},
+        target: 'worker',
+        workspaceRoot,
+      }),
+    ).not.toThrow();
+
+    writeFileSync(
+      path.join(workspaceRoot, '.env.local'),
+      'SUPABASE_SERVICE_ROLE_KEY=wrong-location-placeholder',
+    );
+
+    expect(() =>
+      inspectEnvironmentContract({
+        runtimeEnvironment: {},
+        target: 'worker',
+        workspaceRoot,
+      }),
+    ).toThrow(/SUPABASE_SERVICE_ROLE_KEY/u);
+  });
+
+  it('rejects every public Supabase privileged-secret spelling without printing its value', () => {
+    const secretValue = 'supabase-secret-that-must-not-appear';
+    writeFileSync(
+      path.join(workspaceRoot, 'apps', 'mobile', '.env.production'),
+      `EXPO_PUBLIC_SUPABASE_SERVICE_ROLE_KEY=${secretValue}`,
+    );
+
+    expect(() =>
+      inspectEnvironmentContract({
+        runtimeEnvironment: {},
+        target: 'mobile',
+        workspaceRoot,
+      }),
+    ).toThrow(/EXPO_PUBLIC_SUPABASE_SERVICE_ROLE_KEY/u);
+
+    try {
+      inspectEnvironmentContract({
+        runtimeEnvironment: {},
+        target: 'mobile',
+        workspaceRoot,
+      });
+    } catch (error) {
+      expect(error.message).not.toContain(secretValue);
+    }
+  });
+
   const itOnSymlinkCapablePlatforms = process.platform === 'win32' ? it.skip : it;
 
   itOnSymlinkCapablePlatforms('rejects a public AI secret in a dotenv symlink', () => {

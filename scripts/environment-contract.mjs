@@ -7,6 +7,12 @@ export const forbiddenPublicSecretNames = [
   'NEXT_PUBLIC_DEEPSEEK_API_KEY',
   'EXPO_PUBLIC_DEEPSEEK_API_KEY',
 ];
+export const workerOnlySupabaseSecretNames = [
+  'SUPABASE_DB_PASSWORD',
+  'SUPABASE_DB_URL',
+  'SUPABASE_SECRET_KEY',
+  'SUPABASE_SERVICE_ROLE_KEY',
+];
 
 const supportedModels = new Set(['deepseek-v4-flash', 'deepseek-v4-pro']);
 const thinkingModes = new Set(['disabled', 'enabled']);
@@ -67,6 +73,20 @@ const getLoadOrder = (nodeEnvironment) => [
   ...(nodeEnvironment === 'test' ? [] : ['.env.local']),
   `.env.${nodeEnvironment}.local`,
 ];
+
+const isWorkerEnvironmentFile = (filePath, workspaceRoot) => {
+  const workerDirectory = path.join(workspaceRoot, 'apps', 'worker');
+  const relativePath = path.relative(workerDirectory, filePath);
+
+  return (
+    relativePath.length > 0 && !relativePath.startsWith('..') && !path.isAbsolute(relativePath)
+  );
+};
+
+const isPublicSupabaseSecretName = (name) =>
+  /^(NEXT_PUBLIC|EXPO_PUBLIC)_SUPABASE_(DB_PASSWORD|DB_URL|SECRET_KEY|SERVICE_ROLE_KEY)$/u.test(
+    name,
+  );
 
 const resolveProjectEnvironment = (
   directory,
@@ -138,6 +158,20 @@ export const inspectEnvironmentContract = ({
         exposedLocations.push(`${name} in ${path.relative(workspaceRoot, filePath)}`);
       }
     }
+
+    for (const name of workerOnlySupabaseSecretNames) {
+      if (parsedFile[name]?.trim() && !isWorkerEnvironmentFile(filePath, workspaceRoot)) {
+        exposedLocations.push(
+          `${name} outside apps/worker in ${path.relative(workspaceRoot, filePath)}`,
+        );
+      }
+    }
+
+    for (const [name, value] of Object.entries(parsedFile)) {
+      if (value.trim() && isPublicSupabaseSecretName(name)) {
+        exposedLocations.push(`${name} in ${path.relative(workspaceRoot, filePath)}`);
+      }
+    }
   }
 
   for (const name of forbiddenPublicSecretNames) {
@@ -146,8 +180,24 @@ export const inspectEnvironmentContract = ({
     }
   }
 
+  if (target !== 'worker') {
+    for (const name of workerOnlySupabaseSecretNames) {
+      if (runtimeEnvironment[name]?.trim()) {
+        exposedLocations.push(`${name} in the process environment outside the worker target`);
+      }
+    }
+  }
+
+  for (const [name, value] of Object.entries(runtimeEnvironment)) {
+    if (value?.trim() && isPublicSupabaseSecretName(name)) {
+      exposedLocations.push(`${name} in the process environment`);
+    }
+  }
+
   if (exposedLocations.length > 0) {
-    throw new Error(`Forbidden public AI secret variable(s): ${exposedLocations.join(', ')}.`);
+    throw new Error(
+      `Forbidden public or non-worker secret variable(s): ${exposedLocations.join(', ')}.`,
+    );
   }
 
   const resolvedEnvironments = projectDirectories.map((directory) =>
