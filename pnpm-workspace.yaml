@@ -1,0 +1,16 @@
+packages:
+  - apps/*
+  - packages/*
+
+allowBuilds:
+  '@tailwindcss/oxide': true
+  esbuild: true
+  sharp: true
+  supabase: true
+  unrs-resolver: true
+
+nodeLinker: isolated
+
+overrides:
+  postcss: 8.5.24
+  sharp: 0.35.3

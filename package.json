@@ -1,0 +1,40 @@
+{
+  "name": "ideogram-learning-app",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.0.9",
+  "engines": {
+    "node": ">=24.12.0 <25",
+    "pnpm": ">=11.0.9 <12"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "check:boundaries": "node scripts/check-import-boundaries.mjs",
+    "check:env": "node scripts/check-env.mjs --target workspace",
+    "commitlint": "commitlint --from=HEAD~1 --to=HEAD",
+    "dev": "turbo run dev --parallel",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "pnpm check:boundaries && eslint scripts eslint.config.mjs prettier.config.mjs commitlint.config.cjs && turbo run lint",
+    "supabase:start": "supabase start",
+    "supabase:status": "supabase status",
+    "supabase:stop": "supabase stop",
+    "test": "pnpm test:root && turbo run test",
+    "test:root": "vitest run scripts/environment-contract.test.mjs",
+    "typecheck": "turbo run typecheck"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "21.2.1",
+    "@commitlint/config-conventional": "21.2.0",
+    "@eslint/js": "9.39.5",
+    "@types/node": "24.13.3",
+    "eslint": "9.39.5",
+    "globals": "17.8.0",
+    "prettier": "3.9.6",
+    "supabase": "2.110.0",
+    "turbo": "2.10.7",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.65.0",
+    "vitest": "4.1.10"
+  }
+}
