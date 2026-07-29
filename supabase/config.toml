@@ -3,7 +3,7 @@ project_id = "ideogram-learning"
 [api]
 enabled = true
 port = 54321
-schemas = ["public", "graphql_public"]
+schemas = ["public"]
 extra_search_path = ["public", "extensions"]
 max_rows = 1000
 
@@ -29,6 +29,17 @@ site_url = "http://localhost:3000"
 additional_redirect_urls = ["ideogram-learning://auth/callback"]
 jwt_expiry = 3600
 enable_signup = false
+enable_anonymous_sign_ins = false
+
+[auth.email]
+enable_signup = false
+
+[auth.sms]
+enable_signup = false
+
+[auth.rate_limit]
+sign_in_sign_ups = 10
+token_verifications = 10
 
 [storage]
 enabled = true
