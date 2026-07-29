@@ -24,6 +24,13 @@ pnpm test
 pnpm build
 ```
 
+For the protected learner-catalog route, smoke validation should also cover:
+
+- `401` when no valid credentials are supplied
+- `200` when an active verified learner is supplied
+- `503` when auth or data dependencies are unavailable
+- `Cache-Control`, `Pragma`, `Expires`, and `X-Request-Id` on both success and error responses
+
 ## Supabase local commands
 
 ```bash
@@ -56,6 +63,11 @@ policy-tested application routes instead of direct storage metadata writes.
 - Keep `DEEPSEEK_API_KEY` server-only.
 - Use protected deployment secrets for shared environments.
 - Do not publish real secrets in docs, screenshots, or repo files.
+- The web runtime reads `NEXT_PUBLIC_SUPABASE_URL` and
+  `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (or the accepted server aliases) for
+  the protected catalog route. The URL validator only accepts a Supabase origin,
+  requires HTTPS outside localhost and 127.0.0.1, and rejects embedded
+  credentials or path/query fragments.
 
 ## Open items
 

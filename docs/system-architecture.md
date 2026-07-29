@@ -12,22 +12,48 @@ The platform is designed as a modular monolith with three client runtimes and on
 
 ## Current state
 
-The implementation is still at the foundation stage for user-facing apps. The only implemented HTTP API route today is `GET /api/v1/health`, but Phase 3 has now added the learning persistence layer in Supabase: catalog tables, placement helpers, review helpers, activity attempt helpers, and purge receipts. Those learning operations are database private helpers, not Next.js route handlers yet.
+The implementation is still at the foundation stage for user-facing apps. The implemented HTTP API routes today are `GET /api/v1/health` and the protected learner catalog route `GET /api/v1/learning/catalog`. Phase 3 also added the learning persistence layer in Supabase: catalog tables, placement helpers, review helpers, activity attempt helpers, and purge receipts. The catalog read path is route-led in Next.js and uses the allowlisted aggregate RPC; the remaining learning mutation routes are still planned.
+
+## Learner catalog read flow
+
+1. Web or mobile calls `GET /api/v1/learning/catalog`.
+2. The Next.js route verifies a Supabase bearer token or SSR cookie session with `auth.getUser()`.
+3. The route reads `public.get_learner_catalog_data()` from Supabase.
+4. The database returns only active packs and structurally complete published
+   catalog content through a deep allowlist, then enforces the exact projected
+   response budget.
+5. The route assembles `LearnerCatalogResponse`, independently enforces the
+   serialized response budget, and returns private no-store headers plus an
+   opaque request ID.
 
 ## Learning persistence boundary
 
-| Caller / runtime            | Allowed surface                       | Notes                                                                               |
-| --------------------------- | ------------------------------------- | ----------------------------------------------------------------------------------- |
-| Web / mobile client         | None directly                         | No direct learner writes to Postgres from the client runtime                        |
-| `app_learning_api_executor` | Learner-safe private RPCs             | Trusted application boundary for placement, activity, review, and enrollment writes |
-| `service_role`              | Worker-only scoring and purge helpers | Used for placement scoring and privacy purge; not for learner write paths           |
-| `app_security_definer`      | Narrow definer-owned helpers          | Owns the database helpers and policies; cannot log in or bypass RLS                 |
+| Caller / runtime                         | Allowed surface                            | Notes                                                                        |
+| ---------------------------------------- | ------------------------------------------ | ---------------------------------------------------------------------------- |
+| Web / mobile client                      | Next.js catalog route for reads only       | Client code does not read raw learner-catalog tables                         |
+| Authenticated Supabase caller            | `public.get_learner_catalog_data()`        | Allowlisted aggregate RPC is callable because the `public` schema is exposed |
+| `private.get_learner_catalog_activities` | Internal helper for the public catalog RPC | Definer-owned helper; not granted to authenticated callers                   |
+| `app_learning_api_executor`              | Learner-safe private RPCs                  | Trusted boundary for placement, activity, review, and enrollment writes      |
+| `service_role`                           | Worker-only scoring and purge helpers      | Used for placement scoring and privacy purge; not for learner write paths    |
+| `app_security_definer`                   | Narrow definer-owned helpers               | Owns database helpers and policies; cannot log in or bypass RLS              |
+
+## Catalog scale boundary
+
+The aggregate catalog is intentionally capped at 36 releases, 360 units, 600
+lessons, 600 activities, 384 KiB of raw activity payloads, a 512 KiB projected
+RPC result, and a 512 KiB final HTTP response. Publication also validates
+learner-visible payload types/cardinalities and requires each published unit
+and lesson to have a child. These are safety limits for the first release, not
+the target shape for the complete Japanese, Chinese, and Korean corpus. Before
+the corpus outgrows them, catalog discovery becomes a paged index and lesson
+activities move to a separate detail route.
 
 ## Learning content posture
 
 - Japanese (`ja`) is the active language pack; its authored N5 source corpus is still review-only and has no learner-visible published release.
 - Chinese (`zh`) and Korean (`ko`) are seeded as hidden packs and fail closed in RLS and publish checks.
 - Published releases are immutable once live; archival closes access without deleting history.
+- The catalog read route does not use a service-role secret. It relies on verified request auth plus the allowlisted catalog RPC.
 
 ## Identity and privacy boundary
 
@@ -55,6 +81,7 @@ flowchart TB
 
   API["Canonical API\nNext.js /api/v1"]
   Auth["Supabase Auth"]
+  CatalogRPC["Allowlisted catalog RPC"]
   DB[("Supabase Postgres + RLS")]
   Storage[("Supabase Storage")]
   Worker["Node worker"]
@@ -64,7 +91,8 @@ flowchart TB
   Mobile --> API
   Admin --> API
   API --> Auth
-  API --> DB
+  API --> CatalogRPC
+  CatalogRPC --> DB
   API --> Storage
   API --> AI
   API -. async jobs .-> Worker
@@ -88,7 +116,9 @@ flowchart TB
 - Direct SSE is the preferred shape for live AI tutor responses.
 - Heavy jobs such as transcription, embeddings, and grading belong in the worker path.
 - Search is planned as a hybrid of FTS and pgvector.
-- `/api/v1/learning/*` route handlers remain planned work for Phase 4; the learning rules documented here are the database contract they will call.
+- The remaining `/api/v1/learning/*` mutation route handlers remain planned work for Phase 4; the catalog read route is already implemented.
+- Split the aggregate catalog into paged index and lesson-detail reads before
+  increasing the first-release catalog budget.
 - Canonical route documentation should continue to live under `docs/api-contract.md`.
 - Auth and privacy contracts are documented separately in
   `docs/authentication-guide.md`, `docs/security-and-privacy-baseline.md`, and

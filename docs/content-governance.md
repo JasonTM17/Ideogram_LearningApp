@@ -28,8 +28,11 @@ Key constraints already enforced in the schema:
   not claim official certification.
 - Content release publication requires an active language pack.
 - Published releases are immutable once live.
+- Every published unit has at least one published lesson, and every published
+  lesson has at least one published activity.
 - Activities are typed and carry Vietnamese instructions, target script, and
-  bounded payload sizes.
+  learner-visible payload fields validated against the shared contract,
+  including nested cardinality and UTF-16 string limits.
 
 ## Provenance and rights
 
@@ -82,7 +85,9 @@ invented in source control.
 3. Review and approve the content release tree with real accountable people.
 4. Record real audio plus a checksum before publishing a listening activity.
 5. Add the recorded file to the checksum-verified local media registry.
-6. Publish only after the pack is active and all child content is reviewed.
+6. Publish only after the pack is active, all child content is reviewed, every
+   unit/lesson branch is non-empty, and learner-visible payload fields pass the
+   shared bounds.
 7. Keep learner-visible content immutable after publication.
 8. Use hidden ZH/KO fixtures only as contract proofs until later release gates.
 

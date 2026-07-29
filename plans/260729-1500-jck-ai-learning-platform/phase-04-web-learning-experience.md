@@ -1,7 +1,7 @@
 ---
 phase: 4
 title: "Web Learning Experience"
-status: pending
+status: in_progress
 effort: "10–14 engineer-days"
 ---
 
@@ -19,19 +19,42 @@ with production components; exported HTML is evidence, not source code.
 
 ## File ownership
 
-Create/modify only the web runtime:
+Create/modify the web runtime and the learner-facing contracts required to keep
+the browser and mobile clients free of internal answer keys:
 
-- `apps/web/app/(public)/*`, `apps/web/app/(auth)/*`,
-  `apps/web/app/(learner)/*`
-- `apps/web/app/api/v1/{learning,profile,privacy}/*`, excluding
+- `apps/web/src/app/(public)/*`, `apps/web/src/app/(auth)/*`,
+  `apps/web/src/app/(learner)/*`
+- `apps/web/src/app/api/v1/{auth,learning,profile,privacy}/*`, excluding
   `api/v1/ai/*` owned by Phase 6 and sync/media routes owned by Phase 7
 - `apps/web/src/components/*`, `apps/web/src/features/{auth,onboarding,lesson,review,progress,profile}/*`
 - `apps/web/src/lib/{supabase,i18n,analytics}/*`
+- `apps/web/src/server/*`, `apps/web/src/proxy.ts`
 - `apps/web/src/styles/*`, `apps/web/public/fonts/*`
+- `apps/web/package.json`, `apps/web/next.config.ts`, `pnpm-lock.yaml`
 - `apps/web/test/*`, `apps/web/e2e/*`
-- `packages/design-tokens/src/web/*`
+- `packages/design-tokens/src/*`
+- learner-facing additions under `packages/contracts/src/{auth,learning,profile}/*`
+  and `packages/api-client/src/{auth,learning,profile}/*`
 
 Do not edit native screens or AI provider code.
+
+## Locked route and boundary decisions
+
+- Public entry: `/`; authentication: `/sign-in` and `/auth/callback`.
+- Resumable setup: `/onboarding` and `/placement`.
+- Learner destinations: `/today`, `/review`, `/assistant`, `/progress`, `/you`.
+- Deep learning routes: `/learn`, `/lessons/[lessonId]`, and focused child
+  routes under those segments.
+- `/assistant` is a labelled Phase 6 seam only until the AI provider runtime is
+  implemented; Phase 4 does not fake chat behavior.
+- Production reads use verified Supabase cookie or bearer identity and RLS. Test
+  fixtures remain test-only while the Japanese corpus is review-only.
+- Internal content manifests are never returned over HTTP. Public prompt DTOs
+  structurally remove answer keys, explanations that reveal answers, internal
+  rubrics, provenance, and unpublished editorial state.
+- Cookie mutations use hardened `HttpOnly`, `SameSite=Lax` session cookies.
+  Authenticated responses are private/no-store; state-changing cookie requests
+  must pass same-origin and content-type checks.
 
 ## Requirements and architecture
 

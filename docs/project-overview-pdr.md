@@ -6,7 +6,8 @@ Ideogram Learning is a Vietnamese-first AI learning platform for Japanese-first
 launch, with later support planned for Chinese and Korean. The repository now
 contains the foundation layer plus a tested local identity/privacy boundary:
 workspace shells, shared contracts, design tokens, Supabase migrations/RLS, and
-one implemented health endpoint.
+two implemented HTTP surfaces: the public health endpoint and authenticated,
+learner-safe catalog endpoint.
 
 ## Product requirements
 
@@ -28,6 +29,7 @@ one implemented health endpoint.
 - Adult-only registration approval, identity/profile/role/privacy contracts,
   private Storage policies, and local RLS tests
 - Versioned API contract surface
+- Authenticated learner catalog projection with bounded response budgets
 - Documentation baseline
 - Mobile support policy and dependency matrix
 - Load assumptions for closed-beta planning
@@ -35,7 +37,7 @@ one implemented health endpoint.
 ### Not in scope today
 
 - Placement flow
-- Lesson delivery
+- Interactive lesson delivery and attempt submission
 - SRS and review scheduling
 - AI tutor UX and live streaming
 - Offline sync
@@ -53,7 +55,8 @@ one implemented health endpoint.
 
 - README links resolve and match the current repo layout
 - Docs distinguish implemented behavior from planned behavior
-- Only `GET /api/v1/health` is described as implemented today
+- `GET /api/v1/health` and authenticated `GET /api/v1/learning/catalog` are the
+  only routes described as implemented today
 - Product decisions are cross-linked and versioned
 - No doc implies deployment or provisioning already happened
 

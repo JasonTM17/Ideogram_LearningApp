@@ -113,11 +113,17 @@ Gói ngôn ngữ → mục tiêu (JLPT/giao tiếp) → cấp độ → lộ tr�
 
 ## 10. Bàn giao thiết kế
 
-- Artifact Stitch hiện có là tham chiếu màn desktop **Hôm nay** tại
-  [`plans/260729-1500-jck-ai-learning-platform/designs/dashboard-today/`](../plans/260729-1500-jck-ai-learning-platform/designs/dashboard-today/): PNG, HTML và `DESIGN.md`.
-- Đây là một visual handoff, không phải bộ mười màn đã hoàn thành. Các screen
-  mobile và desktop còn lại sẽ được tạo/kiểm tra theo Phase 4–5 trước khi coi
-  là design-ready.
+- Repo đã có mười export Stitch được kiểm chứng tại
+  [`assets/designs/stitch/`](../assets/designs/stitch/): năm màn mobile
+  (Hôm nay, Ôn tập, Trợ lý, Tiến độ, Bạn) và năm màn desktop (Hôm nay, Bài học,
+  Hàng đợi ôn, Trợ lý, Tiến độ). Mỗi export có PNG, HTML và `DESIGN.md`; các ảnh
+  `desktop-refined-*` là hướng desktop Việt hóa ưu tiên khi dựng Phase 4.
+- Artifact
+  [`plans/260729-1500-jck-ai-learning-platform/designs/dashboard-today/`](../plans/260729-1500-jck-ai-learning-platform/designs/dashboard-today/)
+  là bản desktop Hôm nay cũ hơn, chỉ dùng để đối chiếu lịch sử hierarchy.
+- Các export là visual handoff đã có, không phải bằng chứng rằng đầy đủ state
+  loading/empty/error/offline, responsive, dark mode hay accessibility đã được
+  phê duyệt. Phase 4–5 vẫn phải tái dựng và kiểm chứng các state đó trong runtime.
 - HTML từ Stitch chỉ là tài liệu tham chiếu về hierarchy/spacing; không được
   đưa trực tiếp vào Next.js hay Expo. Rebuild theo token, semantic state và
   ranh giới nền tảng ở tài liệu này và `design-system/ideogram-learning/MASTER.md`.

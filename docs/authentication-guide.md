@@ -2,20 +2,22 @@
 
 ## Current state
 
-Authentication is contract-led today, not route-led. The shared packages define
-the session, callback, and request shapes, but the app routes are not
-implemented yet.
+Sign-in, callback, and sign-out remain contract-led today. Protected server API
+verification is now route-led for `GET /api/v1/learning/catalog`, but the app
+auth lifecycle routes are still not implemented yet.
 
 ## Verified contracts
 
-| Contract             | Source                                              | Purpose                                                                 |
-| -------------------- | --------------------------------------------------- | ----------------------------------------------------------------------- |
-| PKCE transaction     | `packages/auth/src/pkce-transaction.ts`             | Generates opaque state, nonce, verifier, and challenge values           |
-| Callback consumption | `packages/auth/src/authorization-callback.ts`       | Parses authorization-code callbacks and rejects token-bearing payloads  |
-| Code exchange        | `packages/auth/src/authorization-exchange.ts`       | Requires a verified ID-token nonce to match the consumed transaction    |
-| Session lifecycle    | `packages/auth/src/session-lifecycle.ts`            | Determines refresh timing and clears local credentials on sign-out      |
-| Session cookies      | `packages/contracts/src/auth/auth-session.ts`       | Defines hardened web cookie attributes                                  |
-| Planned API requests | `packages/api-client/src/auth/auth-api-requests.ts` | Defines invite-only OTP, callback exchange, and sign-out request shapes |
+| Contract               | Source                                              | Purpose                                                                 |
+| ---------------------- | --------------------------------------------------- | ----------------------------------------------------------------------- |
+| Protected request auth | `apps/web/src/lib/supabase/request-auth.ts`         | Verifies bearer or SSR cookie sessions with Supabase Auth `getUser()`   |
+| Catalog route          | `apps/web/src/app/api/v1/learning/catalog/route.ts` | Protected learner-catalog read path                                     |
+| PKCE transaction       | `packages/auth/src/pkce-transaction.ts`             | Generates opaque state, nonce, verifier, and challenge values           |
+| Callback consumption   | `packages/auth/src/authorization-callback.ts`       | Parses authorization-code callbacks and rejects token-bearing payloads  |
+| Code exchange          | `packages/auth/src/authorization-exchange.ts`       | Requires a verified ID-token nonce to match the consumed transaction    |
+| Session lifecycle      | `packages/auth/src/session-lifecycle.ts`            | Determines refresh timing and clears local credentials on sign-out      |
+| Session cookies        | `packages/contracts/src/auth/auth-session.ts`       | Defines hardened web cookie attributes                                  |
+| Planned API requests   | `packages/api-client/src/auth/auth-api-requests.ts` | Defines invite-only OTP, callback exchange, and sign-out request shapes |
 
 ## Allowed flow
 
@@ -36,6 +38,13 @@ implemented yet.
 - Expired or replayed PKCE state is rejected.
 - PKCE entropy sources must return the expected byte lengths and the digest
   adapter must return a 32-byte SHA-256 result.
+- Protected request parsing is strict: bearer credentials must use the
+  `Authorization: Bearer ...` form, and the bearer client does not persist or
+  refresh sessions.
+- Web session cookies are hardened by the shared cookie options before they are
+  written back to the SSR store.
+- 401 is used for missing or rejected credentials; 503 is used for unexpected
+  auth-provider unavailability.
 - Local credential cleanup starts before remote sign-out completes, so a hung
   revocation call cannot leave the local session in place.
 - Web session cookies are server-only, `httpOnly`, `SameSite=lax`, and

@@ -50,11 +50,42 @@ It is evidence-based, not a claim of legal compliance or launch readiness.
   the current JWT claims to the subject. It is not authoritative revocation
   proof.
 
+## Protected API request verification
+
+- The request-auth helper accepts either a strict Bearer token or the SSR
+  cookie session path.
+- Request identity is verified with Supabase Auth `getUser()`.
+- Bearer clients are non-persistent and do not refresh or store sessions.
+- Normal credential rejection becomes a 401 response.
+- Unexpected auth-provider unavailability becomes a 503 response.
+- Route errors are serialized with the generic shared API error body and an
+  opaque request ID.
+
+## Catalog data boundary
+
+- Raw SELECT access on the learner-catalog source tables is revoked for
+  authenticated callers.
+- `public.get_learner_catalog_data()` is a `SECURITY DEFINER` aggregate RPC
+  with a fixed search path and a deep allowlist for catalog fields.
+- Anonymous callers have no execute privilege on the catalog RPC.
+- The public schema is exposed through the local API configuration, so the
+  safe aggregate RPC remains callable by authenticated database users even
+  though the raw source tables stay closed.
+- The RPC rechecks active-account state and returns an empty catalog for frozen
+  or revoked accounts.
+- Publication rejects missing or malformed learner-visible payload fields,
+  out-of-contract nested cardinalities, empty unit/lesson branches, and
+  JavaScript/Zod-incompatible UTF-16 string lengths.
+- The database enforces both the raw-source preflight budget and an exact
+  512 KiB cap on the fully projected aggregate before returning it.
+
 ## Session validation note
 
-Sensitive server actions still need a future authoritative session-validation
-adapter or GoTrue verification path, plus the current DB `role_epoch` and
-tombstone checks. Do not treat claim matching as immediate logout revocation.
+The protected catalog route now has an authoritative GoTrue verification path
+through `auth.getUser()`. Sensitive mutation paths still need the future
+session-revocation adapter or DB `role_epoch` and tombstone checks. Do not
+treat claim matching alone as immediate logout revocation for those higher-risk
+actions.
 
 ## Storage posture
 

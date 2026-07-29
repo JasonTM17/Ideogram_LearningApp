@@ -1,6 +1,6 @@
 # Ideogram Learning
 
-Ideogram Learning is a Vietnamese-first language learning platform for Japanese-first launch, with planned expansion to Chinese and Korean under separate quality gates. This repository is still at the foundation stage: the web shell, mobile shell, worker stub, shared contracts, and a single health endpoint exist today; the learning product flows are not implemented yet.
+Ideogram Learning is a Vietnamese-first language learning platform for Japanese-first launch, with planned expansion to Chinese and Korean under separate quality gates. This repository is still at the foundation stage: the web shell, mobile shell, worker stub, shared contracts, the health endpoint, and a protected learner catalog read route exist today; the learning product flows are not implemented yet.
 
 ## Current foundation
 
@@ -8,8 +8,8 @@ Ideogram Learning is a Vietnamese-first language learning platform for Japanese-
 - Mobile: Expo shell in `apps/mobile`
 - Worker: Node worker stub in `apps/worker`
 - Shared packages: `packages/contracts`, `packages/design-tokens`, `packages/config`, `packages/testing`, `packages/auth`, `packages/api-client`, `packages/learning-engine`
-- Implemented API route: `GET /api/v1/health`
-- Phase 3 learning persistence: Supabase migrations and private helpers now implement the learning content catalog, placement flow, activity attempts, review engine, and purge receipts. No Next.js learning route handlers exist yet.
+- Implemented API routes: `GET /api/v1/health`, `GET /api/v1/learning/catalog`
+- Phase 3 learning persistence: Supabase migrations and private helpers now implement the learning content catalog, placement flow, activity attempts, review engine, and purge receipts. The catalog read route is implemented in Next.js; the remaining learning mutation routes and user-facing learning screens are still pending.
 
 ## Visual references
 
@@ -71,10 +71,10 @@ pnpm supabase:stop
 
 ## What is not implemented yet
 
-- Next.js learning route handlers and user-facing learning screens
+- Next.js learning mutation routes and user-facing learning screens
 - AI tutor/chatbot, offline sync, progress tracking, and admin workflows
 - Production deployment or cloud provisioning
-- Any endpoint beyond `GET /api/v1/health`
+- Any additional endpoint beyond `GET /api/v1/health` and `GET /api/v1/learning/catalog`
 
 ## Docs
 

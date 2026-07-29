@@ -12,7 +12,7 @@
 | `packages/config`        | Shared runtime/config helpers                             | Active           |
 | `packages/testing`       | Shared test helpers and setup                             | Active           |
 | `packages/auth`          | Auth session, PKCE, and callback helpers                  | Active           |
-| `packages/api-client`    | Planned auth and privacy request contracts                | Active           |
+| `packages/api-client`    | Shared request descriptors and response parsers           | Active           |
 
 ## Standards
 
@@ -32,8 +32,11 @@
 ## API and contract rules
 
 - `packages/contracts` owns shared API types.
-- `GET /api/v1/health` is the only implemented route today.
+- `GET /api/v1/health` and authenticated `GET /api/v1/learning/catalog` are the
+  only implemented routes today.
 - Planned auth and privacy contracts live in `packages/api-client/src/auth`.
+- The implemented learner-catalog descriptor and parser live in
+  `packages/api-client/src/learning`.
 - `public.data_subject_requests` is the canonical terminology for export and
   deletion requests in the current phase work.
 - Future endpoints should be versioned under `/api/v1`.

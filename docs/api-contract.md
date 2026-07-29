@@ -1,10 +1,11 @@
 # API Contract
 
-## Current implemented endpoint
+## Current implemented endpoints
 
-| Method | Path             | Auth | Request | Response               | Status      |
-| ------ | ---------------- | ---- | ------- | ---------------------- | ----------- |
-| GET    | `/api/v1/health` | None | None    | Shared health contract | Implemented |
+| Method | Path                       | Auth                                                 | Request | Response                 | Status      |
+| ------ | -------------------------- | ---------------------------------------------------- | ------- | ------------------------ | ----------- |
+| GET    | `/api/v1/health`           | None                                                 | None    | Shared health contract   | Implemented |
+| GET    | `/api/v1/learning/catalog` | Verified Supabase bearer token or SSR cookie session | None    | `LearnerCatalogResponse` | Implemented |
 
 ## Health response shape
 
@@ -19,15 +20,17 @@ Shared contract source: `packages/contracts/src/api.ts`
 
 The route handler at `apps/web/src/app/api/v1/health/route.ts` returns this shared health contract via `Response.json(...)`.
 
+The catalog route at `apps/web/src/app/api/v1/learning/catalog/route.ts` authenticates the request with Supabase Auth `getUser()`, reads the allowlisted aggregate RPC `public.get_learner_catalog_data()`, and returns the shared learner-catalog contract through `jsonNoStore(...)`.
+
 ## Shared API error shape
 
-`packages/contracts/src/api.ts` also defines a shared error payload shape for future endpoints:
+`packages/contracts/src/api.ts` defines the shared error payload shape used by the catalog route:
 
 - `code`
 - `message`
 - `requestId`
 
-That error shape is not yet used by any implemented route.
+The catalog route returns that shape on 401 and 503 responses. It also emits the same opaque request ID in `X-Request-Id`, together with private no-store cache headers.
 
 ## Implemented learning database contracts
 
@@ -48,7 +51,8 @@ Phase 3 added database-private learning helpers. They are not HTTP endpoints yet
 
 Notes:
 
-- These are Postgres helpers, not route handlers. No `/api/v1/learning/*` HTTP route exists yet.
+- These Postgres helpers are not route handlers. The catalog read route exists,
+  but no learning mutation route is implemented yet.
 - The migration defines `app_learning_api_executor` as the narrow app executor boundary and grants it to `postgres` locally so pgTAP can `SET LOCAL ROLE` during tests. Production provisioning still needs a real login role.
 - Placement answers are replay-safe after session submission when the idempotency key and payload match; new answers still require a draft session.
 - Review events are replay-safe when the payload matches, and the database assigns the server receipt sequence.
@@ -69,7 +73,58 @@ The shared client contracts already define request shapes for routes that are no
 Those request shapes live in `packages/api-client/src/auth/auth-api-requests.ts`.
 The server route handlers do not exist yet.
 
+The learning catalog is now implemented. The remaining learning mutation routes and user-facing learning screens are still planned.
+
+## Learning catalog contract
+
+The protected catalog read route returns the shared `LearnerCatalogResponse` contract from `packages/contracts/src/learning/learner-catalog-contract.ts`.
+
+Verified behavior:
+
+- `GET /api/v1/learning/catalog`
+- accepts a verified Supabase bearer token or SSR cookie session
+- returns `200` with `LearnerCatalogResponse`
+- returns `401` for missing or rejected credentials
+- returns `503` for unexpected auth or repository unavailability
+- sets private no-store cache headers and an opaque `X-Request-Id`
+- reads only `public.get_learner_catalog_data()`
+- rejects raw answer keys, rubrics, editorial fields, provenance fields, and other non-allowlisted nested payload data
+- exposes only active packs and published learning content
+- remains fail-closed for frozen or revoked accounts
+
+Response hierarchy:
+
+1. `languagePacks`
+2. `releases`
+3. `units`
+4. `lessons`
+5. `activities`
+
+Use the shared contract file for the full field list. Do not duplicate the database RPC shape in docs.
+
+### Aggregate catalog budget
+
+The current route is a bounded pilot surface:
+
+| Boundary              | Limit                           |
+| --------------------- | ------------------------------- |
+| Published releases    | 36                              |
+| Published units       | 360                             |
+| Published lessons     | 600                             |
+| Published activities  | 600                             |
+| Raw activity payloads | 384 KiB total before projection |
+| Projected RPC JSON    | 512 KiB                         |
+| Serialized HTTP body  | 512 KiB                         |
+
+The database validates the public activity payload shape when content is
+published, requires every published unit and lesson branch to be non-empty,
+and rejects the exact projected aggregate when it exceeds 512 KiB. The Next.js
+assembler checks the final serialized response again. Before the Chinese and
+Korean release gates open or the corpus exceeds this pilot budget, the read
+model must split into a paged catalog index plus lesson/activity detail routes.
+
 ## Verification notes
 
 - The current health route has a passing route test.
 - The contract is shared between the route and the contracts package.
+- The learner catalog route is covered by route, repository, assembler, and pgTAP tests after the latest fresh local migration reset.
