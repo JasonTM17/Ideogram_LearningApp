@@ -1,0 +1,13 @@
+{
+  "approvalStatus": "pending",
+  "approvedAt": null,
+  "approvedBy": null,
+  "contentReleaseId": "ja-n5-vietnamese-first-pilot",
+  "evidenceReference": "content/licenses/manifest.md#rights-decision",
+  "rights": {
+    "adaptationAllowed": false,
+    "aiProviderProcessingAllowed": false,
+    "embeddingAllowed": false,
+    "redistributionAllowed": false
+  }
+}

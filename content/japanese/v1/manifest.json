@@ -1,0 +1,3942 @@
+{
+  "contentReleaseId": "ja-n5-vietnamese-first-pilot",
+  "languageCode": "ja",
+  "levelCode": "N5",
+  "objectiveKey": "communication",
+  "provenance": {
+    "authorName": "Ideogram Learning content team",
+    "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+    "reviewerName": null,
+    "rights": {
+      "adaptationAllowed": false,
+      "aiProviderProcessingAllowed": false,
+      "embeddingAllowed": false,
+      "redistributionAllowed": false
+    },
+    "sourceKind": "original",
+    "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+  },
+  "releaseStatus": "review",
+  "titleVietnamese": "Tiếng Nhật N5 cho người Việt — pilot nền tảng",
+  "units": [
+    {
+      "lessons": [
+        {
+          "activities": [
+            {
+              "activityId": "ja-n5-l01-vocabulary",
+              "activityType": "vocabulary",
+              "estimatedMinutes": 12,
+              "instructionsVietnamese": "Đọc từ, kana/kanji và ví dụ. Tự trả lời nghĩa trước khi mở bản dịch tiếng Việt.",
+              "payload": {
+                "entries": [
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi là người Việt Nam。",
+                      "value": "私はベトナム人です。"
+                    },
+                    "meaningVietnamese": "tôi",
+                    "reading": "わたし",
+                    "term": "私"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Bạn là học sinh phải không?",
+                      "value": "あなたは学生ですか。"
+                    },
+                    "meaningVietnamese": "bạn",
+                    "reading": "あなた",
+                    "term": "あなた"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi là Minh。",
+                      "value": "私はミンです。"
+                    },
+                    "meaningVietnamese": "trợ từ chủ đề “thì/là”",
+                    "reading": "は",
+                    "term": "は"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Đây là sách。",
+                      "value": "これは本です。"
+                    },
+                    "meaningVietnamese": "là (lịch sự)",
+                    "reading": "です",
+                    "term": "です"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Bạn là anh/chị Tanaka phải không?",
+                      "value": "田中さんですか。"
+                    },
+                    "meaningVietnamese": "trợ từ nghi vấn",
+                    "reading": "か",
+                    "term": "か"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Vâng, đúng vậy。",
+                      "value": "はい、そうです。"
+                    },
+                    "meaningVietnamese": "vâng/có",
+                    "reading": "はい",
+                    "term": "はい"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Không, không phải。",
+                      "value": "いいえ、違います。"
+                    },
+                    "meaningVietnamese": "không",
+                    "reading": "いいえ",
+                    "term": "いいえ"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Xin chào, anh Yamada。",
+                      "value": "こんにちは、山田さん。"
+                    },
+                    "meaningVietnamese": "xin chào (ban ngày)",
+                    "reading": "こんにちは",
+                    "term": "こんにちは"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Cảm ơn bạn。",
+                      "value": "ありがとうございます。"
+                    },
+                    "meaningVietnamese": "cảm ơn",
+                    "reading": "ありがとうございます",
+                    "term": "ありがとうございます"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Xin lỗi, hãy nói lại một lần nữa。",
+                      "value": "すみません、もう一度お願いします。"
+                    },
+                    "meaningVietnamese": "xin lỗi/xin phép",
+                    "reading": "すみません",
+                    "term": "すみません"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Chào buổi sáng, thầy/cô。",
+                      "value": "おはようございます、先生。"
+                    },
+                    "meaningVietnamese": "chào buổi sáng",
+                    "reading": "おはようございます",
+                    "term": "おはようございます"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Chào buổi tối, mọi người。",
+                      "value": "こんばんは、皆さん。"
+                    },
+                    "meaningVietnamese": "chào buổi tối",
+                    "reading": "こんばんは",
+                    "term": "こんばんは"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Rất hân hạnh, tôi là Linh。",
+                      "value": "はじめまして、リンです。"
+                    },
+                    "meaningVietnamese": "rất hân hạnh gặp bạn",
+                    "reading": "はじめまして",
+                    "term": "はじめまして"
+                  }
+                ]
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Từ vựng chủ đề"
+            },
+            {
+              "activityId": "ja-n5-l01-01",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l01-01.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: ban ngày.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "ban ngày"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "buổi sáng"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "buổi tối"
+                      }
+                    ],
+                    "prompt": "Hai người chào nhau vào thời điểm nào?",
+                    "questionId": "ja-n5-l01-01-q1"
+                  }
+                ],
+                "transcript": "A: こんにちは。B: こんにちは。",
+                "transcriptVietnamese": "A: Xin chào. B: Xin chào."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 01: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l01-02",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l01-02.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: người A.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "người A"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "người B"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "giáo viên"
+                      }
+                    ],
+                    "prompt": "Người tên Mai là ai?",
+                    "questionId": "ja-n5-l01-02-q1"
+                  }
+                ],
+                "transcript": "A: はじめまして。私はマイです。B: はじめまして、ケンです。",
+                "transcriptVietnamese": "A: Rất hân hạnh. Tôi là Mai. B: Rất hân hạnh, tôi là Ken."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 01: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l01-03",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l01-03.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: có.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "có"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "không"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "không biết"
+                      }
+                    ],
+                    "prompt": "Minh có phải người Việt Nam không?",
+                    "questionId": "ja-n5-l01-03-q1"
+                  }
+                ],
+                "transcript": "A: ミンさんはベトナム人ですか。B: はい、そうです。",
+                "transcriptVietnamese": "A: Minh là người Việt Nam phải không? B: Vâng, đúng vậy."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 01: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l01-04",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l01-04.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: cảm ơn.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "cảm ơn"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "xin lỗi"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "tạm biệt"
+                      }
+                    ],
+                    "prompt": "A đang nói gì?",
+                    "questionId": "ja-n5-l01-04-q1"
+                  }
+                ],
+                "transcript": "A: ありがとうございます。B: いいえ。",
+                "transcriptVietnamese": "A: Cảm ơn. B: Không có gì."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 01: hội thoại ngắn"
+            }
+          ],
+          "estimatedMinutes": 28,
+          "lessonId": "ja-n5-l01-greetings-and-self-introduction",
+          "sequence": 1,
+          "summaryVietnamese": "Chào hỏi lịch sự, giới thiệu tên và phản hồi cơ bản.",
+          "titleVietnamese": "Chào hỏi và tự giới thiệu"
+        },
+        {
+          "activities": [
+            {
+              "activityId": "ja-n5-l02-vocabulary",
+              "activityType": "vocabulary",
+              "estimatedMinutes": 12,
+              "instructionsVietnamese": "Đọc từ, kana/kanji và ví dụ. Tự trả lời nghĩa trước khi mở bản dịch tiếng Việt.",
+              "payload": {
+                "entries": [
+                  {
+                    "example": {
+                      "translationVietnamese": "Đây là vở của tôi。",
+                      "value": "これは私のノートです。"
+                    },
+                    "meaningVietnamese": "cái này",
+                    "reading": "これ",
+                    "term": "これ"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Đó là từ điển phải không?",
+                      "value": "それは辞書ですか。"
+                    },
+                    "meaningVietnamese": "cái đó (gần người nghe)",
+                    "reading": "それ",
+                    "term": "それ"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Kia là trường học。",
+                      "value": "あれは学校です。"
+                    },
+                    "meaningVietnamese": "cái kia (xa cả hai)",
+                    "reading": "あれ",
+                    "term": "あれ"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Cây bút này màu xanh。",
+                      "value": "このペンは青いです。"
+                    },
+                    "meaningVietnamese": "này (đứng trước danh từ)",
+                    "reading": "この",
+                    "term": "この"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Cái túi đó to。",
+                      "value": "そのかばんは大きいです。"
+                    },
+                    "meaningVietnamese": "đó (đứng trước danh từ)",
+                    "reading": "その",
+                    "term": "その"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Người kia là giáo viên。",
+                      "value": "あの人は先生です。"
+                    },
+                    "meaningVietnamese": "kia (đứng trước danh từ)",
+                    "reading": "あの",
+                    "term": "あの"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Quyển sách này là sách tiếng Nhật。",
+                      "value": "この本は日本語の本です。"
+                    },
+                    "meaningVietnamese": "sách",
+                    "reading": "ほん",
+                    "term": "本"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi viết tên vào vở。",
+                      "value": "ノートに名前を書きます。"
+                    },
+                    "meaningVietnamese": "vở",
+                    "reading": "ノート",
+                    "term": "ノート"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Cho tôi một cây bút。",
+                      "value": "ペンをください。"
+                    },
+                    "meaningVietnamese": "bút",
+                    "reading": "ペン",
+                    "term": "ペン"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Trên bàn có sách。",
+                      "value": "机の上に本があります。"
+                    },
+                    "meaningVietnamese": "bàn học/bàn làm việc",
+                    "reading": "つくえ",
+                    "term": "机"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi ngồi lên ghế。",
+                      "value": "椅子に座ります。"
+                    },
+                    "meaningVietnamese": "ghế",
+                    "reading": "いす",
+                    "term": "椅子"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Cái túi ở dưới ghế。",
+                      "value": "かばんは椅子の下です。"
+                    },
+                    "meaningVietnamese": "túi/cặp",
+                    "reading": "かばん",
+                    "term": "かばん"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Đây là từ điển tiếng Nhật。",
+                      "value": "これは日本語の辞書です。"
+                    },
+                    "meaningVietnamese": "từ điển",
+                    "reading": "じしょ",
+                    "term": "辞書"
+                  }
+                ]
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Từ vựng chủ đề"
+            },
+            {
+              "activityId": "ja-n5-l02-01",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l02-01.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: sách.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "sách"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "từ điển"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "bút"
+                      }
+                    ],
+                    "prompt": "Đó là vật gì?",
+                    "questionId": "ja-n5-l02-01-q1"
+                  }
+                ],
+                "transcript": "A: これは何ですか。B: それは本です。",
+                "transcriptVietnamese": "A: Đây là gì? B: Đó là sách."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 02: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l02-02",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l02-02.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: người B.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "người B"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "người A"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "giáo viên"
+                      }
+                    ],
+                    "prompt": "Cây bút thuộc về ai?",
+                    "questionId": "ja-n5-l02-02-q1"
+                  }
+                ],
+                "transcript": "A: このペンはだれのですか。B: 私のです。",
+                "transcriptVietnamese": "A: Cây bút này của ai? B: Của tôi."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 02: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l02-03",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l02-03.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: dưới ghế.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "dưới ghế"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "trên bàn"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "trước cửa"
+                      }
+                    ],
+                    "prompt": "Cái túi ở đâu?",
+                    "questionId": "ja-n5-l02-03-q1"
+                  }
+                ],
+                "transcript": "A: かばんはどこですか。B: 椅子の下です。",
+                "transcriptVietnamese": "A: Túi ở đâu? B: Ở dưới ghế."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 02: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l02-04",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l02-04.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: tiếng Nhật.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "tiếng Nhật"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "tiếng Anh"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "tiếng Việt"
+                      }
+                    ],
+                    "prompt": "Cuốn từ điển là từ điển gì?",
+                    "questionId": "ja-n5-l02-04-q1"
+                  }
+                ],
+                "transcript": "A: あの辞書は日本語ですか。B: はい、日本語の辞書です。",
+                "transcriptVietnamese": "A: Cuốn từ điển kia là tiếng Nhật phải không? B: Vâng, là từ điển tiếng Nhật."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 02: hội thoại ngắn"
+            }
+          ],
+          "estimatedMinutes": 28,
+          "lessonId": "ja-n5-l02-classroom-objects",
+          "sequence": 2,
+          "summaryVietnamese": "Chỉ định đồ vật, hỏi sở hữu và vị trí đơn giản.",
+          "titleVietnamese": "Đồ vật trong lớp"
+        },
+        {
+          "activities": [
+            {
+              "activityId": "ja-n5-l03-vocabulary",
+              "activityType": "vocabulary",
+              "estimatedMinutes": 12,
+              "instructionsVietnamese": "Đọc từ, kana/kanji và ví dụ. Tự trả lời nghĩa trước khi mở bản dịch tiếng Việt.",
+              "payload": {
+                "entries": [
+                  {
+                    "example": {
+                      "translationVietnamese": "Cho tôi một quả táo。",
+                      "value": "りんごを一つください。"
+                    },
+                    "meaningVietnamese": "một",
+                    "reading": "いち",
+                    "term": "一"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi có hai anh/chị/em。",
+                      "value": "私は二人の兄弟がいます。"
+                    },
+                    "meaningVietnamese": "hai",
+                    "reading": "に",
+                    "term": "二"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Hãy gặp nhau lúc ba giờ。",
+                      "value": "三時に会いましょう。"
+                    },
+                    "meaningVietnamese": "ba",
+                    "reading": "さん",
+                    "term": "三"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Bốn người cùng ăn。",
+                      "value": "四人で食べます。"
+                    },
+                    "meaningVietnamese": "bốn",
+                    "reading": "よん",
+                    "term": "四"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Hãy đợi năm phút。",
+                      "value": "五分待ってください。"
+                    },
+                    "meaningVietnamese": "năm",
+                    "reading": "ご",
+                    "term": "五"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi dậy lúc sáu giờ。",
+                      "value": "六時に起きます。"
+                    },
+                    "meaningVietnamese": "sáu",
+                    "reading": "ろく",
+                    "term": "六"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi lên xe buýt số bảy。",
+                      "value": "七番のバスに乗ります。"
+                    },
+                    "meaningVietnamese": "bảy",
+                    "reading": "なな",
+                    "term": "七"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tháng tám nóng。",
+                      "value": "八月は暑いです。"
+                    },
+                    "meaningVietnamese": "tám",
+                    "reading": "はち",
+                    "term": "八"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Lớp học bắt đầu từ chín giờ。",
+                      "value": "九時から授業です。"
+                    },
+                    "meaningVietnamese": "chín",
+                    "reading": "きゅう",
+                    "term": "九"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Hãy đọc mười trang。",
+                      "value": "十ページ読んでください。"
+                    },
+                    "meaningVietnamese": "mười",
+                    "reading": "じゅう",
+                    "term": "十"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Bây giờ là hai giờ。",
+                      "value": "今は二時です。"
+                    },
+                    "meaningVietnamese": "giờ",
+                    "reading": "じ",
+                    "term": "時"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Đến ga mất mười phút。",
+                      "value": "駅まで十分です。"
+                    },
+                    "meaningVietnamese": "phút",
+                    "reading": "ふん",
+                    "term": "分"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Bạn ngủ lúc mấy giờ?",
+                      "value": "何時に寝ますか。"
+                    },
+                    "meaningVietnamese": "mấy giờ",
+                    "reading": "なんじ",
+                    "term": "何時"
+                  }
+                ]
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Từ vựng chủ đề"
+            },
+            {
+              "activityId": "ja-n5-l03-01",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l03-01.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: bảy giờ.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "bảy giờ"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "chín giờ"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "mười giờ"
+                      }
+                    ],
+                    "prompt": "Bây giờ là mấy giờ?",
+                    "questionId": "ja-n5-l03-01-q1"
+                  }
+                ],
+                "transcript": "A: 今、何時ですか。B: 七時です。",
+                "transcriptVietnamese": "A: Bây giờ mấy giờ? B: Bảy giờ."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 03: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l03-02",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l03-02.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: 300 yên.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "300 yên"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "500 yên"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "800 yên"
+                      }
+                    ],
+                    "prompt": "Bánh mì giá bao nhiêu?",
+                    "questionId": "ja-n5-l03-02-q1"
+                  }
+                ],
+                "transcript": "A: このパンはいくらですか。B: 三百円です。",
+                "transcriptVietnamese": "A: Bánh mì này bao nhiêu? B: 300 yên."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 03: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l03-03",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l03-03.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: chín giờ.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "chín giờ"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "bảy giờ"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "mười một giờ"
+                      }
+                    ],
+                    "prompt": "Lớp học bắt đầu lúc nào?",
+                    "questionId": "ja-n5-l03-03-q1"
+                  }
+                ],
+                "transcript": "A: 授業は何時からですか。B: 九時からです。",
+                "transcriptVietnamese": "A: Lớp học bắt đầu lúc mấy giờ? B: Từ chín giờ."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 03: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l03-04",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l03-04.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: mười phút.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "mười phút"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "năm phút"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "hai mươi phút"
+                      }
+                    ],
+                    "prompt": "Đến ga mất bao lâu?",
+                    "questionId": "ja-n5-l03-04-q1"
+                  }
+                ],
+                "transcript": "A: 駅まで何分ですか。B: 十分です。",
+                "transcriptVietnamese": "A: Đến ga mất mấy phút? B: Mười phút."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 03: hội thoại ngắn"
+            }
+          ],
+          "estimatedMinutes": 28,
+          "lessonId": "ja-n5-l03-numbers-and-time",
+          "sequence": 3,
+          "summaryVietnamese": "Đọc số cơ bản, hỏi giờ và thời lượng.",
+          "titleVietnamese": "Số đếm và thời gian"
+        },
+        {
+          "activities": [
+            {
+              "activityId": "ja-n5-l04-vocabulary",
+              "activityType": "vocabulary",
+              "estimatedMinutes": 12,
+              "instructionsVietnamese": "Đọc từ, kana/kanji và ví dụ. Tự trả lời nghĩa trước khi mở bản dịch tiếng Việt.",
+              "payload": {
+                "entries": [
+                  {
+                    "example": {
+                      "translationVietnamese": "Trường ở gần ga。",
+                      "value": "学校は駅の近くです。"
+                    },
+                    "meaningVietnamese": "trường học",
+                    "reading": "がっこう",
+                    "term": "学校"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi gặp bạn ở ga。",
+                      "value": "駅で友達に会います。"
+                    },
+                    "meaningVietnamese": "ga tàu/ga xe",
+                    "reading": "えき",
+                    "term": "駅"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Ngân hàng ở đâu?",
+                      "value": "銀行はどこですか。"
+                    },
+                    "meaningVietnamese": "ngân hàng",
+                    "reading": "ぎんこう",
+                    "term": "銀行"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Bệnh viện ở đằng kia。",
+                      "value": "病院はあそこです。"
+                    },
+                    "meaningVietnamese": "bệnh viện",
+                    "reading": "びょういん",
+                    "term": "病院"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi mua tem ở bưu điện。",
+                      "value": "郵便局で切手を買います。"
+                    },
+                    "meaningVietnamese": "bưu điện",
+                    "reading": "ゆうびんきょく",
+                    "term": "郵便局"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Nhà vệ sinh ở đâu?",
+                      "value": "トイレはどこですか。"
+                    },
+                    "meaningVietnamese": "ở đâu",
+                    "reading": "どこ",
+                    "term": "どこ"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Đây là lớp học。",
+                      "value": "ここは教室です。"
+                    },
+                    "meaningVietnamese": "ở đây",
+                    "reading": "ここ",
+                    "term": "ここ"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Hãy ngồi ở đó。",
+                      "value": "そこに座ってください。"
+                    },
+                    "meaningVietnamese": "ở đó (gần người nghe)",
+                    "reading": "そこ",
+                    "term": "そこ"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Đằng kia có núi。",
+                      "value": "あそこに山があります。"
+                    },
+                    "meaningVietnamese": "ở đằng kia",
+                    "reading": "あそこ",
+                    "term": "あそこ"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Ngân hàng ở bên phải。",
+                      "value": "銀行は右です。"
+                    },
+                    "meaningVietnamese": "bên phải",
+                    "reading": "みぎ",
+                    "term": "右"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Ga ở bên trái。",
+                      "value": "駅は左です。"
+                    },
+                    "meaningVietnamese": "bên trái",
+                    "reading": "ひだり",
+                    "term": "左"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Trước trường có công viên。",
+                      "value": "学校の前に公園があります。"
+                    },
+                    "meaningVietnamese": "phía trước",
+                    "reading": "まえ",
+                    "term": "前"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Túi ở sau ghế。",
+                      "value": "かばんは椅子の後ろです。"
+                    },
+                    "meaningVietnamese": "phía sau",
+                    "reading": "うしろ",
+                    "term": "後ろ"
+                  }
+                ]
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Từ vựng chủ đề"
+            },
+            {
+              "activityId": "ja-n5-l04-01",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l04-01.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: bên phải ga.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "bên phải ga"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "bên trái ga"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "sau ga"
+                      }
+                    ],
+                    "prompt": "Ngân hàng ở vị trí nào?",
+                    "questionId": "ja-n5-l04-01-q1"
+                  }
+                ],
+                "transcript": "A: 銀行はどこですか。B: 駅の右です。",
+                "transcriptVietnamese": "A: Ngân hàng ở đâu? B: Ở bên phải ga."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 04: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l04-02",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l04-02.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: màu trắng.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "màu trắng"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "màu đỏ"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "màu xanh"
+                      }
+                    ],
+                    "prompt": "Bệnh viện là tòa nhà màu gì?",
+                    "questionId": "ja-n5-l04-02-q1"
+                  }
+                ],
+                "transcript": "A: 病院はあそこですか。B: はい、あの白い建物です。",
+                "transcriptVietnamese": "A: Bệnh viện ở đằng kia phải không? B: Vâng, tòa nhà trắng kia."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 04: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l04-03",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l04-03.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: trước trường.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "trước trường"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "sau trường"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "trong trường"
+                      }
+                    ],
+                    "prompt": "Bưu điện ở đâu?",
+                    "questionId": "ja-n5-l04-03-q1"
+                  }
+                ],
+                "transcript": "A: 郵便局は学校の前です。B: そうですか。",
+                "transcriptVietnamese": "A: Bưu điện ở trước trường. B: Vậy à."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 04: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l04-04",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l04-04.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: ngân hàng.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "ngân hàng"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "ga"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "bệnh viện"
+                      }
+                    ],
+                    "prompt": "Nơi này là gì?",
+                    "questionId": "ja-n5-l04-04-q1"
+                  }
+                ],
+                "transcript": "A: ここは駅ですか。B: いいえ、銀行です。",
+                "transcriptVietnamese": "A: Đây là ga phải không? B: Không, đây là ngân hàng."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 04: hội thoại ngắn"
+            }
+          ],
+          "estimatedMinutes": 28,
+          "lessonId": "ja-n5-l04-places-and-directions",
+          "sequence": 4,
+          "summaryVietnamese": "Hỏi vị trí các địa điểm quen thuộc và chỉ hướng ngắn.",
+          "titleVietnamese": "Địa điểm và phương hướng"
+        },
+        {
+          "activities": [
+            {
+              "activityId": "ja-n5-l05-vocabulary",
+              "activityType": "vocabulary",
+              "estimatedMinutes": 12,
+              "instructionsVietnamese": "Đọc từ, kana/kanji và ví dụ. Tự trả lời nghĩa trước khi mở bản dịch tiếng Việt.",
+              "payload": {
+                "entries": [
+                  {
+                    "example": {
+                      "translationVietnamese": "Mỗi ngày tôi học tiếng Nhật。",
+                      "value": "毎日日本語を勉強します。"
+                    },
+                    "meaningVietnamese": "mỗi ngày",
+                    "reading": "まいにち",
+                    "term": "毎日"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi thức dậy lúc sáu giờ。",
+                      "value": "六時に起きます。"
+                    },
+                    "meaningVietnamese": "thức dậy",
+                    "reading": "おきます",
+                    "term": "起きます"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi ngủ lúc mười một giờ。",
+                      "value": "十一時に寝ます。"
+                    },
+                    "meaningVietnamese": "ngủ",
+                    "reading": "ねます",
+                    "term": "寝ます"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi ăn sáng。",
+                      "value": "朝ご飯を食べます。"
+                    },
+                    "meaningVietnamese": "ăn",
+                    "reading": "たべます",
+                    "term": "食べます"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi uống nước。",
+                      "value": "水を飲みます。"
+                    },
+                    "meaningVietnamese": "uống",
+                    "reading": "のみます",
+                    "term": "飲みます"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi đi tới trường。",
+                      "value": "学校へ行きます。"
+                    },
+                    "meaningVietnamese": "đi",
+                    "reading": "いきます",
+                    "term": "行きます"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Bạn tôi đến。",
+                      "value": "友達が来ます。"
+                    },
+                    "meaningVietnamese": "đến",
+                    "reading": "きます",
+                    "term": "来ます"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Buổi tối tôi xem phim。",
+                      "value": "夜に映画を見ます。"
+                    },
+                    "meaningVietnamese": "xem/nhìn",
+                    "reading": "みます",
+                    "term": "見ます"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi học ở thư viện。",
+                      "value": "図書館で勉強します。"
+                    },
+                    "meaningVietnamese": "học",
+                    "reading": "べんきょうします",
+                    "term": "勉強します"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Buổi sáng tôi uống cà phê。",
+                      "value": "朝はコーヒーを飲みます。"
+                    },
+                    "meaningVietnamese": "buổi sáng",
+                    "reading": "あさ",
+                    "term": "朝"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Trưa tôi ăn cơm。",
+                      "value": "昼にご飯を食べます。"
+                    },
+                    "meaningVietnamese": "buổi trưa",
+                    "reading": "ひる",
+                    "term": "昼"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Buổi tối tôi ở nhà。",
+                      "value": "夜は家にいます。"
+                    },
+                    "meaningVietnamese": "buổi tối/đêm",
+                    "reading": "よる",
+                    "term": "夜"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Buổi tối tôi về nhà。",
+                      "value": "夜に家へ帰ります。"
+                    },
+                    "meaningVietnamese": "trở về nhà",
+                    "reading": "かえります",
+                    "term": "帰ります"
+                  }
+                ]
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Từ vựng chủ đề"
+            },
+            {
+              "activityId": "ja-n5-l05-01",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l05-01.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: sáu giờ.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "sáu giờ"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "bảy giờ"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "tám giờ"
+                      }
+                    ],
+                    "prompt": "Người B dậy lúc mấy giờ?",
+                    "questionId": "ja-n5-l05-01-q1"
+                  }
+                ],
+                "transcript": "A: 毎日何時に起きますか。B: 六時に起きます。",
+                "transcriptVietnamese": "A: Mỗi ngày bạn dậy lúc mấy giờ? B: Tôi dậy lúc sáu giờ."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 05: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l05-02",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l05-02.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: học tiếng Nhật.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "học tiếng Nhật"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "xem phim"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "đi làm"
+                      }
+                    ],
+                    "prompt": "Buổi tối người B làm gì?",
+                    "questionId": "ja-n5-l05-02-q1"
+                  }
+                ],
+                "transcript": "A: 夜は何をしますか。B: 日本語を勉強します。",
+                "transcriptVietnamese": "A: Buổi tối bạn làm gì? B: Tôi học tiếng Nhật."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 05: hội thoại ngắn"
+            }
+          ],
+          "estimatedMinutes": 28,
+          "lessonId": "ja-n5-l05-daily-routine",
+          "sequence": 5,
+          "summaryVietnamese": "Mô tả giờ giấc sinh hoạt hằng ngày bằng thể lịch sự.",
+          "titleVietnamese": "Sinh hoạt mỗi ngày"
+        },
+        {
+          "activities": [
+            {
+              "activityId": "ja-n5-l06-vocabulary",
+              "activityType": "vocabulary",
+              "estimatedMinutes": 12,
+              "instructionsVietnamese": "Đọc từ, kana/kanji và ví dụ. Tự trả lời nghĩa trước khi mở bản dịch tiếng Việt.",
+              "payload": {
+                "entries": [
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi uống nước lạnh。",
+                      "value": "冷たい水を飲みます。"
+                    },
+                    "meaningVietnamese": "nước",
+                    "reading": "みず",
+                    "term": "水"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Cho tôi một trà。",
+                      "value": "お茶を一つください。"
+                    },
+                    "meaningVietnamese": "trà",
+                    "reading": "おちゃ",
+                    "term": "お茶"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Buổi sáng tôi uống cà phê。",
+                      "value": "朝はコーヒーです。"
+                    },
+                    "meaningVietnamese": "cà phê",
+                    "reading": "コーヒー",
+                    "term": "コーヒー"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Chúng ta hãy ăn cơm。",
+                      "value": "ご飯を食べましょう。"
+                    },
+                    "meaningVietnamese": "cơm/bữa ăn",
+                    "reading": "ごはん",
+                    "term": "ご飯"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi mua bánh mì và sữa。",
+                      "value": "パンと牛乳を買います。"
+                    },
+                    "meaningVietnamese": "bánh mì",
+                    "reading": "パン",
+                    "term": "パン"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi thích cá。",
+                      "value": "魚が好きです。"
+                    },
+                    "meaningVietnamese": "cá",
+                    "reading": "さかな",
+                    "term": "魚"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Hôm nay tôi ăn thịt。",
+                      "value": "今日は肉を食べます。"
+                    },
+                    "meaningVietnamese": "thịt",
+                    "reading": "にく",
+                    "term": "肉"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Rau tốt cho cơ thể。",
+                      "value": "野菜は体にいいです。"
+                    },
+                    "meaningVietnamese": "rau",
+                    "reading": "やさい",
+                    "term": "野菜"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Cho tôi hoa quả。",
+                      "value": "果物をください。"
+                    },
+                    "meaningVietnamese": "hoa quả",
+                    "reading": "くだもの",
+                    "term": "果物"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Hãy cho tôi thực đơn。",
+                      "value": "メニューをください。"
+                    },
+                    "meaningVietnamese": "hãy cho tôi",
+                    "reading": "ください",
+                    "term": "ください"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Làm ơn cho tôi nước。",
+                      "value": "水をお願いします。"
+                    },
+                    "meaningVietnamese": "làm ơn/xin nhờ",
+                    "reading": "おねがいします",
+                    "term": "お願いします"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Cái này bao nhiêu tiền?",
+                      "value": "これはいくらですか。"
+                    },
+                    "meaningVietnamese": "bao nhiêu tiền",
+                    "reading": "いくら",
+                    "term": "いくら"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Bánh mì này ngon。",
+                      "value": "このパンはおいしいです。"
+                    },
+                    "meaningVietnamese": "ngon",
+                    "reading": "おいしい",
+                    "term": "おいしい"
+                  }
+                ]
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Từ vựng chủ đề"
+            },
+            {
+              "activityId": "ja-n5-l06-01",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l06-01.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: nước.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "nước"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "trà"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "cà phê"
+                      }
+                    ],
+                    "prompt": "Người A gọi gì?",
+                    "questionId": "ja-n5-l06-01-q1"
+                  }
+                ],
+                "transcript": "A: お水をください。B: はい、どうぞ。",
+                "transcriptVietnamese": "A: Cho tôi nước. B: Vâng, xin mời."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 06: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l06-02",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l06-02.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: rất ngon.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "rất ngon"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "rất đắt"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "rất cay"
+                      }
+                    ],
+                    "prompt": "Người B nhận xét món cá thế nào?",
+                    "questionId": "ja-n5-l06-02-q1"
+                  }
+                ],
+                "transcript": "A: この魚はおいしいですか。B: はい、とてもおいしいです。",
+                "transcriptVietnamese": "A: Cá này ngon không? B: Vâng, rất ngon."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 06: hội thoại ngắn"
+            }
+          ],
+          "estimatedMinutes": 28,
+          "lessonId": "ja-n5-l06-food-and-cafe",
+          "sequence": 6,
+          "summaryVietnamese": "Gọi món, hỏi giá và nói nhận xét rất cơ bản.",
+          "titleVietnamese": "Đồ ăn và quán cà phê"
+        }
+      ],
+      "sequence": 1,
+      "titleVietnamese": "Nền tảng giao tiếp hằng ngày",
+      "unitId": "ja-n5-unit-1"
+    },
+    {
+      "lessons": [
+        {
+          "activities": [
+            {
+              "activityId": "ja-n5-l07-vocabulary",
+              "activityType": "vocabulary",
+              "estimatedMinutes": 12,
+              "instructionsVietnamese": "Đọc từ, kana/kanji và ví dụ. Tự trả lời nghĩa trước khi mở bản dịch tiếng Việt.",
+              "payload": {
+                "entries": [
+                  {
+                    "example": {
+                      "translationVietnamese": "Nhà tôi ở gần ga。",
+                      "value": "私の家は駅の近くです。"
+                    },
+                    "meaningVietnamese": "nhà",
+                    "reading": "いえ",
+                    "term": "家"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Phòng này sáng。",
+                      "value": "この部屋は明るいです。"
+                    },
+                    "meaningVietnamese": "phòng",
+                    "reading": "へや",
+                    "term": "部屋"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Bố tôi là nhân viên công ty。",
+                      "value": "父は会社員です。"
+                    },
+                    "meaningVietnamese": "bố (nói về bố mình)",
+                    "reading": "ちち",
+                    "term": "父"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Mẹ tôi thích nấu ăn。",
+                      "value": "母は料理が好きです。"
+                    },
+                    "meaningVietnamese": "mẹ (nói về mẹ mình)",
+                    "reading": "はは",
+                    "term": "母"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Anh trai tôi là sinh viên đại học。",
+                      "value": "兄は大学生です。"
+                    },
+                    "meaningVietnamese": "anh trai (nói về anh mình)",
+                    "reading": "あに",
+                    "term": "兄"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Chị gái tôi sống ở Tokyo。",
+                      "value": "姉は東京に住んでいます。"
+                    },
+                    "meaningVietnamese": "chị gái (nói về chị mình)",
+                    "reading": "あね",
+                    "term": "姉"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Em trai tôi mười tuổi。",
+                      "value": "弟は十歳です。"
+                    },
+                    "meaningVietnamese": "em trai",
+                    "reading": "おとうと",
+                    "term": "弟"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Em gái tôi là học sinh trung học。",
+                      "value": "妹は高校生です。"
+                    },
+                    "meaningVietnamese": "em gái",
+                    "reading": "いもうと",
+                    "term": "妹"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Gia đình có năm người。",
+                      "value": "家族は五人です。"
+                    },
+                    "meaningVietnamese": "gia đình",
+                    "reading": "かぞく",
+                    "term": "家族"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi sống ở Hà Nội。",
+                      "value": "ハノイに住んでいます。"
+                    },
+                    "meaningVietnamese": "sống/cư trú",
+                    "reading": "すみます",
+                    "term": "住みます"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Có mèo trong phòng。",
+                      "value": "部屋に猫がいます。"
+                    },
+                    "meaningVietnamese": "có/ở (người, động vật)",
+                    "reading": "います",
+                    "term": "います"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Gia đình bạn có mấy người?",
+                      "value": "家族は何人ですか。"
+                    },
+                    "meaningVietnamese": "mấy người",
+                    "reading": "なんにん",
+                    "term": "何人"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Phòng tôi lớn。",
+                      "value": "私の部屋は大きいです。"
+                    },
+                    "meaningVietnamese": "to/lớn",
+                    "reading": "おおきい",
+                    "term": "大きい"
+                  }
+                ]
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Từ vựng chủ đề"
+            },
+            {
+              "activityId": "ja-n5-l07-01",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l07-01.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: năm người.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "năm người"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "ba người"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "bảy người"
+                      }
+                    ],
+                    "prompt": "Gia đình người B có mấy người?",
+                    "questionId": "ja-n5-l07-01-q1"
+                  }
+                ],
+                "transcript": "A: 家族は何人ですか。B: 五人です。",
+                "transcriptVietnamese": "A: Gia đình có mấy người? B: Năm người."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 07: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l07-02",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l07-02.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: Tokyo.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "Tokyo"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "Hà Nội"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "Osaka"
+                      }
+                    ],
+                    "prompt": "Chị gái người B sống ở đâu?",
+                    "questionId": "ja-n5-l07-02-q1"
+                  }
+                ],
+                "transcript": "A: お姉さんはどこに住んでいますか。B: 東京に住んでいます。",
+                "transcriptVietnamese": "A: Chị gái bạn sống ở đâu? B: Sống ở Tokyo."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 07: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l07-03",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l07-03.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: nhỏ.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "nhỏ"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "lớn"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "rất mới"
+                      }
+                    ],
+                    "prompt": "Phòng của người B thế nào?",
+                    "questionId": "ja-n5-l07-03-q1"
+                  }
+                ],
+                "transcript": "A: あなたの部屋は大きいですか。B: いいえ、小さいです。",
+                "transcriptVietnamese": "A: Phòng bạn lớn không? B: Không, nhỏ."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 07: hội thoại ngắn"
+            }
+          ],
+          "estimatedMinutes": 28,
+          "lessonId": "ja-n5-l07-home-and-family",
+          "sequence": 7,
+          "summaryVietnamese": "Giới thiệu gia đình, căn phòng và nơi ở.",
+          "titleVietnamese": "Nhà và gia đình"
+        },
+        {
+          "activities": [
+            {
+              "activityId": "ja-n5-l08-vocabulary",
+              "activityType": "vocabulary",
+              "estimatedMinutes": 12,
+              "instructionsVietnamese": "Đọc từ, kana/kanji và ví dụ. Tự trả lời nghĩa trước khi mở bản dịch tiếng Việt.",
+              "payload": {
+                "entries": [
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi đi công ty bằng tàu điện。",
+                      "value": "電車で会社へ行きます。"
+                    },
+                    "meaningVietnamese": "tàu điện",
+                    "reading": "でんしゃ",
+                    "term": "電車"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi đi xe buýt đến ga。",
+                      "value": "バスで駅まで行きます。"
+                    },
+                    "meaningVietnamese": "xe buýt",
+                    "reading": "バス",
+                    "term": "バス"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Bố tôi lái ô tô。",
+                      "value": "父は車を運転します。"
+                    },
+                    "meaningVietnamese": "ô tô",
+                    "reading": "くるま",
+                    "term": "車"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi đi học bằng xe đạp。",
+                      "value": "自転車で学校へ行きます。"
+                    },
+                    "meaningVietnamese": "xe đạp",
+                    "reading": "じてんしゃ",
+                    "term": "自転車"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi đi bộ từ ga。",
+                      "value": "駅から歩きます。"
+                    },
+                    "meaningVietnamese": "đi bộ",
+                    "reading": "あるきます",
+                    "term": "歩きます"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi lên xe buýt số bảy。",
+                      "value": "七番のバスに乗ります。"
+                    },
+                    "meaningVietnamese": "lên/đi bằng phương tiện",
+                    "reading": "のります",
+                    "term": "乗ります"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi xuống ở ga tiếp theo。",
+                      "value": "次の駅で降ります。"
+                    },
+                    "meaningVietnamese": "xuống phương tiện",
+                    "reading": "おります",
+                    "term": "降ります"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Hãy chỉ tôi cách đến ga。",
+                      "value": "駅への行き方を教えてください。"
+                    },
+                    "meaningVietnamese": "cách đi",
+                    "reading": "いきかた",
+                    "term": "行き方"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Trường gần nhà。",
+                      "value": "学校は家から近いです。"
+                    },
+                    "meaningVietnamese": "gần",
+                    "reading": "ちかい",
+                    "term": "近い"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Sân bay xa chỗ này。",
+                      "value": "空港はここから遠いです。"
+                    },
+                    "meaningVietnamese": "xa",
+                    "reading": "とおい",
+                    "term": "遠い"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi lên chuyến tàu tiếp theo。",
+                      "value": "次の電車に乗ります。"
+                    },
+                    "meaningVietnamese": "tiếp theo",
+                    "reading": "つぎ",
+                    "term": "次"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Là xe buýt số mấy?",
+                      "value": "何番のバスですか。"
+                    },
+                    "meaningVietnamese": "số mấy",
+                    "reading": "なんばん",
+                    "term": "何番"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi mua vé ở ga。",
+                      "value": "駅で切符を買います。"
+                    },
+                    "meaningVietnamese": "vé",
+                    "reading": "きっぷ",
+                    "term": "切符"
+                  }
+                ]
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Từ vựng chủ đề"
+            },
+            {
+              "activityId": "ja-n5-l08-01",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l08-01.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: số bảy.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "số bảy"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "số năm"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "số chín"
+                      }
+                    ],
+                    "prompt": "Xe buýt đến ga là số mấy?",
+                    "questionId": "ja-n5-l08-01-q1"
+                  }
+                ],
+                "transcript": "A: 駅まで何番のバスですか。B: 七番です。",
+                "transcriptVietnamese": "A: Đến ga đi xe buýt số mấy? B: Số bảy."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 08: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l08-02",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l08-02.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: ga tiếp theo.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "ga tiếp theo"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "ga này"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "sân bay"
+                      }
+                    ],
+                    "prompt": "Người B xuống ở đâu?",
+                    "questionId": "ja-n5-l08-02-q1"
+                  }
+                ],
+                "transcript": "A: 次の駅で降りますか。B: はい、降ります。",
+                "transcriptVietnamese": "A: Bạn xuống ở ga tiếp theo chứ? B: Vâng, tôi xuống."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 08: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l08-03",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l08-03.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: mười phút đi bộ.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "mười phút đi bộ"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "một giờ"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "ba mươi phút"
+                      }
+                    ],
+                    "prompt": "Từ nhà đến trường mất bao lâu?",
+                    "questionId": "ja-n5-l08-03-q1"
+                  }
+                ],
+                "transcript": "A: 学校は家から近いですか。B: はい、歩いて十分です。",
+                "transcriptVietnamese": "A: Trường gần nhà không? B: Vâng, đi bộ mười phút."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 08: hội thoại ngắn"
+            }
+          ],
+          "estimatedMinutes": 28,
+          "lessonId": "ja-n5-l08-transport-and-routes",
+          "sequence": 8,
+          "summaryVietnamese": "Đi lại bằng phương tiện công cộng và hỏi cách đi.",
+          "titleVietnamese": "Di chuyển và lộ trình"
+        },
+        {
+          "activities": [
+            {
+              "activityId": "ja-n5-l09-vocabulary",
+              "activityType": "vocabulary",
+              "estimatedMinutes": 12,
+              "instructionsVietnamese": "Đọc từ, kana/kanji và ví dụ. Tự trả lời nghĩa trước khi mở bản dịch tiếng Việt.",
+              "payload": {
+                "entries": [
+                  {
+                    "example": {
+                      "translationVietnamese": "Cửa hàng này mở lúc chín giờ。",
+                      "value": "この店は九時に開きます。"
+                    },
+                    "meaningVietnamese": "cửa hàng",
+                    "reading": "みせ",
+                    "term": "店"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi mua hoa quả ở siêu thị。",
+                      "value": "スーパーで果物を買います。"
+                    },
+                    "meaningVietnamese": "mua",
+                    "reading": "かいます",
+                    "term": "買います"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Cửa hàng này bán sách。",
+                      "value": "この店は本を売っています。"
+                    },
+                    "meaningVietnamese": "bán",
+                    "reading": "うります",
+                    "term": "売ります"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Cái túi này đắt。",
+                      "value": "このかばんは高いです。"
+                    },
+                    "meaningVietnamese": "đắt/cao",
+                    "reading": "たかい",
+                    "term": "高い"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Cửa hàng kia rẻ。",
+                      "value": "あの店は安いです。"
+                    },
+                    "meaningVietnamese": "rẻ",
+                    "reading": "やすい",
+                    "term": "安い"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Bạn thích màu gì?",
+                      "value": "好きな色は何ですか。"
+                    },
+                    "meaningVietnamese": "màu sắc",
+                    "reading": "いろ",
+                    "term": "色"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Cho tôi cây bút đỏ。",
+                      "value": "赤いペンをください。"
+                    },
+                    "meaningVietnamese": "màu đỏ",
+                    "reading": "あかい",
+                    "term": "赤い"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi thích túi màu xanh dương。",
+                      "value": "青いかばんが好きです。"
+                    },
+                    "meaningVietnamese": "màu xanh dương",
+                    "reading": "あおい",
+                    "term": "青い"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Áo này cỡ M。",
+                      "value": "このシャツのサイズはMです。"
+                    },
+                    "meaningVietnamese": "kích cỡ",
+                    "reading": "サイズ",
+                    "term": "サイズ"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Phòng này nhỏ。",
+                      "value": "この部屋は小さいです。"
+                    },
+                    "meaningVietnamese": "nhỏ",
+                    "reading": "ちいさい",
+                    "term": "小さい"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Hơi đắt nhỉ。",
+                      "value": "ちょっと高いですね。"
+                    },
+                    "meaningVietnamese": "một chút/khá",
+                    "reading": "ちょっと",
+                    "term": "ちょっと"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi mua áo trắng。",
+                      "value": "白いシャツを買います。"
+                    },
+                    "meaningVietnamese": "màu trắng",
+                    "reading": "しろい",
+                    "term": "白い"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Có giày màu đen。",
+                      "value": "黒い靴があります。"
+                    },
+                    "meaningVietnamese": "màu đen",
+                    "reading": "くろい",
+                    "term": "黒い"
+                  }
+                ]
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Từ vựng chủ đề"
+            },
+            {
+              "activityId": "ja-n5-l09-01",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l09-01.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: 1.000 yên.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "1.000 yên"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "500 yên"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "2.000 yên"
+                      }
+                    ],
+                    "prompt": "Áo giá bao nhiêu?",
+                    "questionId": "ja-n5-l09-01-q1"
+                  }
+                ],
+                "transcript": "A: このシャツはいくらですか。B: 千円です。",
+                "transcriptVietnamese": "A: Áo này bao nhiêu? B: 1.000 yên."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 09: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l09-02",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l09-02.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: màu đỏ.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "màu đỏ"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "màu xanh"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "màu đen"
+                      }
+                    ],
+                    "prompt": "Cửa hàng có túi màu gì?",
+                    "questionId": "ja-n5-l09-02-q1"
+                  }
+                ],
+                "transcript": "A: 赤いかばんがありますか。B: はい、あります。",
+                "transcriptVietnamese": "A: Có túi màu đỏ không? B: Vâng, có."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 09: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l09-03",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l09-03.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: rẻ.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "rẻ"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "đắt"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "đóng cửa"
+                      }
+                    ],
+                    "prompt": "Cửa hàng kia được nhận xét thế nào?",
+                    "questionId": "ja-n5-l09-03-q1"
+                  }
+                ],
+                "transcript": "A: この靴はちょっと高いですね。B: あの店は安いですよ。",
+                "transcriptVietnamese": "A: Đôi giày này hơi đắt. B: Cửa hàng kia rẻ đó."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 09: hội thoại ngắn"
+            }
+          ],
+          "estimatedMinutes": 28,
+          "lessonId": "ja-n5-l09-shopping-basics",
+          "sequence": 9,
+          "summaryVietnamese": "Hỏi giá, màu sắc, kích cỡ và so sánh rất cơ bản.",
+          "titleVietnamese": "Mua sắm cơ bản"
+        },
+        {
+          "activities": [
+            {
+              "activityId": "ja-n5-l10-vocabulary",
+              "activityType": "vocabulary",
+              "estimatedMinutes": 12,
+              "instructionsVietnamese": "Đọc từ, kana/kanji và ví dụ. Tự trả lời nghĩa trước khi mở bản dịch tiếng Việt.",
+              "payload": {
+                "entries": [
+                  {
+                    "example": {
+                      "translationVietnamese": "Thứ bảy tôi gặp bạn。",
+                      "value": "土曜日に友達に会います。"
+                    },
+                    "meaningVietnamese": "gặp",
+                    "reading": "あいます",
+                    "term": "会います"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Cùng ăn trưa nhé?",
+                      "value": "一緒に昼ご飯を食べませんか。"
+                    },
+                    "meaningVietnamese": "cùng nhau",
+                    "reading": "いっしょに",
+                    "term": "一緒に"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Khi nào bạn đi Nhật?",
+                      "value": "いつ日本へ行きますか。"
+                    },
+                    "meaningVietnamese": "khi nào",
+                    "reading": "いつ",
+                    "term": "いつ"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Ngày mai là Chủ nhật。",
+                      "value": "明日は日曜日です。"
+                    },
+                    "meaningVietnamese": "ngày mai",
+                    "reading": "あした",
+                    "term": "明日"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Hôm nay nóng。",
+                      "value": "今日は暑いです。"
+                    },
+                    "meaningVietnamese": "hôm nay",
+                    "reading": "きょう",
+                    "term": "今日"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Thứ bảy là ngày nghỉ。",
+                      "value": "土曜日は休みです。"
+                    },
+                    "meaningVietnamese": "thứ bảy",
+                    "reading": "どようび",
+                    "term": "土曜日"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Chủ nhật tôi ra ngoài cùng gia đình。",
+                      "value": "日曜日に家族と出かけます。"
+                    },
+                    "meaningVietnamese": "chủ nhật",
+                    "reading": "にちようび",
+                    "term": "日曜日"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Đi xem phim cùng không?",
+                      "value": "映画を見に行きませんか。"
+                    },
+                    "meaningVietnamese": "đi cùng không?",
+                    "reading": "いきませんか",
+                    "term": "行きませんか"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Hay đấy. Chúng ta đi nhé。",
+                      "value": "いいですね。行きましょう。"
+                    },
+                    "meaningVietnamese": "hay đấy/được đấy",
+                    "reading": "いいですね",
+                    "term": "いいですね"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi có lịch ngày mai。",
+                      "value": "明日の予定があります。"
+                    },
+                    "meaningVietnamese": "dự định/lịch",
+                    "reading": "よてい",
+                    "term": "予定"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Bạn có thời gian không?",
+                      "value": "時間がありますか。"
+                    },
+                    "meaningVietnamese": "thời gian",
+                    "reading": "じかん",
+                    "term": "時間"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Địa điểm gặp là đâu?",
+                      "value": "待ち合わせの場所はどこですか。"
+                    },
+                    "meaningVietnamese": "địa điểm",
+                    "reading": "ばしょ",
+                    "term": "場所"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi sẽ gọi sau。",
+                      "value": "後で電話します。"
+                    },
+                    "meaningVietnamese": "sau đó",
+                    "reading": "あとで",
+                    "term": "後で"
+                  }
+                ]
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Từ vựng chủ đề"
+            },
+            {
+              "activityId": "ja-n5-l10-01",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l10-01.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: xem phim.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "xem phim"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "đi mua sắm"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "học ở nhà"
+                      }
+                    ],
+                    "prompt": "Hai người dự định làm gì?",
+                    "questionId": "ja-n5-l10-01-q1"
+                  }
+                ],
+                "transcript": "A: 土曜日に映画を見に行きませんか。B: いいですね。",
+                "transcriptVietnamese": "A: Thứ bảy đi xem phim không? B: Hay đấy."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 10: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l10-02",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l10-02.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: ba giờ.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "ba giờ"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "một giờ"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "năm giờ"
+                      }
+                    ],
+                    "prompt": "Họ gặp lúc mấy giờ?",
+                    "questionId": "ja-n5-l10-02-q1"
+                  }
+                ],
+                "transcript": "A: 何時に会いますか。B: 三時に駅で会いましょう。",
+                "transcriptVietnamese": "A: Mấy giờ gặp? B: Hãy gặp ở ga lúc ba giờ."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 10: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l10-03",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l10-03.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: có lịch hẹn.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "có lịch hẹn"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "không thích ăn"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "không có tiền"
+                      }
+                    ],
+                    "prompt": "Vì sao người B từ chối?",
+                    "questionId": "ja-n5-l10-03-q1"
+                  }
+                ],
+                "transcript": "A: 明日、一緒に食べませんか。B: すみません、予定があります。",
+                "transcriptVietnamese": "A: Mai cùng ăn không? B: Xin lỗi, tôi có lịch rồi."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 10: hội thoại ngắn"
+            }
+          ],
+          "estimatedMinutes": 28,
+          "lessonId": "ja-n5-l10-invitations-and-plans",
+          "sequence": 10,
+          "summaryVietnamese": "Mời bạn, hẹn thời gian/địa điểm và từ chối lịch sự.",
+          "titleVietnamese": "Lời mời và kế hoạch"
+        },
+        {
+          "activities": [
+            {
+              "activityId": "ja-n5-l11-vocabulary",
+              "activityType": "vocabulary",
+              "estimatedMinutes": 12,
+              "instructionsVietnamese": "Đọc từ, kana/kanji và ví dụ. Tự trả lời nghĩa trước khi mở bản dịch tiếng Việt.",
+              "payload": {
+                "entries": [
+                  {
+                    "example": {
+                      "translationVietnamese": "Thời tiết hôm nay đẹp。",
+                      "value": "今日の天気はいいです。"
+                    },
+                    "meaningVietnamese": "thời tiết",
+                    "reading": "てんき",
+                    "term": "天気"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Ngày mai trời nắng。",
+                      "value": "明日は晴れです。"
+                    },
+                    "meaningVietnamese": "trời nắng/quang",
+                    "reading": "はれ",
+                    "term": "晴れ"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Chiều có mưa。",
+                      "value": "午後は雨です。"
+                    },
+                    "meaningVietnamese": "mưa",
+                    "reading": "あめ",
+                    "term": "雨"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Mùa hè nóng。",
+                      "value": "夏は暑いです。"
+                    },
+                    "meaningVietnamese": "nóng (thời tiết)",
+                    "reading": "あつい",
+                    "term": "暑い"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Hôm nay lạnh。",
+                      "value": "今日は寒いです。"
+                    },
+                    "meaningVietnamese": "lạnh (thời tiết)",
+                    "reading": "さむい",
+                    "term": "寒い"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Gió mạnh。",
+                      "value": "風が強いです。"
+                    },
+                    "meaningVietnamese": "gió",
+                    "reading": "かぜ",
+                    "term": "風"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Vì mưa nên tôi mang ô。",
+                      "value": "雨ですから、傘を持ちます。"
+                    },
+                    "meaningVietnamese": "ô",
+                    "reading": "かさ",
+                    "term": "傘"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Cơ thể bạn ổn chứ?",
+                      "value": "体は大丈夫ですか。"
+                    },
+                    "meaningVietnamese": "cơ thể",
+                    "reading": "からだ",
+                    "term": "体"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi đau đầu。",
+                      "value": "頭が痛いです。"
+                    },
+                    "meaningVietnamese": "đầu",
+                    "reading": "あたま",
+                    "term": "頭"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Chân tôi đau。",
+                      "value": "足が痛いです。"
+                    },
+                    "meaningVietnamese": "đau",
+                    "reading": "いたい",
+                    "term": "痛い"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi uống thuốc。",
+                      "value": "薬を飲みます。"
+                    },
+                    "meaningVietnamese": "thuốc",
+                    "reading": "くすり",
+                    "term": "薬"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Hôm nay tôi nghỉ làm。",
+                      "value": "今日は会社を休みます。"
+                    },
+                    "meaningVietnamese": "nghỉ",
+                    "reading": "やすみます",
+                    "term": "休みます"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Vâng, tôi ổn。",
+                      "value": "はい、大丈夫です。"
+                    },
+                    "meaningVietnamese": "ổn/không sao",
+                    "reading": "だいじょうぶ",
+                    "term": "大丈夫"
+                  }
+                ]
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Từ vựng chủ đề"
+            },
+            {
+              "activityId": "ja-n5-l11-01",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l11-01.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: nắng.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "nắng"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "mưa"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "lạnh"
+                      }
+                    ],
+                    "prompt": "Ngày mai thời tiết thế nào?",
+                    "questionId": "ja-n5-l11-01-q1"
+                  }
+                ],
+                "transcript": "A: 明日の天気はどうですか。B: 晴れです。",
+                "transcriptVietnamese": "A: Thời tiết ngày mai thế nào? B: Trời nắng."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 11: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l11-02",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l11-02.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: ô.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "ô"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "áo khoác"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "sách"
+                      }
+                    ],
+                    "prompt": "Người B khuyên mang gì?",
+                    "questionId": "ja-n5-l11-02-q1"
+                  }
+                ],
+                "transcript": "A: 午後は雨ですか。B: はい、傘を持ってください。",
+                "transcriptVietnamese": "A: Chiều có mưa không? B: Có, hãy mang ô."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 11: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l11-03",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l11-03.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: uống thuốc và nghỉ.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "uống thuốc và nghỉ"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "đi mua sắm"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "đi xe buýt"
+                      }
+                    ],
+                    "prompt": "Người B khuyên làm gì?",
+                    "questionId": "ja-n5-l11-03-q1"
+                  }
+                ],
+                "transcript": "A: 頭が痛いです。B: 薬を飲んで、休んでください。",
+                "transcriptVietnamese": "A: Tôi đau đầu. B: Hãy uống thuốc và nghỉ ngơi."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 11: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l11-04",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l11-04.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: ổn rồi.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "ổn rồi"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "vẫn đau"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "đang mưa"
+                      }
+                    ],
+                    "prompt": "Tình trạng người B thế nào?",
+                    "questionId": "ja-n5-l11-04-q1"
+                  }
+                ],
+                "transcript": "A: 体は大丈夫ですか。B: はい、もう大丈夫です。",
+                "transcriptVietnamese": "A: Cơ thể bạn ổn chứ? B: Vâng, giờ tôi ổn rồi."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 11: hội thoại ngắn"
+            }
+          ],
+          "estimatedMinutes": 28,
+          "lessonId": "ja-n5-l11-weather-and-health",
+          "sequence": 11,
+          "summaryVietnamese": "Nói về thời tiết, cảm giác đau nhẹ và nghỉ ngơi.",
+          "titleVietnamese": "Thời tiết và sức khỏe"
+        },
+        {
+          "activities": [
+            {
+              "activityId": "ja-n5-l12-vocabulary",
+              "activityType": "vocabulary",
+              "estimatedMinutes": 12,
+              "instructionsVietnamese": "Đọc từ, kana/kanji và ví dụ. Tự trả lời nghĩa trước khi mở bản dịch tiếng Việt.",
+              "payload": {
+                "entries": [
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi ôn tập ở nhà。",
+                      "value": "家で復習します。"
+                    },
+                    "meaningVietnamese": "ôn tập",
+                    "reading": "ふくしゅう",
+                    "term": "復習"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi có câu hỏi。",
+                      "value": "質問があります。"
+                    },
+                    "meaningVietnamese": "câu hỏi",
+                    "reading": "しつもん",
+                    "term": "質問"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Hãy viết câu trả lời。",
+                      "value": "答えを書いてください。"
+                    },
+                    "meaningVietnamese": "câu trả lời",
+                    "reading": "こたえ",
+                    "term": "答え"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Hãy nói lại một lần nữa。",
+                      "value": "もう一度言ってください。"
+                    },
+                    "meaningVietnamese": "một lần nữa",
+                    "reading": "もういちど",
+                    "term": "もう一度"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Hãy nói chậm。",
+                      "value": "ゆっくり話してください。"
+                    },
+                    "meaningVietnamese": "chậm/chậm rãi",
+                    "reading": "ゆっくり",
+                    "term": "ゆっくり"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi hiểu một ít tiếng Nhật。",
+                      "value": "日本語が少し分かります。"
+                    },
+                    "meaningVietnamese": "hiểu",
+                    "reading": "わかります",
+                    "term": "分かります"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi không hiểu từ này。",
+                      "value": "この言葉は分かりません。"
+                    },
+                    "meaningVietnamese": "không hiểu",
+                    "reading": "わかりません",
+                    "term": "分かりません"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi luyện tập mỗi ngày。",
+                      "value": "毎日練習します。"
+                    },
+                    "meaningVietnamese": "luyện tập",
+                    "reading": "れんしゅう",
+                    "term": "練習"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Bài tập về nhà là ba trang。",
+                      "value": "宿題は三ページです。"
+                    },
+                    "meaningVietnamese": "bài tập về nhà",
+                    "reading": "しゅくだい",
+                    "term": "宿題"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi hỏi giáo viên。",
+                      "value": "先生に質問します。"
+                    },
+                    "meaningVietnamese": "giáo viên/thầy cô",
+                    "reading": "せんせい",
+                    "term": "先生"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi nói tiếng Nhật với bạn。",
+                      "value": "友達と日本語を話します。"
+                    },
+                    "meaningVietnamese": "bạn bè",
+                    "reading": "ともだち",
+                    "term": "友達"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi đọc đoạn văn này。",
+                      "value": "この文章を読みます。"
+                    },
+                    "meaningVietnamese": "đọc",
+                    "reading": "よみます",
+                    "term": "読みます"
+                  },
+                  {
+                    "example": {
+                      "translationVietnamese": "Tôi viết vào vở。",
+                      "value": "ノートに書きます。"
+                    },
+                    "meaningVietnamese": "viết",
+                    "reading": "かきます",
+                    "term": "書きます"
+                  }
+                ]
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Từ vựng chủ đề"
+            },
+            {
+              "activityId": "ja-n5-l12-01",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l12-01.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: câu hỏi.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "câu hỏi"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "vé tàu"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "cái ô"
+                      }
+                    ],
+                    "prompt": "Người A có gì?",
+                    "questionId": "ja-n5-l12-01-q1"
+                  }
+                ],
+                "transcript": "A: 質問があります。B: はい、どうぞ。",
+                "transcriptVietnamese": "A: Tôi có câu hỏi. B: Vâng, mời bạn."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 12: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l12-02",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l12-02.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: ba trang.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "ba trang"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "một trang"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "mười trang"
+                      }
+                    ],
+                    "prompt": "Bài tập về nhà dài bao nhiêu?",
+                    "questionId": "ja-n5-l12-02-q1"
+                  }
+                ],
+                "transcript": "A: 宿題は何ページですか。B: 三ページです。",
+                "transcriptVietnamese": "A: Bài tập về nhà mấy trang? B: Ba trang."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 12: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l12-03",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l12-03.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: nói lại chậm.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "nói lại chậm"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "rời đi ngay"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "mua sách"
+                      }
+                    ],
+                    "prompt": "Người B sẽ làm gì?",
+                    "questionId": "ja-n5-l12-03-q1"
+                  }
+                ],
+                "transcript": "A: すみません、分かりません。B: もう一度ゆっくり言います。",
+                "transcriptVietnamese": "A: Xin lỗi, tôi không hiểu. B: Tôi sẽ nói lại chậm một lần nữa."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 12: hội thoại ngắn"
+            },
+            {
+              "activityId": "ja-n5-l12-04",
+              "activityType": "listening",
+              "estimatedMinutes": 3,
+              "instructionsVietnamese": "Bản nháp biên tập: kiểm transcript trước. Khi bản thu được xuất bản, nghe tối đa hai lần rồi chọn đáp án.",
+              "payload": {
+                "audioAssetPath": "media/ja/n5/ja-n5-l12-04.mp3",
+                "audioProductionStatus": "planned",
+                "questions": [
+                  {
+                    "explanationVietnamese": "Đáp án đúng dựa trực tiếp trên hội thoại: từ vựng.",
+                    "options": [
+                      {
+                        "isCorrect": true,
+                        "optionId": "option-a",
+                        "text": "từ vựng"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-b",
+                        "text": "thời tiết"
+                      },
+                      {
+                        "isCorrect": false,
+                        "optionId": "option-c",
+                        "text": "đường đi"
+                      }
+                    ],
+                    "prompt": "Người B ôn gì?",
+                    "questionId": "ja-n5-l12-04-q1"
+                  }
+                ],
+                "transcript": "A: 今日、何を復習しますか。B: 家で単語を復習します。",
+                "transcriptVietnamese": "A: Hôm nay bạn ôn gì? B: Tôi ôn từ vựng ở nhà."
+              },
+              "provenance": {
+                "authorName": "Ideogram Learning content team",
+                "licenseReference": "content/licenses/manifest.md#japanese-n5-pilot",
+                "reviewerName": null,
+                "rights": {
+                  "adaptationAllowed": false,
+                  "aiProviderProcessingAllowed": false,
+                  "embeddingAllowed": false,
+                  "redistributionAllowed": false
+                },
+                "sourceKind": "original",
+                "sourceReference": "Original Vietnamese-first Japanese N5 pilot source, version 1.0.0"
+              },
+              "status": "draft",
+              "targetScript": "kana_kanji",
+              "titleVietnamese": "Luyện nghe 12: hội thoại ngắn"
+            }
+          ],
+          "estimatedMinutes": 28,
+          "lessonId": "ja-n5-l12-integrated-review",
+          "sequence": 12,
+          "summaryVietnamese": "Ôn lại chiến lược hỏi lại, hiểu bài và tự luyện hằng ngày.",
+          "titleVietnamese": "Ôn tập tích hợp"
+        }
+      ],
+      "sequence": 2,
+      "titleVietnamese": "Tình huống đời sống và tự ôn",
+      "unitId": "ja-n5-unit-2"
+    }
+  ],
+  "version": "v1.0.0"
+}

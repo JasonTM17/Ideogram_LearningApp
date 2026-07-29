@@ -1,6 +1,26 @@
+import {
+  validateListeningPayload,
+  validateVocabularyPayload,
+} from './content-lint-payload-validation.mjs';
+import { validateHiddenFixture } from './content-lint-fixture-validation.mjs';
+
 const identifierPattern = /^[a-z0-9][a-z0-9-]{1,118}$/u;
-const sha256Pattern = /^[a-f0-9]{64}$/u;
-const placementSensitiveKeyPattern = /(answer|correct|rubric|score)/iu;
+const placementRootKeys = new Set([
+  'languageCode',
+  'levelCode',
+  'purposeVietnamese',
+  'questions',
+  'releaseStatus',
+  'targetScript',
+]);
+const placementQuestionKeys = new Set([
+  'interactionType',
+  'placementQuestionKey',
+  'promptVietnamese',
+  'sequence',
+  'skill',
+  'targetPrompt',
+]);
 
 const requiredRights = [
   'adaptationAllowed',
@@ -46,26 +66,12 @@ const validateActivity = ({ activity, errors, isPublishedRelease, location }) =>
     addError(errors, location, 'published release cannot contain non-published activity');
   }
 
-  if (activity.activityType !== 'listening') return;
-
-  const payload = activity.payload ?? {};
-  if (!payload.transcript?.trim() || !payload.transcriptVietnamese?.trim()) {
-    addError(errors, location, 'listening activity requires source and Vietnamese transcripts');
-  }
-  if (!/^media\/ja\/n5\/[a-z0-9-]+\.mp3$/u.test(payload.audioAssetPath ?? '')) {
-    addError(errors, location, 'listening audioAssetPath must be a scoped JA N5 media key');
-  }
-  if (!Array.isArray(payload.questions) || payload.questions.length === 0) {
-    addError(errors, location, 'listening activity requires at least one comprehension question');
-  }
-  if (isPublishedRelease && activity.audioProductionStatus !== 'recorded') {
-    addError(errors, location, 'published listening activity must have recorded audio');
-  }
-  if (
-    activity.audioProductionStatus === 'recorded' &&
-    !sha256Pattern.test(activity.audioSha256 ?? '')
-  ) {
-    addError(errors, location, 'recorded audio requires an integrity checksum');
+  if (activity.activityType === 'listening') {
+    validateListeningPayload({ activity, errors, isPublishedRelease, location });
+  } else if (activity.activityType === 'vocabulary') {
+    validateVocabularyPayload({ activity, errors, location });
+  } else {
+    addError(errors, location, 'pilot activity type must be vocabulary or listening');
   }
 };
 
@@ -117,16 +123,17 @@ export const validateJapaneseManifest = (manifest, errors, location) => {
   }
 };
 
-const containsSensitivePlacementKey = (value) => {
-  if (!value || typeof value !== 'object') return false;
-  return Object.entries(value).some(
-    ([key, child]) =>
-      placementSensitiveKeyPattern.test(key) || containsSensitivePlacementKey(child),
-  );
-};
+const hasOnlyKeys = (value, allowedKeys) =>
+  value &&
+  typeof value === 'object' &&
+  !Array.isArray(value) &&
+  Object.keys(value).every((key) => allowedKeys.has(key));
 
 export const validatePlacementPrompts = (placement, errors, location) => {
   if (!placement || typeof placement !== 'object') return;
+  if (!hasOnlyKeys(placement, placementRootKeys)) {
+    addError(errors, location, 'placement bundle must use only learner-safe allowlisted fields');
+  }
   if (placement.languageCode !== 'ja' || placement.levelCode !== 'N5') {
     addError(errors, location, 'placement prompts must be scoped to Japanese N5');
   }
@@ -134,14 +141,17 @@ export const validatePlacementPrompts = (placement, errors, location) => {
   if (questions.length < 25 || questions.length > 30) {
     addError(errors, location, 'placement requires 25–30 learner-safe prompt specifications');
   }
-  if (containsSensitivePlacementKey(placement.questions)) {
-    addError(
-      errors,
-      location,
-      'placement prompt file must not contain answers, rubrics, or scores',
-    );
-  }
   for (const question of questions) {
+    if (!hasOnlyKeys(question, placementQuestionKeys)) {
+      addError(
+        errors,
+        location,
+        'placement question must use only learner-safe allowlisted fields',
+      );
+    }
+    if (!question || typeof question !== 'object' || Array.isArray(question)) {
+      continue;
+    }
     if (!identifierPattern.test(question.placementQuestionKey ?? '')) {
       addError(errors, location, 'every placement prompt needs a stable key');
     }
@@ -155,33 +165,4 @@ export const validatePlacementPrompts = (placement, errors, location) => {
   }
 };
 
-export const validateHiddenFixture = ({
-  fixture,
-  expectedLanguage,
-  expectedLevel,
-  expectedScript,
-  errors,
-  location,
-}) => {
-  if (!fixture || typeof fixture !== 'object') return;
-  if (
-    fixture.fixtureOnly !== true ||
-    fixture.releaseStatus !== 'draft' ||
-    fixture.languageCode !== expectedLanguage ||
-    fixture.levelCode !== expectedLevel ||
-    fixture.targetScript !== expectedScript
-  ) {
-    addError(
-      errors,
-      location,
-      'fixture must stay a hidden draft with its expected language contract',
-    );
-  }
-  if (
-    !fixture.romanization?.trim() ||
-    !Array.isArray(fixture.segmentation) ||
-    fixture.segmentation.length === 0
-  ) {
-    addError(errors, location, 'fixture must cover romanization and segmentation');
-  }
-};
+export { validateHiddenFixture };

@@ -1,0 +1,27 @@
+{
+  "examMapping": {
+    "framework": "HSK",
+    "level": "HSK_1"
+  },
+  "fixtureOnly": true,
+  "languageCode": "zh",
+  "levelCode": "HSK_1",
+  "releaseStatus": "draft",
+  "romanization": "nǐ hǎo",
+  "segmentation": [
+    {
+      "pinyin": "nǐ",
+      "surface": "你"
+    },
+    {
+      "pinyin": "hǎo",
+      "surface": "好"
+    }
+  ],
+  "rubricContract": {
+    "romanizationRequired": true,
+    "targetScript": "hanzi_simplified"
+  },
+  "targetScript": "hanzi_simplified",
+  "testPurposeVietnamese": "Fixture hợp đồng cho chữ Hán giản thể, pinyin có dấu và tách từ; không phải bài học hay corpus ra mắt."
+}

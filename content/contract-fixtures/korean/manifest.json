@@ -1,0 +1,27 @@
+{
+  "examMapping": {
+    "framework": "TOPIK",
+    "level": "TOPIK_1"
+  },
+  "fixtureOnly": true,
+  "languageCode": "ko",
+  "levelCode": "TOPIK_1",
+  "releaseStatus": "draft",
+  "romanization": "annyeonghaseyo",
+  "segmentation": [
+    {
+      "romanization": "annyeong",
+      "surface": "안녕"
+    },
+    {
+      "romanization": "haseyo",
+      "surface": "하세요"
+    }
+  ],
+  "rubricContract": {
+    "romanizationRequired": true,
+    "targetScript": "hangul"
+  },
+  "targetScript": "hangul",
+  "testPurposeVietnamese": "Fixture hợp đồng cho Hangul, romanization và tách cụm; không phải bài học hay corpus ra mắt."
+}

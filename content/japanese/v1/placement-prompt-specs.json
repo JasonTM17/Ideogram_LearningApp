@@ -1,0 +1,209 @@
+{
+  "languageCode": "ja",
+  "levelCode": "N5",
+  "purposeVietnamese": "Thu thập câu trả lời đầu vào cho bài phân luồng; kết quả chỉ dùng để gợi ý lộ trình, không phải chứng chỉ JLPT.",
+  "questions": [
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-greeting-01",
+      "promptVietnamese": "Chọn cách chào phù hợp khi gặp ai đó vào ban ngày.",
+      "sequence": 1,
+      "skill": "vocabulary",
+      "targetPrompt": "こんにちは"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-greeting-02",
+      "promptVietnamese": "Hoàn thành câu tự giới thiệu ngắn theo mẫu lịch sự.",
+      "sequence": 2,
+      "skill": "grammar",
+      "targetPrompt": "私はミン___。"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-greeting-03",
+      "promptVietnamese": "Chọn phản hồi phù hợp cho câu hỏi có/không lịch sự.",
+      "sequence": 3,
+      "skill": "grammar",
+      "targetPrompt": "ベトナム人ですか。"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-object-01",
+      "promptVietnamese": "Nhận diện đồ vật ở gần người nói.",
+      "sequence": 4,
+      "skill": "vocabulary",
+      "targetPrompt": "これは___です。"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-object-02",
+      "promptVietnamese": "Hỏi đồ vật thuộc về ai bằng câu lịch sự ngắn.",
+      "sequence": 5,
+      "skill": "grammar",
+      "targetPrompt": "このペンはだれのですか。"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-object-03",
+      "promptVietnamese": "Xác định vị trí một vật trong lớp.",
+      "sequence": 6,
+      "skill": "reading",
+      "targetPrompt": "かばんは椅子の下です。"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-number-01",
+      "promptVietnamese": "Đọc số cơ bản trong ngữ cảnh giờ giấc.",
+      "sequence": 7,
+      "skill": "reading",
+      "targetPrompt": "七時"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-number-02",
+      "promptVietnamese": "Hỏi giờ bằng mẫu câu lịch sự.",
+      "sequence": 8,
+      "skill": "grammar",
+      "targetPrompt": "今、何時ですか。"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-number-03",
+      "promptVietnamese": "Nhận diện giá tiền bằng yên Nhật.",
+      "sequence": 9,
+      "skill": "listening",
+      "targetPrompt": "三百円です。"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-place-01",
+      "promptVietnamese": "Hỏi vị trí của một địa điểm công cộng.",
+      "sequence": 10,
+      "skill": "grammar",
+      "targetPrompt": "銀行はどこですか。"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-place-02",
+      "promptVietnamese": "Đọc mô tả phương hướng cơ bản.",
+      "sequence": 11,
+      "skill": "reading",
+      "targetPrompt": "駅の右です。"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-place-03",
+      "promptVietnamese": "Phân biệt cách nói “ở đây”, “ở đó” và “ở đằng kia”.",
+      "sequence": 12,
+      "skill": "vocabulary",
+      "targetPrompt": "ここ・そこ・あそこ"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-routine-01",
+      "promptVietnamese": "Mô tả giờ thức dậy hằng ngày.",
+      "sequence": 13,
+      "skill": "grammar",
+      "targetPrompt": "六時に起きます。"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-routine-02",
+      "promptVietnamese": "Nhận diện động từ hoạt động thường ngày.",
+      "sequence": 14,
+      "skill": "vocabulary",
+      "targetPrompt": "食べます・飲みます・寝ます"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-food-01",
+      "promptVietnamese": "Gọi một đồ uống bằng cách lịch sự.",
+      "sequence": 15,
+      "skill": "speaking",
+      "targetPrompt": "お水をください。"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-food-02",
+      "promptVietnamese": "Hỏi giá một món đồ hay món ăn.",
+      "sequence": 16,
+      "skill": "grammar",
+      "targetPrompt": "これはいくらですか。"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-family-01",
+      "promptVietnamese": "Nói số người trong gia đình.",
+      "sequence": 17,
+      "skill": "reading",
+      "targetPrompt": "家族は五人です。"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-family-02",
+      "promptVietnamese": "Hỏi nơi ở của một người trong gia đình.",
+      "sequence": 18,
+      "skill": "grammar",
+      "targetPrompt": "どこに住んでいますか。"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-transport-01",
+      "promptVietnamese": "Nhận diện số xe buýt trong hội thoại ngắn.",
+      "sequence": 19,
+      "skill": "listening",
+      "targetPrompt": "七番のバス"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-transport-02",
+      "promptVietnamese": "Hiểu hành động xuống phương tiện tại điểm tiếp theo.",
+      "sequence": 20,
+      "skill": "reading",
+      "targetPrompt": "次の駅で降ります。"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-shopping-01",
+      "promptVietnamese": "Nhận diện tính từ chỉ mức giá.",
+      "sequence": 21,
+      "skill": "vocabulary",
+      "targetPrompt": "高い・安い"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-invitation-01",
+      "promptVietnamese": "Hiểu lời mời đi cùng ai đó.",
+      "sequence": 22,
+      "skill": "listening",
+      "targetPrompt": "一緒に行きませんか。"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-weather-01",
+      "promptVietnamese": "Nhận diện từ vựng thời tiết cơ bản.",
+      "sequence": 23,
+      "skill": "vocabulary",
+      "targetPrompt": "晴れ・雨・寒い"
+    },
+    {
+      "interactionType": "objective",
+      "placementQuestionKey": "ja-n5-placement-health-01",
+      "promptVietnamese": "Đọc câu mô tả đau nhẹ và hành động phù hợp trong bối cảnh đơn giản.",
+      "sequence": 24,
+      "skill": "reading",
+      "targetPrompt": "頭が痛いです。"
+    },
+    {
+      "interactionType": "free_response",
+      "placementQuestionKey": "ja-n5-placement-repair-01",
+      "promptVietnamese": "Hãy nói hoặc viết một câu lịch sự để đề nghị người khác nói lại chậm hơn.",
+      "sequence": 25,
+      "skill": "speaking",
+      "targetPrompt": "もう一度ゆっくり言ってください。"
+    }
+  ],
+  "releaseStatus": "review",
+  "targetScript": "kana_kanji"
+}
