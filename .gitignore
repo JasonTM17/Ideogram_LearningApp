@@ -1,0 +1,23 @@
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# JavaScript and build output
+node_modules/
+.turbo/
+.next/
+.expo/
+dist/
+coverage/
+
+# Local platform state
+supabase/.branches/
+supabase/.temp/
+*.log
+
+# IDE and OS metadata
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
