@@ -20,7 +20,7 @@ without the account owner supplying credentials and explicit approval.
 Create/modify:
 
 - `.github/workflows/{preview,staging,production,mobile-release,rollback}.yml`
-- `apps/web/vercel.json`, `apps/admin/vercel.json`
+- `.dockerignore`, `apps/web/{vercel.json,Dockerfile}`, `apps/admin/vercel.json`
 - `apps/mobile/eas.json`, `apps/mobile/app.config.ts`
 - `apps/worker/Dockerfile`, `apps/worker/deploy/*`
 - `supabase/production/*`, `scripts/release/*`, `scripts/rollback/*`
@@ -41,6 +41,12 @@ Create/modify:
 - Default deployment: Vercel web/admin, EAS iOS/Android, Supabase managed data,
   one container worker on the approved managed runtime. No Redis until measured
   backlog/throughput justifies it.
+- Publish reproducible `web` and `worker` OCI images to Docker Hub from the
+  protected release workflow. Mobile remains a signed EAS/store artifact, never
+  a container image. Build both images from the repository root with Turbo
+  pruning, run as non-root, tag immutable `sha-<commit>` and approved `v<semver>`
+  releases, and deploy only by verified digest. `latest` is an optional alias,
+  never a deployment reference.
 - Database release uses expand/migrate/contract changes and checks previous
   ordered migration DAG, expand/migrate/contract changes and an old/new
   client×API×schema compatibility matrix before any destructive migration.
@@ -58,6 +64,11 @@ Create/modify:
 3. Build signed reproducible web/worker/mobile artifacts with provenance/SBOM,
    verify signatures/attestations before deploy and fail the approved
    vulnerability thresholds. Verify store permission/privacy declarations.
+   Docker Hub publication uses a dedicated scoped token stored only in the
+   protected release environment; PR CI builds/scans images without registry
+   credentials. Attach SBOM and maximum BuildKit provenance to each pushed
+   digest, verify the attestation, and retain the digest/scan evidence in the
+   release record.
 4. Rehearse database backup/restore, migration rollback, previous web deploy,
    EAS update rollback, worker drain/replay and AI/recording kill switches.
    Backup matrix includes DB, Storage, outbox/job state, config/content/prompt
@@ -85,6 +96,9 @@ Create/modify:
   links are stored in the release record.
 - Previous supported mobile binary passes the compatibility matrix before and
   after migration; contract cleanup waits until its support window closes.
+- Web and worker Docker Hub images start successfully from their immutable
+  digests, run as non-root, pass health checks, and have a verified SBOM,
+  provenance, vulnerability scan and release-record link.
 - Store privacy/data declarations, consent UI, deletion/export and retention
   behavior agree with the running product.
 - Beta gates have numeric thresholds, owners and stop/rollback actions; no
@@ -99,12 +113,14 @@ Create/modify:
 - **Rollback:** previous web/worker artifact, compatible DB state, content/prompt
   version and EAS channel are identified before each production action.
 - **Security:** least-privilege deployment identities, protected environments,
-  OIDC where possible, verified signed artifacts, branch protection and key rotation.
+  OIDC where possible, verified signed artifacts, branch protection, scoped
+  Docker Hub token rotation and key rotation.
 
 ## Completion checklist
 
 - [ ] Staging and production delivery are reproducible and protected.
 - [ ] Rollback/restore/mobile compatibility drills pass.
 - [ ] SBOM/provenance, action pins, vulnerability and fork-secret gates pass.
+- [ ] Docker Hub web/worker images are immutable-digest verified and recorded.
 - [ ] Japanese-first beta meets agreed product, AI and reliability gates.
 - [ ] Docs match shipped behavior; release/tag/push have explicit approval.
