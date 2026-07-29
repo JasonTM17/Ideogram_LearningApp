@@ -1,0 +1,29 @@
+{
+  "name": "@ideogram/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev --turbopack",
+    "lint": "eslint . --max-warnings=0",
+    "start": "next start",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ideogram/contracts": "workspace:*",
+    "@ideogram/design-tokens": "workspace:*",
+    "next": "16.2.12",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.1.13",
+    "@types/node": "24.13.3",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "eslint-config-next": "16.2.12",
+    "tailwindcss": "4.1.13",
+    "vitest": "4.1.10"
+  }
+}
