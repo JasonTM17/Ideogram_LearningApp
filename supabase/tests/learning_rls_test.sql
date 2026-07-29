@@ -296,47 +296,46 @@ select set_config('request.jwt.claim.sub', '10000000-0000-0000-0000-000000000001
 set local role authenticated;
 
 select is(
-  (select count(*) from public.language_packs),
-  1::bigint,
-  'an active learner sees only active language packs'
+  jsonb_array_length(public.get_learner_catalog_data() -> 'language_packs'),
+  1,
+  'an active learner receives only active language packs through the safe catalog RPC'
 );
-select is(
-  (
-    select count(*)
-    from public.language_packs
-    where language_code in ('zh', 'ko')
+select ok(
+  not exists (
+    select 1
+    from jsonb_array_elements(public.get_learner_catalog_data() -> 'language_packs') as pack(value)
+    where pack.value ->> 'language_code' in ('zh', 'ko')
   ),
-  0::bigint,
-  'hidden Chinese and Korean packs fail closed'
+  'hidden Chinese and Korean packs fail closed in the safe catalog RPC'
 );
 select is(
   (
     select count(*)
-    from public.level_definitions
-    where language_code = 'ja'
-  ),
-  5::bigint,
-  'the Japanese level family is visible to an active learner'
-);
-select is(
-  (
-    select count(*)
-    from public.content_releases
-    where content_release_id = 'ja-n5-rls-test-v1'
+    from jsonb_array_elements(public.get_learner_catalog_data() -> 'paths') as path(value)
+    where path.value ->> 'language_code' = 'ja'
   ),
   1::bigint,
-  'an active learner can read the published Japanese release'
+  'the published Japanese path is visible to an active learner through the safe catalog RPC'
 );
 select is(
   (
     select count(*)
-    from public.learning_paths
-    where language_code = 'ja'
-      and level_code = 'N5'
-      and objective_key = 'exam'
+    from jsonb_array_elements(public.get_learner_catalog_data() -> 'releases') as release(value)
+    where release.value ->> 'content_release_id' = 'ja-n5-rls-test-v1'
   ),
   1::bigint,
-  'an active learner can read a path only after its release is published'
+  'an active learner can read the published Japanese release through the safe catalog RPC'
+);
+select is(
+  (
+    select count(*)
+    from jsonb_array_elements(public.get_learner_catalog_data() -> 'paths') as path(value)
+    where path.value ->> 'language_code' = 'ja'
+      and path.value ->> 'level_code' = 'N5'
+      and path.value ->> 'objective_key' = 'exam'
+  ),
+  1::bigint,
+  'an active learner can read a path only after its release is published through the safe catalog RPC'
 );
 select throws_ok(
   $$
@@ -539,9 +538,9 @@ select set_config('request.jwt.claim.sub', '10000000-0000-0000-0000-000000000001
 set local role authenticated;
 
 select is(
-  (select count(*) from public.content_releases),
-  0::bigint,
-  'a frozen account loses direct catalog access'
+  jsonb_array_length(public.get_learner_catalog_data() -> 'releases'),
+  0,
+  'a frozen account loses safe catalog access'
 );
 select is(
   (select count(*) from public.learner_enrollments),
