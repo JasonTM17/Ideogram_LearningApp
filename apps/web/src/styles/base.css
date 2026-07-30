@@ -64,7 +64,12 @@
   }
 
   :where(a, button, input, select, textarea, [tabindex]) {
+    -webkit-tap-highlight-color: color-mix(in srgb, var(--color-action-primary) 18%, transparent);
     touch-action: manipulation;
+  }
+
+  :where([id]) {
+    scroll-margin-top: var(--space-8);
   }
 
   :where(a, button, input, select, textarea, [tabindex]):focus-visible {
@@ -74,6 +79,7 @@
 
   ::selection {
     background: #bfdbfe;
+    color: #0b1220;
   }
 }
 

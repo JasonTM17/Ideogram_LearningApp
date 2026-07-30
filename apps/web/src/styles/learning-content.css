@@ -1,0 +1,290 @@
+.language-pack-list,
+.release-list,
+.unit-list,
+.lesson-link-list,
+.lesson-overview,
+.lesson-overview__activities,
+.lesson-overview__activities > ol {
+  display: grid;
+}
+
+.language-pack-list,
+.release-list,
+.unit-list {
+  gap: var(--space-6);
+}
+
+.language-pack {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.language-pack__heading {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.language-pack__heading > span {
+  display: grid;
+  width: var(--touch-target);
+  height: var(--touch-target);
+  place-items: center;
+  border-radius: var(--radius-control);
+  background: var(--color-surface-subtle);
+  color: var(--color-action-primary);
+}
+
+.language-pack__heading p,
+.release-card header p {
+  color: var(--color-text-tertiary);
+  font-size: var(--type-caption-size);
+  font-weight: 650;
+  text-transform: uppercase;
+}
+
+.language-pack__heading h2 {
+  font-size: var(--type-heading-md-size);
+}
+
+.release-card {
+  display: grid;
+  gap: var(--space-6);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-surface);
+  background: var(--color-surface);
+  padding: clamp(1.25rem, 4vw, 2rem);
+  box-shadow: var(--shadow-soft);
+  content-visibility: auto;
+  contain-intrinsic-size: auto 28rem;
+}
+
+.release-card > header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.release-card > header > div {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.release-card > header > span {
+  height: fit-content;
+  border-radius: var(--radius-chip);
+  background: var(--color-surface-subtle);
+  padding: var(--space-1) var(--space-3);
+  color: var(--color-text-secondary);
+  font-size: var(--type-caption-size);
+}
+
+.unit-list,
+.lesson-link-list,
+.lesson-overview__activities > ol {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.unit-list > li {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.unit-list__heading {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.unit-list__heading span {
+  color: var(--color-action-primary);
+  font-size: var(--type-caption-size);
+  font-weight: 650;
+  text-transform: uppercase;
+}
+
+.lesson-link-list {
+  gap: var(--space-2);
+}
+
+.lesson-link-list a {
+  display: grid;
+  min-height: var(--touch-target);
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  align-items: center;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-control);
+  padding: var(--space-3) var(--space-4);
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard);
+}
+
+.lesson-link-list a > span {
+  grid-column: 1 / -1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.lesson-link-list a > small {
+  grid-column: 1;
+}
+
+.lesson-link-list a > svg {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.lesson-link-list a:hover {
+  border-color: color-mix(in srgb, var(--color-action-primary) 30%, var(--color-border-subtle));
+  background: var(--color-surface-subtle);
+}
+
+.lesson-link-list small {
+  color: var(--color-text-tertiary);
+}
+
+@media (min-width: 640px) {
+  .lesson-link-list a {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .lesson-link-list a > span,
+  .lesson-link-list a > small,
+  .lesson-link-list a > svg {
+    grid-column: auto;
+    grid-row: auto;
+  }
+}
+
+.lesson-overview {
+  width: min(100%, var(--content-measure));
+  margin-inline: auto;
+  gap: var(--space-8);
+  padding-bottom: var(--space-8);
+}
+
+.lesson-overview__header {
+  display: grid;
+  gap: var(--space-4);
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding-bottom: var(--space-8);
+}
+
+.lesson-overview__header > p:first-child {
+  color: var(--color-action-primary);
+  font-size: var(--type-caption-size);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lesson-overview__header h1 {
+  font-size: clamp(2rem, 6vw, 3.25rem);
+  line-height: 1.15;
+  letter-spacing: -0.045em;
+}
+
+.lesson-overview__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.lesson-overview__meta span {
+  display: inline-flex;
+  min-height: var(--touch-target);
+  align-items: center;
+  gap: var(--space-2);
+  border-radius: var(--radius-chip);
+  background: var(--color-surface-subtle);
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-text-secondary);
+  font-size: var(--type-body-sm-size);
+}
+
+.lesson-overview__summary {
+  color: var(--color-text-secondary);
+  font-size: var(--type-body-lg-size);
+  line-height: var(--type-body-lg-leading);
+}
+
+.lesson-overview__activities {
+  gap: var(--space-4);
+}
+
+.lesson-overview__activities > ol {
+  gap: var(--space-3);
+}
+
+.lesson-overview__activities > ol > li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-4);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-surface);
+  background: var(--color-surface);
+  padding: var(--space-4);
+}
+
+.activity-sequence {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-surface-subtle);
+  color: var(--color-action-primary);
+  font-size: var(--type-caption-size);
+  font-weight: 700;
+}
+
+.lesson-overview__activities li > div {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.lesson-overview__activities li p,
+.lesson-overview__activities li span:last-child {
+  color: var(--color-text-tertiary);
+  font-size: var(--type-body-sm-size);
+}
+
+.lesson-overview__activities li h3 {
+  font-size: var(--type-body-lg-size);
+  line-height: var(--type-body-lg-leading);
+}
+
+.lesson-runtime-note {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+  border-radius: var(--radius-surface);
+  background: color-mix(in srgb, var(--color-action-secondary) 8%, var(--color-surface));
+  padding: var(--space-6);
+  color: var(--color-action-secondary);
+}
+
+.lesson-runtime-note > div {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.lesson-runtime-note h2 {
+  color: var(--color-text-primary);
+  font-size: var(--type-body-size);
+}
+
+.lesson-runtime-note p {
+  color: var(--color-text-secondary);
+  font-size: var(--type-body-sm-size);
+}
+
+@media (min-width: 768px) {
+  .lesson-overview__activities > ol > li {
+    padding: var(--space-6);
+  }
+}

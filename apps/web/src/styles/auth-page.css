@@ -1,0 +1,237 @@
+.auth-page {
+  display: grid;
+  width: min(calc(100% - 2rem), 66rem);
+  min-height: 100dvh;
+  grid-template-columns: minmax(0, 1fr);
+  margin-inline: auto;
+  gap: var(--space-12);
+  align-items: center;
+  padding-block: clamp(2rem, 8vw, 6rem);
+}
+
+.auth-page__intro {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-8);
+}
+
+.auth-page__intro > a {
+  display: inline-flex;
+  width: fit-content;
+  min-height: var(--touch-target);
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: var(--type-body-sm-size);
+  font-weight: 650;
+}
+
+.auth-page__intro > div {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.auth-page__intro h1 {
+  font-size: clamp(2.25rem, 7vw, 4.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.05em;
+}
+
+.auth-page__intro > div > p:last-child {
+  max-width: 36rem;
+  color: var(--color-text-secondary);
+  font-size: var(--type-body-lg-size);
+  line-height: var(--type-body-lg-leading);
+}
+
+.auth-page__intro ul {
+  display: grid;
+  gap: var(--space-3);
+  padding: 0;
+  list-style: none;
+  color: var(--color-text-secondary);
+  font-size: var(--type-body-sm-size);
+}
+
+.auth-page__intro li {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.auth-page__intro li svg {
+  flex: 0 0 auto;
+  color: var(--color-action-secondary);
+}
+
+.auth-card {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-6);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 1.25rem;
+  background: var(--color-surface-raised);
+  padding: clamp(1.25rem, 5vw, 2.5rem);
+  box-shadow: var(--shadow-raised);
+}
+
+.auth-card__heading {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.auth-card__heading > span {
+  display: grid;
+  width: var(--touch-target);
+  height: var(--touch-target);
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-action-primary);
+  color: var(--color-on-action-primary);
+  font-weight: 700;
+}
+
+.auth-card__heading > div {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-1);
+}
+
+.auth-card__heading p {
+  color: var(--color-text-tertiary);
+  font-size: var(--type-caption-size);
+}
+
+.auth-card__heading h2 {
+  font-size: var(--type-heading-md-size);
+}
+
+.auth-callback-error {
+  border: 1px solid color-mix(in srgb, var(--color-danger) 35%, var(--color-border-subtle));
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--color-danger) 7%, var(--color-surface));
+  color: var(--color-danger);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--type-body-sm-size);
+}
+
+.sign-in-form,
+.sign-in-field {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.sign-in-field label {
+  font-size: var(--type-label-size);
+  font-weight: 650;
+}
+
+.sign-in-input-wrap {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-text-tertiary);
+}
+
+.sign-in-input-wrap:focus-within {
+  border-color: var(--color-focus-ring);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-focus-ring) 20%, transparent);
+}
+
+.sign-in-input-wrap svg {
+  margin-left: var(--space-3);
+}
+
+.sign-in-input-wrap input {
+  width: 100%;
+  min-height: 3rem;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--color-text-primary);
+  padding: var(--space-2) var(--space-3);
+}
+
+.sign-in-field > p {
+  color: var(--color-text-tertiary);
+  font-size: var(--type-caption-size);
+}
+
+.sign-in-field > p[role='alert'] {
+  color: var(--color-danger);
+}
+
+.sign-in-form > button,
+.sign-in-success button {
+  display: inline-flex;
+  min-height: var(--touch-target);
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--color-action-primary);
+  color: var(--color-on-action-primary);
+  padding: var(--space-3) var(--space-4);
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.sign-in-form > button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.sign-in-form > button:not(:disabled):hover {
+  background: color-mix(in srgb, var(--color-action-primary) 88%, black);
+}
+
+.auth-card__privacy {
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: var(--space-4);
+  color: var(--color-text-tertiary);
+  font-size: var(--type-caption-size);
+}
+
+.sign-in-success {
+  display: flex;
+  gap: var(--space-4);
+  color: var(--color-success);
+}
+
+.sign-in-success > div {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-3);
+}
+
+.sign-in-success > div > p {
+  color: var(--color-text-secondary);
+}
+
+.sign-in-success > div > p:first-child {
+  color: var(--color-success);
+  font-size: var(--type-caption-size);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.sign-in-success button {
+  width: fit-content;
+  background: var(--color-surface-subtle);
+  color: var(--color-text-primary);
+}
+
+.sign-in-success button:hover {
+  background: color-mix(in srgb, var(--color-action-primary) 12%, var(--color-surface));
+}
+
+@media (min-width: 900px) {
+  .auth-page {
+    grid-template-columns: minmax(0, 1.05fr) minmax(22rem, 0.95fr);
+  }
+}

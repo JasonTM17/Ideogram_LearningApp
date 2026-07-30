@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import { Be_Vietnam_Pro, Noto_Sans_JP } from 'next/font/google';
 
@@ -24,6 +24,14 @@ export const metadata: Metadata = {
     default: 'Ideogram Learning',
     template: '%s | Ideogram Learning',
   },
+};
+
+export const viewport: Viewport = {
+  colorScheme: 'light dark',
+  themeColor: [
+    { color: '#F8FAFC', media: '(prefers-color-scheme: light)' },
+    { color: '#0B1220', media: '(prefers-color-scheme: dark)' },
+  ],
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {

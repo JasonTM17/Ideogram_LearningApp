@@ -146,6 +146,23 @@
     max(var(--space-2), env(safe-area-inset-left));
 }
 
+.learner-shell__bottom-nav .shell-nav__list {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.learner-shell__bottom-nav .shell-nav-link {
+  min-width: 0;
+}
+
+.learner-shell__bottom-nav .shell-nav-link__text {
+  justify-items: center;
+}
+
+.learner-shell__bottom-nav .planned-badge {
+  display: none;
+}
+
 .learner-shell__sidebar-inner,
 .learner-shell__rail-inner {
   position: sticky;
