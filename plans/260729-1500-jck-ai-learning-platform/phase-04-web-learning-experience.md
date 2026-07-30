@@ -9,9 +9,10 @@ effort: "10–14 engineer-days"
 
 ## Context and outcome
 
-Deliver the responsive learner web experience from authenticated onboarding
-through daily study, review and progress. Rebuild the approved Stitch hierarchy
-with production components; exported HTML is evidence, not source code.
+The current worktree implements the read-side web/auth slice: public landing,
+invite-only sign-in, safe callback handling, protected learner shell pages, and
+catalog-backed learner reads. The remaining phase work is the interactive
+learning and mutation layer.
 
 **Depends on:** Phases 1–3.
 **Can parallel with:** Phase 5 after shared contracts are frozen.
@@ -41,10 +42,11 @@ Do not edit native screens or AI provider code.
 ## Locked route and boundary decisions
 
 - Public entry: `/`; authentication: `/sign-in` and `/auth/callback`.
-- Resumable setup: `/onboarding` and `/placement`.
-- Learner destinations: `/today`, `/review`, `/assistant`, `/progress`, `/you`.
-- Deep learning routes: `/learn`, `/lessons/[lessonId]`, and focused child
-  routes under those segments.
+- Learner destinations implemented today: `/today`, `/learn`, `/lessons/[lessonId]`,
+  `/review`, `/assistant`, `/progress`, `/you`, `/you/settings`, and `/help`.
+- Resumable setup and placement routes remain planned for later work.
+- Deep learning routes and focused child routes under those segments remain the
+  interactive learning target.
 - `/assistant` is a labelled Phase 6 seam only until the AI provider runtime is
   implemented; Phase 4 does not fake chat behavior.
 - Production reads use verified Supabase cookie or bearer identity and RLS. Test
@@ -126,6 +128,16 @@ Do not edit native screens or AI provider code.
 
 ## Completion checklist
 
+- [x] Public landing, invite-only sign-in, responsive learner shell, and route
+      recovery states are implemented from the Stitch direction.
+- [x] OTP, PKCE callback, local sign-out, safe return path, CSRF/origin,
+      active-profile/learner-role, and cookie-budget negative tests pass.
+- [x] `/today`, `/learn`, and lesson overview use the real learner-safe catalog;
+      future review/AI/progress routes are labelled planned states.
+- [x] Current slice passed keyboard/focus, 200% text reflow, 320px layout,
+      full workspace lint/type/test/build, and production review. Evidence:
+      [test report](./reports/tester-20260730-web-auth-learner-entry.md) and
+      [review report](./reports/reviewer-20260730-web-auth-learner.md).
 - [ ] All core web routes use real typed APIs and recovery states.
 - [ ] API matrix and cookie/CSRF/CORS invariants pass positive and negative tests.
 - [ ] Stitch direction is reproduced without copying generated runtime code.

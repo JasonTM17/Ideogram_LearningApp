@@ -49,11 +49,11 @@ event history is the source of truth, not a recalculated guess.
 
 ## Access boundaries
 
-| Caller                      | Allowed surface                         | Notes                                   |
-| --------------------------- | --------------------------------------- | --------------------------------------- |
-| `app_learning_api_executor` | Learner-facing review submission helper | Trusted app boundary for learner writes |
-| `service_role`              | Worker-only scoring and purge helpers   | Not used for direct learner writes      |
-| Browser/mobile client       | None directly                           | Must go through the app boundary        |
+| Caller                      | Allowed surface                         | Notes                                          |
+| --------------------------- | --------------------------------------- | ---------------------------------------------- |
+| `app_learning_api_executor` | Learner-facing review submission helper | Trusted app boundary for active learner writes |
+| `service_role`              | Worker-only scoring and purge helpers   | Not used for direct learner writes             |
+| Browser/mobile client       | None directly                           | Must go through the app boundary               |
 
 ## What is not in scope yet
 
@@ -61,6 +61,8 @@ event history is the source of truth, not a recalculated guess.
 - AI tutor personalization logic
 - Route handlers for `/api/v1/learning/*`
 - Offline conflict resolution outside the current idempotency rules
+
+Active learners reach this helper only after the web auth gate confirms the profile is active and the learner role is still valid.
 
 ## Related docs
 

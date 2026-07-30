@@ -30,6 +30,10 @@ These are closed-beta planning assumptions, not observed production metrics and 
 - Treat the caps as non-authorizing guardrails.
 - Recheck the assumptions before widening beta access.
 - If any assumption is exceeded, slow release rather than silently increasing spend.
+- In-process auth guardrails now rate-limit email OTP at 5 requests per email and 30 requests per network identity per 15 minutes, with 10,000 hashed buckets max; the shared network identity only applies when ingress overwrites the proxy IP headers.
+- Auth return-path cookies are capped to one generic cookie or one flow-specific
+  cookie per callback, with at most four pending flow cookies and a 256
+  raw-character / 768 encoded-character return-target budget.
 
 ## Known uncertainties
 

@@ -6,6 +6,8 @@ The database state machine exists now, but the user-facing enqueue path and the
 worker integration are not fully wired yet. The deletion path now also covers
 learning-state purge receipts, so account completion cannot happen until the
 learning purge helper has finished and left an auditable receipt.
+The web learner shell still fails closed for inactive or revoked accounts before
+any deletion or export UI is reachable.
 
 ## State machine
 

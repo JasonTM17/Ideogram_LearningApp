@@ -59,10 +59,10 @@ gate riêng.
 
 | Phase | Name | Status |
 |-------|------|--------|
-| 1 | [Foundation and Delivery](./phase-01-foundation-and-delivery.md) | Complete |
+| 1 | [Foundation and Delivery](./phase-01-foundation-and-delivery.md) | In progress |
 | 2 | [Identity Data and Security](./phase-02-identity-data-and-security.md) | In progress |
-| 3 | [Learning Domain and Content](./phase-03-learning-domain-and-content.md) | Pending |
-| 4 | [Web Learning Experience](./phase-04-web-learning-experience.md) | Pending |
+| 3 | [Learning Domain and Content](./phase-03-learning-domain-and-content.md) | In progress |
+| 4 | [Web Learning Experience](./phase-04-web-learning-experience.md) | In progress |
 | 5 | [Mobile Learning Experience](./phase-05-mobile-learning-experience.md) | Pending |
 | 6 | [AI Tutor and Personalization](./phase-06-ai-tutor-and-personalization.md) | Pending |
 | 7 | [Media Offline and Sync](./phase-07-media-offline-and-sync.md) | Pending |
@@ -81,6 +81,14 @@ gate riêng.
   [test report](./reports/foundation-test-report.md),
   [security scan](./reports/security-scan-2026-07-29-foundation.md) and
   [progress report](./reports/pm-260729-foundation-progress.md).
+- Session 3 (2026-07-30): Phase 4 read-side delivery produced `d7aad12`
+  (public/responsive UI), `b7f025e` (passwordless auth and active learner
+  authorization), and `184b4c9` (catalog-backed learner views). Full workspace
+  gates passed with 222 tests passed and 1 intentional skip; evidence:
+  [test report](./reports/tester-20260730-web-auth-learner-entry.md),
+  [production review](./reports/reviewer-20260730-web-auth-learner.md),
+  [security scan](./reports/security-scan-20260730-web-auth.md), and
+  [docs sync](./reports/docs-manager-20260730-web-auth-learner-sync.md).
 - The approved plan is executing. Deploy, purchase, real secrets and store
   publication still require their named authority.
 

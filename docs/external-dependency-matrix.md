@@ -21,6 +21,7 @@ This repository has dependency references and local config, but no production ex
 
 - The DeepSeek credential is server-only and must never be copied into client env files.
 - The repo should treat all live account values as external to source control.
+- Local Supabase auth now covers invite-only email OTP, callback exchange, and local sign-out, but production mail provider configuration and redirect allowlists still need separate provisioning.
 - This matrix is planning data, not proof of operational readiness.
 
 ## Open questions

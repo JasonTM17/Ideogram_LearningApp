@@ -12,30 +12,39 @@ The platform is designed as a modular monolith with three client runtimes and on
 
 ## Current state
 
-The implementation is still at the foundation stage for user-facing apps. The implemented HTTP API routes today are `GET /api/v1/health` and the protected learner catalog route `GET /api/v1/learning/catalog`. Phase 3 also added the learning persistence layer in Supabase: catalog tables, placement helpers, review helpers, activity attempt helpers, and purge receipts. The catalog read path is route-led in Next.js and uses the allowlisted aggregate RPC; the remaining learning mutation routes are still planned.
+The implementation is still at the foundation stage for user-facing apps. The implemented HTTP API routes today are `GET /api/v1/health`, `GET /api/v1/learning/catalog`, `POST /api/v1/auth/email-otp`, `GET /auth/callback`, and `POST /api/v1/auth/sign-out`. The web auth slice and protected learner shell pages now exist, and Phase 3 also added the learning persistence layer in Supabase: catalog tables, placement helpers, review helpers, activity attempt helpers, and purge receipts. External/mobile clients use the catalog HTTP route; web SSR learner pages read the catalog directly after the SSR learner-page gate. The remaining learning mutation routes are still planned.
 
 ## Learner catalog read flow
 
-1. Web or mobile calls `GET /api/v1/learning/catalog`.
-2. The Next.js route verifies a Supabase bearer token or SSR cookie session with `auth.getUser()`.
+There are two current read paths:
+
+External/mobile HTTP path:
+
+1. External/mobile clients call `GET /api/v1/learning/catalog`.
+2. The Next.js route verifies a Supabase bearer token or SSR cookie session with Supabase Auth verification.
 3. The route reads `public.get_learner_catalog_data()` from Supabase.
-4. The database returns only active packs and structurally complete published
-   catalog content through a deep allowlist, then enforces the exact projected
-   response budget.
-5. The route assembles `LearnerCatalogResponse`, independently enforces the
-   serialized response budget, and returns private no-store headers plus an
-   opaque request ID.
+4. The database returns only active packs and structurally complete published catalog content through a deep allowlist, then enforces the exact projected response budget.
+5. The route assembles the shared learner-catalog response contract, independently enforces the serialized response budget, and returns private no-store headers plus an opaque request ID.
+
+Web SSR path:
+
+1. Web SSR learner pages such as `/today`, `/learn`, and `/lessons/[lessonId]` call the SSR learner-page gate.
+2. The gate verifies the Supabase user, current active/unrevoked profile, and
+   active learner role.
+3. Those server components then call `readLearnerCatalog(client)` directly instead of round-tripping through the HTTP catalog route.
+4. The same shared learner-catalog response contract boundary applies, but the browser only sees the rendered page output.
 
 ## Learning persistence boundary
 
-| Caller / runtime                         | Allowed surface                            | Notes                                                                        |
-| ---------------------------------------- | ------------------------------------------ | ---------------------------------------------------------------------------- |
-| Web / mobile client                      | Next.js catalog route for reads only       | Client code does not read raw learner-catalog tables                         |
-| Authenticated Supabase caller            | `public.get_learner_catalog_data()`        | Allowlisted aggregate RPC is callable because the `public` schema is exposed |
-| `private.get_learner_catalog_activities` | Internal helper for the public catalog RPC | Definer-owned helper; not granted to authenticated callers                   |
-| `app_learning_api_executor`              | Learner-safe private RPCs                  | Trusted boundary for placement, activity, review, and enrollment writes      |
-| `service_role`                           | Worker-only scoring and purge helpers      | Used for placement scoring and privacy purge; not for learner write paths    |
-| `app_security_definer`                   | Narrow definer-owned helpers               | Owns database helpers and policies; cannot log in or bypass RLS              |
+| Caller / runtime                         | Allowed surface                                | Notes                                                                               |
+| ---------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------- |
+| External/mobile client                   | Next.js catalog route for reads only           | Client code does not read raw learner-catalog tables                                |
+| Web SSR learner pages                    | `readLearnerCatalog(client)` after session     | Server components bypass the HTTP route but keep the same auth/read boundary        |
+| Authenticated Supabase caller            | `public.get_learner_catalog_data()`            | Allowlisted aggregate RPC is callable because the `public` schema is exposed        |
+| `private.get_learner_catalog_activities` | Internal helper for the public catalog RPC     | Definer-owned helper; not granted to authenticated callers                          |
+| `app_learning_api_executor`              | Learner-safe private RPCs                      | Trusted boundary for placement, activity, review, and enrollment writes             |
+| `service_role`                           | Reserved worker-only scoring and purge helpers | The current worker runtime is readiness-only and does not execute these helpers yet |
+| `app_security_definer`                   | Narrow definer-owned helpers                   | Owns database helpers and policies; cannot log in or bypass RLS                     |
 
 ## Catalog scale boundary
 
@@ -59,11 +68,18 @@ activities move to a separate detail route.
 
 Identity and privacy are modeled as a database-first boundary:
 
-- Supabase Auth proves identity
+- Supabase Auth proves identity and owns the invite-only email OTP, callback, and local sign-out flow
+- The web route client uses `@supabase/ssr` to manage PKCE callback exchange and hardened session cookies
+- OTP throttling combines provider controls with a bounded in-process hashed
+  limiter; proxy-IP buckets are opt-in behind trusted ingress, and production
+  horizontal scale still requires a distributed limiter
+- Callback redirects suppress referrers, flow IDs are ASCII-only, and
+  return-path cookies are size/count bounded
 - `public.profiles`, `public.account_roles`, `public.consent_records`, and `public.data_subject_requests` hold the public lifecycle state
 - `private.registration_approvals` and `private.security_events` remain private
 - `app_security_definer` cannot log in and does not bypass RLS
 - The worker is the only runtime intended to hold the service-role secret
+- `APP_ORIGIN` must match the exact web origin, and the callback allowlist must include the query-bearing `/auth/callback*` route shape
 
 The local Supabase config keeps self-service signup disabled and exposes only
 the `public` schema through the API configuration. Storage remains available
@@ -116,7 +132,7 @@ flowchart TB
 - Direct SSE is the preferred shape for live AI tutor responses.
 - Heavy jobs such as transcription, embeddings, and grading belong in the worker path.
 - Search is planned as a hybrid of FTS and pgvector.
-- The remaining `/api/v1/learning/*` mutation route handlers remain planned work for Phase 4; the catalog read route is already implemented.
+- The remaining `/api/v1/learning/*` mutation route handlers remain planned work for Phase 4; the catalog read route and auth lifecycle routes are already implemented.
 - Split the aggregate catalog into paged index and lesson-detail reads before
   increasing the first-release catalog budget.
 - Canonical route documentation should continue to live under `docs/api-contract.md`.

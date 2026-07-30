@@ -2,17 +2,18 @@
 
 ## Purpose
 
-This document explains how learner actions are synchronized across client,
-database, and worker boundaries. The contract is already implemented in the
-database helpers, even though the HTTP routes are still pending.
+This document explains how learner actions will synchronize across client,
+database, and worker boundaries. Auth/catalog reads and protected SSR learner
+pages exist; placement, activity, and review write semantics are implemented as
+database helpers, but their HTTP routes and client synchronization are not wired.
 
 ## Runtime boundaries
 
-| Runtime                     | Allowed work                                                    |
-| --------------------------- | --------------------------------------------------------------- |
-| Web / mobile client         | Collect input and call the future app route layer only          |
-| `app_learning_api_executor` | Learner-safe placement, activity, review, and enrollment writes |
-| `service_role`              | Placement scoring and privacy purge only                        |
+| Runtime                     | Allowed work                                                                     |
+| --------------------------- | -------------------------------------------------------------------------------- |
+| Web / mobile client         | Future action writes call the app route layer only after the active learner gate |
+| `app_learning_api_executor` | Learner-safe placement, activity, review, and enrollment writes                  |
+| `service_role`              | Placement scoring and privacy purge only                                         |
 
 ## Learner-safe operations
 
@@ -44,6 +45,7 @@ database helpers, even though the HTTP routes are still pending.
   if the call is replayed.
 - `private.submit_review_event()` uses the database receipt sequence, so retries do not
   double-count progress.
+- The web learner shell now checks active profile and learner role state before any of these helpers are reachable from the browser.
 
 ## Archive behavior
 

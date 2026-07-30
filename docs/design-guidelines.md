@@ -1,6 +1,12 @@
 # Ideogram Learning — Hướng dẫn UX/UI
 
-> Bản 0.2 · 2026-07-29 · Nhãn sản phẩm `Ideogram Learning` chỉ là tên làm việc, không phải thương hiệu cuối. Stitch project: `projects/11429302359379765748`; design system: `assets/3415345924425844809` (version 2).
+> Bản 0.3 · 2026-07-30 · Nhãn sản phẩm `Ideogram Learning` chỉ là tên làm việc, không phải thương hiệu cuối. Stitch project: `projects/11429302359379765748`; design system: `assets/3415345924425844809` (version 2).
+
+> Ranh giới trạng thái: các mục 2–9 mô tả target UX cho toàn bộ web/mobile.
+> Runtime web hiện có landing, invite-only auth, responsive learner shell,
+> catalog-backed Today/path/lesson overview, profile/sign-out, và honest planned
+> states. Onboarding, placement, focused activity/review, sync, AI, progress và
+> native navigation vẫn chưa đạt target này.
 
 ## 1. Định hướng sản phẩm
 
@@ -123,10 +129,13 @@ Gói ngôn ngữ → mục tiêu (JLPT/giao tiếp) → cấp độ → lộ tr�
   là bản desktop Hôm nay cũ hơn, chỉ dùng để đối chiếu lịch sử hierarchy.
 - Các export là visual handoff đã có, không phải bằng chứng rằng đầy đủ state
   loading/empty/error/offline, responsive, dark mode hay accessibility đã được
-  phê duyệt. Phase 4–5 vẫn phải tái dựng và kiểm chứng các state đó trong runtime.
+  phê duyệt. Phase 4 đã tái dựng và kiểm chứng lát cắt public/auth/read-side nêu
+  ở đầu tài liệu; các luồng tương tác còn lại và toàn bộ Phase 5 native vẫn phải
+  được dựng/kiểm chứng trong runtime.
 - HTML từ Stitch chỉ là tài liệu tham chiếu về hierarchy/spacing; không được
   đưa trực tiếp vào Next.js hay Expo. Rebuild theo token, semantic state và
-  ranh giới nền tảng ở tài liệu này và `design-system/ideogram-learning/MASTER.md`.
+  ranh giới nền tảng ở tài liệu này và
+  [`../design-system/ideogram-learning/MASTER.md`](../design-system/ideogram-learning/MASTER.md).
 
 ## Unresolved questions
 

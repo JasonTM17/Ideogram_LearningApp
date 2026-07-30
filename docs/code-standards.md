@@ -32,11 +32,14 @@
 ## API and contract rules
 
 - `packages/contracts` owns shared API types.
-- `GET /api/v1/health` and authenticated `GET /api/v1/learning/catalog` are the
-  only implemented routes today.
-- Planned auth and privacy contracts live in `packages/api-client/src/auth`.
+- Implemented routes today are `GET /api/v1/health`, `GET /api/v1/learning/catalog`,
+  `POST /api/v1/auth/email-otp`, `GET /auth/callback`, and `POST /api/v1/auth/sign-out`.
+- Planned privacy request contracts live in `packages/api-client/src/auth`.
 - The implemented learner-catalog descriptor and parser live in
   `packages/api-client/src/learning`.
+- Web SSR learner pages use the server-side learner-session gate and read the
+  current profile plus learner role before reading the catalog directly on the
+  server; the HTTP catalog route remains the external client surface.
 - `public.data_subject_requests` is the canonical terminology for export and
   deletion requests in the current phase work.
 - Future endpoints should be versioned under `/api/v1`.
@@ -48,6 +51,10 @@
 - `DEEPSEEK_API_KEY` is server-only.
 - Do not place secrets in `NEXT_PUBLIC_*` or `EXPO_PUBLIC_*`.
 - Local ignored env files are the expected place for developer secrets.
+- `APP_ORIGIN` is mandatory for canonical same-origin mutation and callback
+  construction; open the web app using that exact origin.
+- `TRUST_PROXY_IP_HEADERS` defaults to `false` and may be enabled only behind an
+  ingress that overwrites forwarded IP headers.
 - `pnpm check:env` scans root and target runtime dotenv files without printing
   values; it rejects public AI-key names and validates the non-secret DeepSeek
   configuration contract.

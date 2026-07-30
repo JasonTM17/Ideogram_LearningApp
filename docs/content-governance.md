@@ -99,6 +99,10 @@ invented in source control.
 - Claims of official exam certification
 - Mutable published content
 
+## Access note
+
+Only active learner accounts can reach the learner shell that renders the catalog. Hidden or revoked learner accounts fail closed before content is shown, so content policy and session policy stay separate.
+
 ## Related docs
 
 - [Learning engine contract](./learning-engine-contract.md)

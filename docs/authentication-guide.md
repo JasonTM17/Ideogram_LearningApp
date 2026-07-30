@@ -2,68 +2,92 @@
 
 ## Current state
 
-Sign-in, callback, and sign-out remain contract-led today. Protected server API
-verification is now route-led for `GET /api/v1/learning/catalog`, but the app
-auth lifecycle routes are still not implemented yet.
+Sign-in, callback, and sign-out are implemented in the web app as an invite-only
+email OTP flow plus Supabase SSR PKCE. Protected server API verification is now
+route-led for `GET /api/v1/learning/catalog`, and protected learner pages use
+the same server-side session gate. The generic `packages/auth` contracts still
+exist, but they are not the wired web implementation.
 
 ## Verified contracts
 
-| Contract               | Source                                              | Purpose                                                                 |
-| ---------------------- | --------------------------------------------------- | ----------------------------------------------------------------------- |
-| Protected request auth | `apps/web/src/lib/supabase/request-auth.ts`         | Verifies bearer or SSR cookie sessions with Supabase Auth `getUser()`   |
-| Catalog route          | `apps/web/src/app/api/v1/learning/catalog/route.ts` | Protected learner-catalog read path                                     |
-| PKCE transaction       | `packages/auth/src/pkce-transaction.ts`             | Generates opaque state, nonce, verifier, and challenge values           |
-| Callback consumption   | `packages/auth/src/authorization-callback.ts`       | Parses authorization-code callbacks and rejects token-bearing payloads  |
-| Code exchange          | `packages/auth/src/authorization-exchange.ts`       | Requires a verified ID-token nonce to match the consumed transaction    |
-| Session lifecycle      | `packages/auth/src/session-lifecycle.ts`            | Determines refresh timing and clears local credentials on sign-out      |
-| Session cookies        | `packages/contracts/src/auth/auth-session.ts`       | Defines hardened web cookie attributes                                  |
-| Planned API requests   | `packages/api-client/src/auth/auth-api-requests.ts` | Defines invite-only OTP, callback exchange, and sign-out request shapes |
+| Contract / route           | Source                                              | Current purpose / status                                                               |
+| -------------------------- | --------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Web auth route config      | `apps/web/src/lib/supabase/auth-route-config.ts`    | Derives the exact trusted origin and callback URL for the web auth flow                |
+| Protected request auth     | `apps/web/src/lib/supabase/request-auth.ts`         | Verifies bearer or SSR cookie sessions with Supabase Auth verification                 |
+| Learner page session gate  | `apps/web/src/lib/supabase/learner-session.ts`      | Requires a verified user, active profile, and active learner role before SSR rendering |
+| Email OTP route            | `apps/web/src/server/auth/email-otp-route.ts`       | Invite-only request with `shouldCreateUser: false`, safe return cookie, generic `202`  |
+| Callback route             | `apps/web/src/server/auth/callback-route.ts`        | Browser `GET /auth/callback` PKCE exchange and safe redirect                           |
+| Sign-out route             | `apps/web/src/server/auth/sign-out-route.ts`        | Cookie-session-only local sign-out with empty JSON body                                |
+| Catalog route              | `apps/web/src/app/api/v1/learning/catalog/route.ts` | Protected learner-catalog read path                                                    |
+| Session cookies            | `packages/contracts/src/auth/auth-session.ts`       | Hardened web cookie attributes used by the auth/session helpers                        |
+| Generic auth contracts     | `packages/auth/src/*`                               | Provider-agnostic PKCE, callback, nonce, and session helpers; contract-level only here |
+| Auth API request envelopes | `packages/api-client/src/auth/auth-api-requests.ts` | Email OTP and sign-out request builders only; no callback builder exists               |
 
 ## Allowed flow
 
-1. A server-side registration service records an adult eligibility approval.
-2. The app asks Supabase for an email OTP request with `shouldCreateUser: false`.
-3. The client stores PKCE state, nonce, and verifier in one-use storage.
-4. The callback parser accepts only authorization-code callbacks.
-5. One-use storage atomically consumes a transaction only when both its state
-   and exact redirect URI match; a mismatched URI cannot burn the valid state.
-6. The callback exchange carries the stored verifier, state, and nonce. Its
-   OIDC adapter must validate the token issuer, audience, signature, expiry,
-   and nonce before a session is issued.
+1. `/sign-in` reads a safe relative `returnTo` path and keeps the form invite-only.
+2. `POST /api/v1/auth/email-otp` validates `email` and `returnTo`, asks Supabase
+   for an OTP with `shouldCreateUser: false`, stores the safe return cookie, and
+   returns the generic accepted response without leaking account existence.
+3. Supabase redirects back to `GET /auth/callback?code=...&sb_flow_id=...`.
+4. The callback parser rejects token-bearing query fields, consumes the stored
+   return path, and exchanges the code through Supabase SSR.
+5. The callback route redirects with `303` to the normalized return target or to
+   `/sign-in?reason=...` when exchange or provider state fails.
+6. Protected learner pages re-read the current profile and learner role after
+   `auth.getUser()`; frozen, pending-deletion, or role-revoked accounts fail
+   closed. The catalog route uses the request-auth helper for bearer or cookie
+   sessions and its RPC independently rechecks active account state.
+7. `POST /api/v1/auth/sign-out` accepts only a verified cookie session and an
+   empty JSON body, then calls `signOut({ scope: 'local' })`.
 
 ## Guardrails
 
+- `APP_ORIGIN` must match the exact web origin used by the app, and local dev is
+  aligned to `http://127.0.0.1:3000`.
+- The Supabase redirect allowlist must include the callback origin and the
+  query-bearing callback path (`/auth/callback*`) so PKCE flow IDs can round-trip
+  safely. The local `supabase/config.toml` already shows that shape; production
+  config still needs separate verification.
 - Bearer tokens in callback payloads are rejected.
-- Redirect URIs are matched exactly, not by host suffix or path prefix.
+- Callback redirects use `Referrer-Policy: no-referrer`; flow identifiers accept
+  ASCII only and never become unvalidated cookie names.
 - Expired or replayed PKCE state is rejected.
-- PKCE entropy sources must return the expected byte lengths and the digest
-  adapter must return a 32-byte SHA-256 result.
+- Return targets are limited to 256 raw characters and 768 encoded characters.
+  The app stores either the legacy generic cookie or the flow-specific cookie,
+  never both, and retains at most four pending flow targets.
 - Protected request parsing is strict: bearer credentials must use the
   `Authorization: Bearer ...` form, and the bearer client does not persist or
   refresh sessions.
 - Web session cookies are hardened by the shared cookie options before they are
   written back to the SSR store.
-- 401 is used for missing or rejected credentials; 503 is used for unexpected
-  auth-provider unavailability.
-- Local credential cleanup starts before remote sign-out completes, so a hung
-  revocation call cannot leave the local session in place.
-- Web session cookies are server-only, `httpOnly`, `SameSite=lax`, and
-  `secure` in production.
-- The native app still needs a production HTTPS universal/app-link configuration.
-  The current custom-scheme fallback is only a development escape hatch.
+- 202 is used for the generic OTP acceptance envelope; 303 is used for the
+  callback redirect; 200 is used for same-origin local sign-out.
+- Web session cookies are server-only, `httpOnly`, `SameSite=lax`, and `secure`
+  in production.
+- Local sign-out is not global revocation and does not delete user data.
+- OTP requests have a bounded in-process, hashed defense-in-depth limiter:
+  5 attempts per normalized email and, only when a trusted ingress is explicitly
+  enabled, 30 attempts per verified proxy IP per 15 minutes. Supabase/provider
+  controls remain authoritative; horizontally scaled production needs a
+  distributed limiter before widening access.
+- `TRUST_PROXY_IP_HEADERS` defaults to `false`. Enable it only when ingress
+  strips client-supplied proxy headers and writes its own values.
+- The native app still needs a production HTTPS universal/app-link
+  configuration. The current custom-scheme fallback is only a development
+  escape hatch.
 - `private.session_claim_matches(subject_id, candidate_session_id)` only checks
   the current JWT claims against the subject. It does not prove session
   revocation state.
 
 ## Not implemented yet
 
-- App route handlers for `/api/v1/auth/email-otp`, `/api/v1/auth/callback`, and
-  `/api/v1/auth/sign-out`
 - A native storage adapter for secure credential persistence
 - A production deep-link callback deployment
 - Authoritative session revocation checks for sensitive server actions
-- A production OIDC exchange adapter that verifies ID-token claims before
-  calling the nonce comparison helper
+- Any additional auth provider beyond the current invite-only email OTP flow
+- An app-owned OIDC/nonce adapter if the generic `packages/auth` contract path
+  is wired later
 
 ## Open questions
 

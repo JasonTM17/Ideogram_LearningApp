@@ -5,6 +5,16 @@
 This matrix inventories the verified stores that hold identity-adjacent data and
 describes their current lifecycle posture.
 
+## Auth lifecycle inventory
+
+- Supabase Auth stores the raw email/session/provider data for sign-in and callback exchange.
+- Web session and PKCE cookies are `httpOnly`, `SameSite=Lax`, and `secure` in production.
+- Return-to cookies are normalized to safe same-origin paths, scoped to
+  `/auth/callback`, and live for 15 minutes. Values are limited to 256 raw / 768
+  encoded characters; only a generic or flow-specific value is stored, with at
+  most four pending flow cookies.
+- Local sign-out clears the local web session only; it is not a deletion request and not a global revocation guarantee.
+
 ## Inventory
 
 | Store group                                      | Subject binding                       | Retention / TTL                           | Export                         | Purge / deletion              | Notes                                          |

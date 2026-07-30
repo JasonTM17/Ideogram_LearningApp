@@ -2,17 +2,17 @@
 
 ## Phase status
 
-| Phase | Name                            | Status                                                                      |
-| ----- | ------------------------------- | --------------------------------------------------------------------------- |
-| 1     | Foundation and Delivery         | Complete; hosted CI/sign-offs remain release dependencies                   |
-| 2     | Identity Data and Security      | In progress                                                                 |
-| 3     | Learning Domain and Content     | Complete; persistence, security, and catalog read contracts are implemented |
-| 4     | Web Learning Experience         | In progress; secure catalog read route is implemented                       |
-| 5     | Mobile Learning Experience      | Pending                                                                     |
-| 6     | AI Tutor and Personalization    | Pending                                                                     |
-| 7     | Media Offline and Sync          | Pending                                                                     |
-| 8     | Admin Quality and Observability | Pending                                                                     |
-| 9     | Release and Launch              | Pending                                                                     |
+| Phase | Name                            | Status                                                                              |
+| ----- | ------------------------------- | ----------------------------------------------------------------------------------- |
+| 1     | Foundation and Delivery         | In progress; hosted CI and business sign-offs remain release dependencies           |
+| 2     | Identity Data and Security      | In progress                                                                         |
+| 3     | Learning Domain and Content     | In progress; catalog/content path is built, but rights/editorial/audio gates remain |
+| 4     | Web Learning Experience         | In progress; auth/read-side learner slice is built, core learning mutations are not |
+| 5     | Mobile Learning Experience      | Pending                                                                             |
+| 6     | AI Tutor and Personalization    | Pending                                                                             |
+| 7     | Media Offline and Sync          | Pending                                                                             |
+| 8     | Admin Quality and Observability | Pending                                                                             |
+| 9     | Release and Launch              | Pending                                                                             |
 
 ## Roadmap shape
 
@@ -28,11 +28,8 @@
 - This repo is not production-deployed.
 - The launch plan remains internal beta first.
 - Adult-only eligibility must remain fail-closed until the decision record is approved.
-- Foundation workspace/delivery and app-shell commits are complete. Clean
-  GitHub-hosted CI and named business approvals remain release dependencies.
-- Identity/security work remains active, but the learning persistence layer and
-  protected catalog read route are now implemented. Remaining learning
-  mutation routes and mobile/web experiences are still pending.
+- Foundation workspace and app-shell code are present, but hosted CI and business approvals remain release dependencies.
+- Identity/security work remains active, and the learning persistence layer plus protected catalog read route are implemented. The auth lifecycle and read-side learner pages now exist, but remaining learning mutation routes and mobile/web experiences are still pending.
 
 ## Open questions
 
