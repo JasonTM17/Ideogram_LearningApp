@@ -3,7 +3,6 @@
     "name": "Ideogram Learning",
     "slug": "ideogram-learning",
     "version": "0.1.0",
-    "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "ideogram-learning",
     "runtimeVersion": {
@@ -25,6 +24,10 @@
     "web": {
       "bundler": "metro",
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": ["expo-router", "expo-font"],
+    "experiments": {
+      "typedRoutes": true
     }
   }
 }
