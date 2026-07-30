@@ -30,5 +30,25 @@ export const editorialTokens = {
 
 export { webColorTokens, webDesignTokens, webLayoutTokens, webMotionTokens, webTypographyTokens };
 
+export {
+  nativeColorTokens,
+  nativeDarkTheme,
+  nativeDesignTokens,
+  nativeLayoutTokens,
+  nativeLightTheme,
+  nativeMotionTokens,
+  nativeTypographyTokens,
+} from './native';
+
+export type {
+  NativeColorTokens,
+  NativeCubicBezier,
+  NativeDesignTokens,
+  NativeLayoutTokens,
+  NativeMotionTokens,
+  NativeTheme,
+  NativeTypographyTokens,
+} from './native';
+
 export type EditorialTokens = typeof editorialTokens;
 export type WebDesignTokens = typeof webDesignTokens;
