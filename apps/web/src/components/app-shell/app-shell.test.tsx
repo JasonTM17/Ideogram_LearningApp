@@ -16,10 +16,9 @@ describe('learnerPrimaryDestinations', () => {
     ]);
   });
 
-  it('marks only the AI destination as planned in the foundation shell', () => {
+  it('marks destinations without connected learner history as planned', () => {
     const plannedItems = learnerPrimaryDestinations.filter((item) => item.planned);
-    expect(plannedItems).toHaveLength(1);
-    expect(plannedItems[0]?.label).toBe('Trợ lý');
+    expect(plannedItems.map((item) => item.label)).toEqual(['Ôn tập', 'Trợ lý', 'Tiến độ']);
   });
 });
 

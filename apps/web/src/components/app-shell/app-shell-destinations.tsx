@@ -26,6 +26,7 @@ export const learnerPrimaryDestinations: readonly LearnerDestination[] = [
     href: '/review',
     description: 'Hàng đợi SRS và các mục đến hạn cần xử lý.',
     icon: RotateCcw,
+    planned: true,
   },
   {
     key: 'assistant',
@@ -41,6 +42,7 @@ export const learnerPrimaryDestinations: readonly LearnerDestination[] = [
     href: '/progress',
     description: 'Insight theo kỹ năng, mục tiêu và lỗi lặp lại.',
     icon: ChartColumn,
+    planned: true,
   },
   {
     key: 'profile',
