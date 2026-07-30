@@ -1,73 +1,34 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  createAuthorizationCodeExchangeApiRequest,
   createDataSubjectRequestApiRequest,
   createEmailOtpApiRequest,
+  createSignOutApiRequest,
   plannedAuthApiRoutes,
 } from './auth-api-requests';
 
 describe('planned authentication API requests', () => {
-  const callbackUri = 'https://app.ideogram.example/auth/callback';
-
-  it('creates an invite-only email OTP request', () => {
+  it('creates an invite-only email OTP request with a safe relative return target', () => {
     expect(
       createEmailOtpApiRequest({
-        allowedRedirectUris: [callbackUri],
         email: ' Minh@example.test ',
-        redirectUri: callbackUri,
+        returnTo: '/learn?deck=n5',
       }),
     ).toEqual({
       body: {
         email: 'minh@example.test',
-        redirectUri: callbackUri,
-        shouldCreateUser: false,
+        returnTo: '/learn?deck=n5',
       },
       method: 'POST',
       path: plannedAuthApiRoutes.emailOtp,
     });
   });
 
-  it('rejects a callback URI that only resembles an allowed URI', () => {
+  it('rejects an unsafe return target that could become an open redirect', () => {
     expect(() =>
       createEmailOtpApiRequest({
-        allowedRedirectUris: [callbackUri],
         email: 'minh@example.test',
-        redirectUri: `${callbackUri}?next=https://attacker.example`,
-      }),
-    ).toThrow(TypeError);
-  });
-
-  it('binds an authorization exchange to an exact callback URI, state, and nonce', () => {
-    expect(
-      createAuthorizationCodeExchangeApiRequest({
-        allowedRedirectUris: [callbackUri],
-        code: 'one-time-code',
-        codeVerifier: 'pkce-verifier',
-        nonce: 'id-token-nonce',
-        redirectUri: callbackUri,
-        state: 'opaque-state',
-      }),
-    ).toEqual({
-      body: {
-        code: 'one-time-code',
-        codeVerifier: 'pkce-verifier',
-        nonce: 'id-token-nonce',
-        redirectUri: callbackUri,
-        state: 'opaque-state',
-      },
-      method: 'POST',
-      path: plannedAuthApiRoutes.callback,
-    });
-
-    expect(() =>
-      createAuthorizationCodeExchangeApiRequest({
-        allowedRedirectUris: [callbackUri],
-        code: 'one-time-code',
-        codeVerifier: 'pkce-verifier',
-        nonce: 'id-token-nonce',
-        redirectUri: 'https://attacker.example/auth/callback',
-        state: 'opaque-state',
+        returnTo: 'https://attacker.example',
       }),
     ).toThrow(TypeError);
   });
@@ -95,5 +56,13 @@ describe('planned authentication API requests', () => {
         requestKind: 'purge_everything' as never,
       }),
     ).toThrow(TypeError);
+  });
+
+  it('creates a same-origin sign-out mutation request envelope', () => {
+    expect(createSignOutApiRequest()).toEqual({
+      body: {},
+      method: 'POST',
+      path: plannedAuthApiRoutes.signOut,
+    });
   });
 });

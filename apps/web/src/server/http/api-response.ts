@@ -2,11 +2,23 @@ import type { ApiErrorCode, ApiErrorResponse } from '@ideogram/contracts';
 
 export class ApiHttpError extends Error {
   readonly code: ApiErrorCode;
+  readonly headers: HeadersInit | undefined;
   readonly status: number;
 
-  constructor({ code, message, status }: { code: ApiErrorCode; message: string; status: number }) {
+  constructor({
+    code,
+    headers,
+    message,
+    status,
+  }: {
+    code: ApiErrorCode;
+    headers?: HeadersInit;
+    message: string;
+    status: number;
+  }) {
     super(message);
     this.code = code;
+    this.headers = headers;
     this.name = 'ApiHttpError';
     this.status = status;
   }
@@ -57,5 +69,9 @@ export const createApiErrorResponse = (error: unknown, requestId: string): Respo
     requestId,
   };
 
-  return jsonNoStore(body, { requestId, status: apiError.status });
+  return jsonNoStore(body, {
+    ...(apiError.headers ? { headers: apiError.headers } : {}),
+    requestId,
+    status: apiError.status,
+  });
 };

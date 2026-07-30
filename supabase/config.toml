@@ -25,8 +25,11 @@ api_url = "http://127.0.0.1"
 
 [auth]
 enabled = true
-site_url = "http://localhost:3000"
-additional_redirect_urls = ["ideogram-learning://auth/callback"]
+site_url = "http://127.0.0.1:3000"
+additional_redirect_urls = [
+  "http://127.0.0.1:3000/auth/callback*",
+  "ideogram-learning://auth/callback",
+]
 jwt_expiry = 3600
 enable_signup = false
 enable_anonymous_sign_ins = false
