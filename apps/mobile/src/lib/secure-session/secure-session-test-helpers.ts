@@ -6,8 +6,10 @@ import {
 import type { SecureStorePort, Sha256Port } from './secure-session-storage-types';
 
 type FailurePredicate = (key: string) => boolean;
+type SetObserver = (key: string, value: string) => Promise<void>;
 
 export class InMemorySecureStore implements SecureStorePort {
+  beforeSet: SetObserver | undefined;
   failGet: FailurePredicate | undefined;
   failRemove: FailurePredicate | undefined;
   failSet: FailurePredicate | undefined;
@@ -30,6 +32,8 @@ export class InMemorySecureStore implements SecureStorePort {
   }
 
   async setItem(key: string, value: string): Promise<void> {
+    await this.beforeSet?.(key, value);
+
     if (this.failSet?.(key)) {
       throw new Error('write failed');
     }
@@ -50,13 +54,19 @@ export const deterministicSha256: Sha256Port = {
   },
 };
 
-export const createTestStorage = (options: ChunkedSecureSessionStorageOptions = {}) => {
-  const secureStore = new InMemorySecureStore();
-  const storage = new ChunkedSecureSessionStorage(secureStore, deterministicSha256, {
+export const createStorageForSecureStore = (
+  secureStore: InMemorySecureStore,
+  options: ChunkedSecureSessionStorageOptions = {},
+) =>
+  new ChunkedSecureSessionStorage(secureStore, deterministicSha256, {
     chunkByteLimit: 64,
     maximumChunks: 8,
     ...options,
   });
+
+export const createTestStorage = (options: ChunkedSecureSessionStorageOptions = {}) => {
+  const secureStore = new InMemorySecureStore();
+  const storage = createStorageForSecureStore(secureStore, options);
 
   return { secureStore, storage };
 };

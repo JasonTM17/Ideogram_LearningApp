@@ -10,9 +10,10 @@ import {
 
 export type ChunkedSecureSessionStorageOptions = SecureSessionCodecOptions;
 
+const sharedSessionLocks = new Map<string, Promise<void>>();
+
 export class ChunkedSecureSessionStorage implements AsyncKeyValueStorage {
   private readonly codec: SecureSessionCodec;
-  private readonly locks = new Map<string, Promise<void>>();
   private readonly records: SecureSessionRecordStore;
 
   constructor(
@@ -100,8 +101,11 @@ export class ChunkedSecureSessionStorage implements AsyncKeyValueStorage {
         version: 1,
       };
 
+      let writingMarkerCommitted = false;
+
       try {
         await this.writeManifest(manifestKey, writingManifest);
+        writingMarkerCommitted = true;
         await this.records.removeChunks(baseKey, cleanupCount);
         await this.records.writeChunks(baseKey, chunks);
         await this.writeManifest(manifestKey, {
@@ -110,7 +114,9 @@ export class ChunkedSecureSessionStorage implements AsyncKeyValueStorage {
           status: 'ready',
         });
       } catch (error) {
-        await this.purgeBestEffort(baseKey, cleanupCount);
+        if (writingMarkerCommitted) {
+          await this.purgeBestEffort(baseKey, cleanupCount);
+        }
         throw this.toStorageError(error);
       }
     });
@@ -148,17 +154,17 @@ export class ChunkedSecureSessionStorage implements AsyncKeyValueStorage {
   }
 
   private runExclusive<T>(key: string, operation: () => Promise<T>): Promise<T> {
-    const previous = this.locks.get(key) ?? Promise.resolve();
+    const previous = sharedSessionLocks.get(key) ?? Promise.resolve();
     const result = previous.catch(() => undefined).then(operation);
     const tail = result.then(
       () => undefined,
       () => undefined,
     );
-    this.locks.set(key, tail);
+    sharedSessionLocks.set(key, tail);
 
     return result.finally(() => {
-      if (this.locks.get(key) === tail) {
-        this.locks.delete(key);
+      if (sharedSessionLocks.get(key) === tail) {
+        sharedSessionLocks.delete(key);
       }
     });
   }
