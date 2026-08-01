@@ -137,14 +137,14 @@ function OptionGroup<T extends string>({
   theme,
 }: OptionGroupProps<T>) {
   return (
-    <View style={styles.group}>
+    <View accessibilityLabel={label} accessibilityRole="radiogroup" style={styles.group}>
       <AppText variant="label">{label}</AppText>
       <View style={styles.options}>
         {options.map((option) => {
           const active = selected === option.value;
           return (
             <Pressable
-              accessibilityRole="button"
+              accessibilityRole="radio"
               accessibilityState={{ disabled, selected: active }}
               disabled={disabled}
               key={option.value}
@@ -153,6 +153,7 @@ function OptionGroup<T extends string>({
                 styles.option,
                 {
                   backgroundColor: active ? theme.color.actionPrimary : theme.color.surfaceSubtle,
+                  borderColor: active ? theme.color.actionPrimary : theme.color.borderSubtle,
                   opacity: disabled ? 0.52 : pressed ? 0.72 : 1,
                 },
               ]}
@@ -181,6 +182,7 @@ const styles = StyleSheet.create({
   group: { gap: nativeLayoutTokens.spacing[2] },
   heading: { gap: nativeLayoutTokens.spacing[1] },
   option: {
+    borderWidth: 1,
     borderRadius: nativeLayoutTokens.radius.chip,
     justifyContent: 'center',
     minHeight: nativeLayoutTokens.touchTarget.android,

@@ -19,7 +19,9 @@ describe('TutorResponsePanel', () => {
       createElement(TutorResponsePanel, { idempotentReplay: true, response }),
     );
 
-    expect(markup).toContain('Câu trả lời của Trợ lý');
+    expect(markup).toContain('aria-live="polite"');
+    expect(markup).toContain('aria-labelledby="tutor-response-title"');
+    expect(markup).toContain('tabindex="-1"');
     expect(markup).toContain('Kết quả đã lưu được dùng lại an toàn.');
     for (const value of Object.values(response)) {
       expect(markup).toContain(value);

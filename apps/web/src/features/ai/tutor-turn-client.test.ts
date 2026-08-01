@@ -43,6 +43,7 @@ describe('web tutor turn client', () => {
       '/api/v1/ai/tutor/turn',
       expect.objectContaining({
         credentials: 'same-origin',
+        headers: expect.objectContaining({ 'Content-Type': 'application/json' }),
         method: 'POST',
         redirect: 'error',
       }),
@@ -62,6 +63,7 @@ describe('web tutor turn client', () => {
   it.each([
     [401, 'UNAUTHORIZED'],
     [403, 'FORBIDDEN'],
+    [409, 'INVALID_REQUEST'],
     [429, 'RATE_LIMITED'],
     [503, 'SERVER_ERROR'],
   ] as const)('maps HTTP %i to an opaque %s error', async (status, code) => {
@@ -83,5 +85,19 @@ describe('web tutor turn client', () => {
         fetchImplementation: vi.fn().mockResolvedValue(response(200, receipt, 'text/html')),
       }),
     ).rejects.toMatchObject({ code: 'INVALID_RESPONSE' });
+  });
+
+  it('maps aborts and network failures to stable client errors', async () => {
+    await expect(
+      submitWebTutorTurn(request, {
+        fetchImplementation: vi.fn().mockRejectedValue(new DOMException('Aborted', 'AbortError')),
+      }),
+    ).rejects.toMatchObject({ code: 'ABORTED' });
+
+    await expect(
+      submitWebTutorTurn(request, {
+        fetchImplementation: vi.fn().mockRejectedValue(new Error('offline')),
+      }),
+    ).rejects.toMatchObject({ code: 'NETWORK_ERROR' });
   });
 });

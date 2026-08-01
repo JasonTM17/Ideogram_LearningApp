@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
+
 import type { TutorTurnResponse } from '@ideogram/contracts';
 
 interface TutorResponsePanelProps {
@@ -17,23 +19,30 @@ const responseSections = [
 ] as const satisfies readonly [keyof TutorTurnResponse, string][];
 
 export function TutorResponsePanel({ idempotentReplay, response }: TutorResponsePanelProps) {
+  const panelRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    panelRef.current?.focus();
+  }, []);
+
   return (
     <section
-      aria-label="Câu trả lời của Trợ lý"
-      className="grid gap-4 rounded-3xl border border-orange-200 bg-orange-50 p-5 shadow-sm"
+      ref={panelRef}
+      aria-live="polite"
+      aria-labelledby="tutor-response-title"
+      className="tutor-response"
+      tabIndex={-1}
     >
-      <div>
-        <h2 className="text-xl font-semibold text-stone-950">Trợ lý trả lời</h2>
+      <div className="tutor-response__heading">
+        <h2 id="tutor-response-title">Trợ lý trả lời</h2>
         {idempotentReplay ? (
-          <p className="mt-1 text-sm font-medium text-emerald-700">
-            Kết quả đã lưu được dùng lại an toàn.
-          </p>
+          <p className="tutor-response__replay">Kết quả đã lưu được dùng lại an toàn.</p>
         ) : null}
       </div>
       {responseSections.map(([key, label]) => (
-        <div className="grid gap-1" key={key}>
-          <h3 className="text-sm font-semibold text-stone-700">{label}</h3>
-          <p className="whitespace-pre-wrap text-sm leading-7 text-stone-900">{response[key]}</p>
+        <div className="tutor-response__section" key={key}>
+          <h3>{label}</h3>
+          <p>{response[key]}</p>
         </div>
       ))}
     </section>

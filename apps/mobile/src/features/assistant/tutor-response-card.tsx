@@ -25,14 +25,16 @@ export function TutorResponseCard({ idempotentReplay, response }: TutorResponseC
 
   return (
     <View
-      accessibilityLabel="Câu trả lời của Trợ lý"
+      accessibilityLiveRegion="polite"
       style={[
         styles.card,
         { backgroundColor: theme.color.surface, borderColor: theme.color.borderSubtle },
       ]}
     >
       <View style={styles.heading}>
-        <AppText variant="headingMd">Trợ lý trả lời</AppText>
+        <AppText accessibilityRole="header" variant="headingMd">
+          Trợ lý trả lời
+        </AppText>
         {idempotentReplay ? (
           <AppText tone="success" variant="caption">
             Kết quả đã lưu được dùng lại an toàn

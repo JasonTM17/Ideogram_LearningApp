@@ -1,9 +1,12 @@
 import { createTutorTurnApiRequest } from '@ideogram/api-client';
+import { useRouter } from 'expo-router';
 import * as Crypto from 'expo-crypto';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  AccessibilityInfo,
   KeyboardAvoidingView,
+  Keyboard,
   Platform,
   Pressable,
   StyleSheet,
@@ -32,6 +35,7 @@ import { TutorPreferenceDraftPanel } from './tutor-preference-draft-panel';
 import { TutorResponseCard } from './tutor-response-card';
 
 export function AssistantScreen() {
+  const router = useRouter();
   const { theme } = useMobileTheme();
   const { getRequestSignal, hasSession, isHydrating, sessionProvider } = useNativeAuthSession();
   const [conversationId] = useState(() => Crypto.randomUUID());
@@ -47,6 +51,12 @@ export function AssistantScreen() {
       activeRequest.current?.dispose();
     };
   }, []);
+
+  useEffect(() => {
+    if (state.kind === 'ready') {
+      void AccessibilityInfo.announceForAccessibility('Trợ lý đã trả lời.');
+    }
+  }, [state.kind]);
 
   const submit = useCallback(async () => {
     const trimmedMessage = message.trim();
@@ -75,6 +85,7 @@ export function AssistantScreen() {
     }
 
     const request = createSessionBoundRequestSignal(getRequestSignal());
+    Keyboard.dismiss();
     activeRequest.current = request;
     setState({ kind: 'submitting' });
 
@@ -133,7 +144,10 @@ export function AssistantScreen() {
       ) : null}
       {!isHydrating && !hasSession ? (
         <StatusPanel
+          actionHint="Mở màn hình đăng nhập"
+          actionLabel="Đăng nhập"
           description="Hãy đăng nhập để gửi câu hỏi và nhận câu trả lời riêng cho tiến độ của bạn."
+          onAction={() => router.replace('../../sign-in')}
           title="Cần đăng nhập"
           variant="error"
         />
@@ -142,11 +156,6 @@ export function AssistantScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.form}
       >
-        <TutorPreferenceDraftPanel
-          disabled={isSubmitting}
-          onChange={setPreferences}
-          preferences={preferences}
-        />
         <View
           style={[
             styles.composer,
@@ -162,12 +171,12 @@ export function AssistantScreen() {
           <TextInput
             accessibilityHint="Nhập câu hỏi ngôn ngữ bằng tiếng Việt"
             accessibilityLabel="Câu hỏi cho Trợ lý"
-            editable={!isSubmitting}
+            editable={!isSubmitting && !isHydrating && hasSession}
             maxLength={2000}
             multiline
             onChangeText={(value) => {
               setMessage(value);
-              if (state.kind === 'error') {
+              if (state.kind !== 'idle') {
                 setState({ kind: 'idle' });
               }
             }}
@@ -211,6 +220,14 @@ export function AssistantScreen() {
             AI có thể sai. Ranh giới nguồn luôn được hiển thị trong câu trả lời.
           </AppText>
         </View>
+        <TutorPreferenceDraftPanel
+          disabled={isSubmitting || isHydrating || !hasSession}
+          onChange={(next) => {
+            setPreferences(next);
+            if (state.kind !== 'idle') setState({ kind: 'idle' });
+          }}
+          preferences={preferences}
+        />
       </KeyboardAvoidingView>
       {state.kind === 'error' ? (
         <StatusPanel

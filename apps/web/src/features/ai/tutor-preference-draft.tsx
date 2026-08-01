@@ -15,7 +15,7 @@ type TutorUiState =
       kind: 'ready';
       response: Awaited<ReturnType<typeof submitWebTutorTurn>>['response'];
     }
-  | { kind: 'error'; message: string };
+  | { code?: WebTutorTurnError['code']; kind: 'error'; message: string };
 
 const errorCopy: Record<WebTutorTurnError['code'], string> = {
   ABORTED: 'Yêu cầu đã được dừng lại.',
@@ -81,7 +81,7 @@ export function TutorPreferenceDraft() {
     } catch (error: unknown) {
       if (controller.signal.aborted) return;
       const code = error instanceof WebTutorTurnError ? error.code : 'NETWORK_ERROR';
-      setState({ kind: 'error', message: errorCopy[code] });
+      setState({ code, kind: 'error', message: errorCopy[code] });
     } finally {
       if (activeRequest.current === controller) activeRequest.current = null;
     }
@@ -91,64 +91,81 @@ export function TutorPreferenceDraft() {
   const isDisabled = isSubmitting || message.trim().length === 0;
 
   return (
-    <section className="grid gap-5 rounded-3xl border border-stone-200 bg-stone-50 p-4 shadow-sm sm:p-6">
-      <div>
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-700">
-          Trợ lý AI
-        </p>
-        <h2 className="mt-2 text-2xl font-semibold text-stone-950">Hỏi bằng tiếng Việt</h2>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-stone-600">
+    <section className="tutor-assistant">
+      <div className="tutor-assistant__intro">
+        <p className="tutor-assistant__eyebrow">Trợ lý AI</p>
+        <h2>Hỏi bằng tiếng Việt</h2>
+        <p>
           Chọn cấu hình trước khi hỏi. Câu trả lời hiển thị ranh giới nguồn và không tự nhận là giáo
           trình chính thức.
         </p>
       </div>
       <TutorPreferenceControls
         disabled={isSubmitting}
-        onChange={setPreferences}
+        onChange={(next) => {
+          setPreferences(next);
+          if (state.kind !== 'idle') setState({ kind: 'idle' });
+        }}
         preferences={preferences}
       />
       <form
-        className="grid gap-3 rounded-3xl border border-stone-200 bg-white p-5"
+        className="tutor-assistant__form"
         onSubmit={(event) => {
           event.preventDefault();
           void submit();
         }}
       >
-        <label className="grid gap-2 text-sm font-semibold text-stone-800" htmlFor="tutor-message">
+        <label className="tutor-choice" htmlFor="tutor-message">
           Câu hỏi của bạn
           <textarea
             aria-describedby="tutor-message-help"
+            className="tutor-assistant__textarea"
+            disabled={isSubmitting}
             id="tutor-message"
             maxLength={2000}
             onChange={(event) => {
               setMessage(event.target.value);
-              if (state.kind === 'error') setState({ kind: 'idle' });
+              if (state.kind !== 'idle') setState({ kind: 'idle' });
             }}
             placeholder="Ví dụ: Vì sao dùng は thay vì が?"
             rows={5}
             value={message}
           />
         </label>
-        <p className="text-xs leading-5 text-stone-500" id="tutor-message-help">
+        <p className="tutor-assistant__hint" id="tutor-message-help">
           Tối đa 2.000 ký tự. Không gửi mật khẩu, mã xác thực hoặc thông tin nhận diện.
         </p>
         <button
           aria-busy={isSubmitting}
-          className="min-h-11 rounded-2xl bg-orange-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-orange-800 disabled:cursor-not-allowed disabled:opacity-45"
+          className="tutor-button tutor-button--primary"
           disabled={isDisabled}
           type="submit"
         >
           {isSubmitting ? 'Đang suy nghĩ…' : 'Gửi câu hỏi'}
         </button>
+        {isSubmitting ? (
+          <button
+            className="tutor-button tutor-button--secondary"
+            onClick={() => {
+              activeRequest.current?.abort();
+              setState({ kind: 'idle' });
+            }}
+            type="button"
+          >
+            Dừng yêu cầu
+          </button>
+        ) : null}
       </form>
       {state.kind === 'error' ? (
-        <div
-          aria-live="assertive"
-          className="grid gap-3 rounded-3xl border border-red-200 bg-red-50 p-5"
-        >
-          <p className="text-sm leading-6 text-red-800">{state.message}</p>
+        <div aria-live="assertive" className="tutor-error">
+          <p className="tutor-error__message">{state.message}</p>
+          {state.code === 'UNAUTHORIZED' ? (
+            <a className="tutor-error__link" href="/sign-in?returnTo=%2Fassistant">
+              Đăng nhập lại
+            </a>
+          ) : null}
           <button
-            className="min-h-11 w-fit rounded-2xl border border-red-300 px-4 py-2 text-sm font-semibold text-red-900 hover:bg-red-100 disabled:opacity-50"
+            className="tutor-button tutor-button--secondary"
             disabled={isDisabled}
             onClick={() => void submit()}
             type="button"

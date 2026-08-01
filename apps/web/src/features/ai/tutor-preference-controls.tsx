@@ -52,15 +52,12 @@ export function TutorPreferenceControls({
   const levels = languageLevelCodes[preferences.preferredLanguageCode];
 
   return (
-    <fieldset
-      className="grid gap-4 rounded-3xl border border-stone-200 bg-white p-5 shadow-sm"
-      disabled={disabled}
-    >
-      <legend className="text-lg font-semibold text-stone-950">Cấu hình Trợ lý</legend>
-      <p className="text-sm leading-6 text-stone-600">
+    <fieldset className="tutor-preferences" disabled={disabled}>
+      <legend className="tutor-preferences__legend">Cấu hình Trợ lý</legend>
+      <p className="tutor-preferences__description">
         Cấu hình dành cho người Việt; được gửi cùng câu hỏi và không làm yếu ranh giới an toàn.
       </p>
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="tutor-preferences__grid">
         <Choice
           label="Ngôn ngữ muốn học"
           options={languageOptions}
@@ -124,11 +121,11 @@ interface ChoiceProps {
 
 function Choice({ label, onChange, options, value }: ChoiceProps) {
   return (
-    <label className="grid gap-2 text-sm font-semibold text-stone-800">
+    <label className="tutor-choice">
       <span>{label}</span>
       <select
         aria-label={label}
-        className="min-h-11 rounded-2xl border border-stone-200 bg-stone-50 px-3 text-sm font-medium text-stone-900 outline-none focus:border-orange-600 focus:ring-2 focus:ring-orange-200"
+        className="tutor-choice__select"
         onChange={(event) => onChange(event.target.value)}
         value={value}
       >
