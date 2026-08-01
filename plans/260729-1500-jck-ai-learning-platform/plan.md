@@ -64,7 +64,7 @@ gate riêng.
 | 3 | [Learning Domain and Content](./phase-03-learning-domain-and-content.md) | In progress |
 | 4 | [Web Learning Experience](./phase-04-web-learning-experience.md) | In progress |
 | 5 | [Mobile Learning Experience](./phase-05-mobile-learning-experience.md) | In progress |
-| 6 | [AI Tutor and Personalization](./phase-06-ai-tutor-and-personalization.md) | Pending |
+| 6 | [AI Tutor and Personalization](./phase-06-ai-tutor-and-personalization.md) | In Progress |
 | 7 | [Media Offline and Sync](./phase-07-media-offline-and-sync.md) | Pending |
 | 8 | [Admin Quality and Observability](./phase-08-admin-quality-and-observability.md) | Pending |
 | 9 | [Release and Launch](./phase-09-release-and-launch.md) | Pending |

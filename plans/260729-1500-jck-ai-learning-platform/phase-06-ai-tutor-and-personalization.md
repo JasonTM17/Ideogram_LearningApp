@@ -1,7 +1,7 @@
 ---
 phase: 6
 title: "AI Tutor and Personalization"
-status: pending
+status: in_progress
 effort: "12–18 engineer-days plus pedagogical review"
 ---
 
