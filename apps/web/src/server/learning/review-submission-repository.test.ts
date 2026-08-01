@@ -141,4 +141,18 @@ describe('review submission repository', () => {
       submitReviewEvent({ input: reviewInput, userId: reviewInput.deviceId }, execute),
     ).rejects.toBe(infrastructureError);
   });
+
+  it.each(['P0002', '42501', '23514', '22023'])(
+    'does not disguise an unexpected PostgreSQL %s failure as a learner error',
+    async (code) => {
+      const infrastructureError = Object.assign(new Error('unexpected database failure'), { code });
+      const execute = async () => {
+        throw infrastructureError;
+      };
+
+      await expect(
+        submitReviewEvent({ input: reviewInput, userId: reviewInput.deviceId }, execute),
+      ).rejects.toBe(infrastructureError);
+    },
+  );
 });

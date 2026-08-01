@@ -96,6 +96,20 @@ const submitReviewEventSql = `
 const createPayloadHash = (input: ReviewSubmissionInput): string =>
   createHash('sha256').update(serializeReviewSubmissionForIdempotency(input)).digest('hex');
 
+const forbiddenReviewMessages = new Set([
+  'Only active learner accounts may mutate learning state.',
+  'Learning operations require a published active content release.',
+  'Learning operations require an active enrollment for the content release.',
+]);
+const missingReviewItemMessages = new Set([
+  'Review item is not available to this learner.',
+  'Review item changed while the operation was being validated.',
+]);
+const conflictingReviewMessages = new Set([
+  'Review idempotency key was reused with a different payload.',
+  'Device sequence was already used for another review event.',
+]);
+
 const mapDatabaseError = (error: unknown): never => {
   const code =
     error && typeof error === 'object' && 'code' in error && typeof error.code === 'string'
@@ -106,39 +120,35 @@ const mapDatabaseError = (error: unknown): never => {
       ? error.message
       : undefined;
 
-  if (code === 'P0002') {
+  if (code === 'P0002' && message && missingReviewItemMessages.has(message)) {
     throw new ApiHttpError({
       code: 'NOT_FOUND',
       message: 'Mục ôn tập không còn khả dụng.',
       status: 404,
     });
   }
-  if (code === '42501') {
+  if (code === '42501' && message && forbiddenReviewMessages.has(message)) {
     throw new ApiHttpError({
       code: 'FORBIDDEN',
       message: 'Bạn không thể cập nhật mục ôn tập này.',
       status: 403,
     });
   }
-  if (code === '23514') {
+  if (code === '23514' && message === 'Suspended review items cannot receive review events.') {
     throw new ApiHttpError({
       code: 'INVALID_REQUEST',
       message: 'Mục ôn tập đang ở trạng thái không thể cập nhật.',
       status: 409,
     });
   }
-  if (
-    code === '22023' &&
-    (message === 'Review idempotency key was reused with a different payload.' ||
-      message === 'Device sequence was already used for another review event.')
-  ) {
+  if (code === '22023' && message && conflictingReviewMessages.has(message)) {
     throw new ApiHttpError({
       code: 'INVALID_REQUEST',
       message: 'Thao tác ôn tập xung đột với một lần gửi trước đó.',
       status: 409,
     });
   }
-  if (code === '22023') {
+  if (code === '22023' && message === 'Review submission input is invalid.') {
     throw new ApiHttpError({
       code: 'INVALID_REQUEST',
       message: 'Dữ liệu ôn tập không hợp lệ.',
