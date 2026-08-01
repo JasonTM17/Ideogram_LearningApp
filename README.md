@@ -4,14 +4,14 @@ Ideogram Learning is a Vietnamese-first language learning platform for Japanese-
 
 ## Current foundation
 
-- Web: Next.js App Router shell in `apps/web` with public landing, sign-in, callback, and protected learner pages
-- Mobile: Expo shell in `apps/mobile` with protected session hydration, native email-link sign-in/callback screens, catalog-backed Today and Lesson read views, an internal learner shell, and a durable device-scoped activity operation identity foundation
+- Web: Next.js App Router shell in `apps/web` with public landing, sign-in, callback, protected learner pages, and a Vietnamese-first bounded tutor-turn surface
+- Mobile: Expo shell in `apps/mobile` with protected session hydration, native email-link sign-in/callback screens, catalog-backed Today and Lesson read views, an internal learner shell, a durable device-scoped activity operation identity foundation, and a session-bound bounded tutor-turn surface
 - Worker: Node worker stub in `apps/worker`
 - Shared packages: `packages/contracts`, `packages/ai`, `packages/design-tokens`, `packages/config`, `packages/testing`, `packages/auth`, `packages/api-client`, `packages/learning-engine`
 - Implemented API routes: `GET /api/v1/health`, `GET /api/v1/learning/catalog`, `POST /api/v1/learning/activities/submit`, `POST /api/v1/learning/reviews/submit`, bounded `POST /api/v1/ai/tutor/turn`, `POST /api/v1/auth/email-otp`, `GET /auth/callback`, `POST /api/v1/auth/sign-out`
 - Web SSR learner pages read the catalog directly; the catalog HTTP route remains the external/mobile surface
 - Phase 3 learning persistence: Supabase migrations and private helpers now implement the learning content catalog, placement flow, activity attempts, review engine, and purge receipts. Next.js now exposes the catalog read route, review submission, and a server-evaluated activity submission route for vocabulary acknowledgement and objective listening answers. The remaining learning mutation routes and full interactive learner flows are still pending.
-- Phase 6A AI boundary: the web Node route authenticates each tutor turn, checks an exact completed replay before new provider configuration, requires the append-only provider-consent policy and `AI_TUTOR_ENABLED=true` for new work, reserves an idempotent private turn/quota row with a database-generated attempt lease, calls DeepSeek outside the DB transaction, and stores structured response/usage/cost or a normalized failure. The route is deliberately disabled by default and does not yet provide grounded lesson retrieval, SSE, history UI, or mobile tutor transport.
+- Phase 6A AI boundary: the web Node route authenticates each tutor turn, checks an exact completed replay before new provider configuration, requires the append-only provider-consent policy and `AI_TUTOR_ENABLED=true` for new work, reserves an idempotent private turn/quota row with a database-generated attempt lease, calls DeepSeek outside the DB transaction, and stores structured response/usage/cost or a normalized failure. The bounded JSON route is now consumed by both web cookie transport and Expo bearer transport through the shared API client. An uncertain retry retains its turn identity until a receipt, cancellation, or draft change; the client only exposes the Japanese beta pack while the server remains authoritative. It is deliberately disabled by default and does not yet provide grounded lesson retrieval, SSE, durable history, or offline tutor queues.
 - Validation: run the workspace gates below plus the two named pgTAP suites
   before shipping learner-write changes. Historical review-boundary evidence is
   retained in the engineering journal; it is not deployment evidence.
@@ -66,6 +66,23 @@ pnpm supabase:status
 pnpm supabase:stop
 ```
 
+## GitHub About and container package
+
+The repository About metadata is maintained on GitHub with the Vietnamese-first
+product description and language-learning topics. The web image is published as
+a public GitHub Container Registry package after every push to `main` (with
+SBOM/provenance enabled):
+
+```bash
+docker pull ghcr.io/jasontm17/ideogram-learning-app/web:main
+docker pull ghcr.io/jasontm17/ideogram-learning-app/web:latest
+```
+
+- [GitHub About](https://github.com/JasonTM17/Ideogram_LearningApp)
+- [Public GHCR package](https://github.com/JasonTM17/Ideogram_LearningApp/pkgs/container/ideogram-learning-app%2Fweb)
+- The image contains no AI credential; runtime secrets must be injected by the
+  deployment platform.
+
 ## Environment
 
 - Copy `.env.example` to a local ignored env file before running secret-backed features.
@@ -97,7 +114,7 @@ pnpm supabase:stop
 
 ## What is not implemented yet
 
-- Other learning mutations, interactive lesson and review UI/offline sync, onboarding, placement, SRS queue UI, grounded/SSE AI chat, progress write flows, mobile tutor transport, and admin workflows. The native operation identity is ready for these flows, but the durable mutation queue and reconciliation remain a later phase.
+- Other learning mutations, interactive lesson and review UI/offline sync, onboarding, placement, SRS queue UI, grounded/SSE AI chat, durable tutor history/offline queues, progress write flows, and admin workflows. The native operation identity and bounded tutor turn are ready for these later flows, but durable mutation queues and reconciliation remain a later phase.
 - Activity evaluators beyond vocabulary acknowledgement and objective listening, including speaking and writing assessment
 - Production web runtime deployment or cloud provisioning (the public GHCR image is published, but no hosted runtime is configured)
 - Hosted production login credential setup for the learning write path; the provisioning SQL exists, but the secret credential and platform wiring remain external

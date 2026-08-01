@@ -61,8 +61,29 @@ Status behavior:
 | `503`       | AI kill switch, provider, or database availability failure     |
 
 This is intentionally a bounded JSON foundation, not the accepted direct SSE
-transport. Grounded lesson retrieval, mobile tutor client, cancellation/reconnect
-semantics, long-lived history UI, and golden-set/injection evaluation remain pending.
+transport. The web cookie client and Expo bearer client now share request
+construction and receipt parsing through `@ideogram/api-client`; both surfaces
+keep the response source boundary explicit. Grounded lesson retrieval,
+cancellation/reconnect semantics, long-lived history UI, offline tutor queues,
+and golden-set/injection evaluation remain pending.
+
+### Tutor client transport
+
+- Web uses `credentials: "same-origin"` and never stores a provider credential
+  in browser state. It maps `401`, `403`, `429`, `5xx`, malformed receipts, and
+  aborts to opaque learner-safe states.
+- Expo uses the existing native client session boundary, bearer authentication,
+  request timeout, account-switch epoch, and unmount cancellation. It does not
+  import `@ideogram/ai` or send a user-controlled identity to the provider.
+- Both clients validate the request before network access, disable duplicate
+  submission while a turn is pending, and render all six bounded response
+  fields, including the Vietnamese source-boundary field. An uncertain retry
+  deliberately keeps its `turnId` until a completed receipt, cancellation, or
+  meaningful draft change.
+- `tutorLanguageAvailability` makes Japanese the only selectable beta tutor
+  pack. This is a client usability guard, not authorization: the route remains
+  authoritative for active language-pack policy and can reject stale or
+  malicious requests.
 
 ## Shared API error shape
 

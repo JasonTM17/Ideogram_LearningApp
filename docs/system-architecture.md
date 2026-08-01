@@ -12,7 +12,7 @@ The platform is designed as a modular monolith with three client runtimes and on
 
 ## Current state
 
-The implementation is still at the foundation stage for user-facing apps. The implemented HTTP API routes today are `GET /api/v1/health`, `GET /api/v1/learning/catalog`, `POST /api/v1/learning/activities/submit`, `POST /api/v1/learning/reviews/submit`, `POST /api/v1/ai/tutor/turn`, `POST /api/v1/auth/email-otp`, `GET /auth/callback`, and `POST /api/v1/auth/sign-out`. The tutor route is a bounded JSON foundation and remains disabled until explicit AI policy/configuration and consent are present. The web auth slice and protected learner shell pages now exist, and Phase 3 also added the learning persistence layer in Supabase: catalog tables, placement helpers, review helpers, activity attempt helpers, and purge receipts. The live activity, review, and tutor writes use `LEARNING_DATABASE_URL`, a dedicated login that can `SET LOCAL ROLE app_learning_api_executor`, and bounded transaction timeouts. Activity submission evaluates only vocabulary acknowledgement and objective listening responses at the database boundary; speaking and writing remain unavailable until their grading lifecycle exists. External/mobile clients use the catalog HTTP route; web SSR learner pages read the catalog directly after the SSR learner-page gate. Grounded tutor retrieval, direct SSE, native tutor transport, and interactive learner flows remain planned.
+The implementation is still at the foundation stage for user-facing apps. The implemented HTTP API routes today are `GET /api/v1/health`, `GET /api/v1/learning/catalog`, `POST /api/v1/learning/activities/submit`, `POST /api/v1/learning/reviews/submit`, `POST /api/v1/ai/tutor/turn`, `POST /api/v1/auth/email-otp`, `GET /auth/callback`, and `POST /api/v1/auth/sign-out`. The tutor route is a bounded JSON foundation and remains disabled until explicit AI policy/configuration and consent are present. The web auth slice, protected learner shell pages, and web/Expo bounded tutor surfaces now exist. Phase 3 also added the learning persistence layer in Supabase: catalog tables, placement helpers, review helpers, activity attempt helpers, and purge receipts. The live activity, review, and tutor writes use `LEARNING_DATABASE_URL`, a dedicated login that can `SET LOCAL ROLE app_learning_api_executor`, and bounded transaction timeouts. Activity submission evaluates only vocabulary acknowledgement and objective listening responses at the database boundary; speaking and writing remain unavailable until their grading lifecycle exists. External/mobile clients use the catalog HTTP route and the native tutor transport; web SSR learner pages read the catalog directly after the SSR learner-page gate. Grounded tutor retrieval, direct SSE, durable tutor history, and interactive lesson flows remain planned.
 
 ## Learner catalog read flow
 
@@ -100,14 +100,16 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-  participant Client as Web client (future chat UI)
+  participant Web as Web assistant (cookie session)
+  participant Mobile as Expo assistant (bearer session)
   participant Route as POST /api/v1/ai/tutor/turn
   participant Auth as Supabase auth verification
   participant Ledger as DB begin transaction
   participant Provider as DeepSeek V4 Flash
   participant Finalize as DB complete/fail transaction
 
-  Client->>Route: tutorTurnRequestSchema + UUIDs
+  Web->>Route: tutorTurnRequestSchema + UUIDs
+  Mobile->>Route: tutorTurnRequestSchema + UUIDs
   Route->>Auth: verify bearer or SSR cookie session
   Route->>Ledger: replay lookup under learner lifecycle lock
   Ledger-->>Route: completed replay or no replay
@@ -121,7 +123,8 @@ sequenceDiagram
   else provider failure/cancel/timeout
     Route->>Finalize: fail turn and release reservation
   end
-  Route-->>Client: private no-store JSON receipt or safe error
+  Route-->>Web: private no-store JSON receipt or safe error
+  Route-->>Mobile: private no-store JSON receipt or safe error
 ```
 
 The route never holds a database transaction across the provider network call. The
@@ -243,7 +246,8 @@ flowchart TB
 
 - Direct SSE is the preferred shape for live AI tutor responses, but the current
   bounded JSON route must gain partial persistence, cancellation, and reconnect
-  semantics before that transport is enabled.
+  semantics before that transport is enabled. Web and Expo currently consume the
+  bounded route through the shared API-client contract.
 - Heavy jobs such as transcription, embeddings, and grading belong in the worker path.
 - Search is planned as a hybrid of FTS and pgvector.
 - The remaining `/api/v1/learning/*` mutation route handlers beyond activity and review submission remain planned work for Phase 4. The catalog read route, auth lifecycle routes, activity submission, and review submission are already implemented.

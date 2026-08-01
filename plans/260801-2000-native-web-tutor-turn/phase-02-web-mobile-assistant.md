@@ -1,7 +1,7 @@
 ---
 phase: 2
 title: "Web and Expo Assistant"
-status: pending
+status: completed
 effort: "1.5–2.5 engineer-days"
 ---
 

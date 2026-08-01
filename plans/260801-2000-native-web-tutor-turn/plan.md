@@ -1,7 +1,7 @@
 ---
 title: "Native and Web Tutor Turn Experience"
 description: "Connect the existing authenticated bounded AI tutor turn to the web and Expo assistant surfaces through one validated API-client boundary."
-status: in_progress
+status: completed
 priority: P1
 effort: "3–5 engineer-days"
 branch: "main"
@@ -28,9 +28,9 @@ web cookie auth and native bearer auth in their existing boundaries.
 
 | Phase | Name | Status |
 | --- | --- | --- |
-| 1 | [Shared Tutor API Client](./phase-01-shared-tutor-api-client.md) | In Progress |
-| 2 | [Web and Expo Assistant](./phase-02-web-mobile-assistant.md) | Pending |
-| 3 | [Validation and Documentation](./phase-03-validation-and-docs.md) | Pending |
+| 1 | [Shared Tutor API Client](./phase-01-shared-tutor-api-client.md) | Completed |
+| 2 | [Web and Expo Assistant](./phase-02-web-mobile-assistant.md) | Completed |
+| 3 | [Validation and Documentation](./phase-03-validation-and-docs.md) | Completed |
 
 ## Acceptance criteria
 

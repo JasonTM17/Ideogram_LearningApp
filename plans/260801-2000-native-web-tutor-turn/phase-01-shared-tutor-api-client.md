@@ -1,7 +1,7 @@
 ---
 phase: 1
 title: "Shared Tutor API Client"
-status: in_progress
+status: completed
 effort: "0.5–1 engineer-day"
 ---
 

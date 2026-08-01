@@ -9,8 +9,10 @@ modules. The first bounded public surface now exists at
 provider configuration, budget approval, and the learner's append-only
 provider-consent record are present. It persists private
 conversation/turn/rate-window rows and never exposes those tables to web or mobile
-clients. Grounded published-content retrieval, direct SSE, mobile transport,
-history UI, and evaluation gates remain separate release work.
+clients. The current web and Expo surfaces use a bounded JSON transport through
+`@ideogram/api-client`; grounded published-content retrieval, direct SSE,
+durable history UI, offline tutor queues, and evaluation gates remain separate
+release work.
 
 ## Provider contract
 
@@ -71,4 +73,5 @@ cancellation/state-fence contract before enabling that policy.
 - The durable turn/rate-limit/deletion boundary is implemented; verify the
   `supabase/tests/ai_tutor_turn_ledger_test.sql` suite before changing it.
 - Add grounded retrieval, direct SSE partial persistence/reconnect semantics, and
-  golden-set/injection evaluations before enabling a learner-facing chat UI.
+  golden-set/injection evaluations before enabling the AI kill switch for the
+  learner-facing bounded chat UI.

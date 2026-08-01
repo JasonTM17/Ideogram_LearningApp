@@ -4,9 +4,9 @@
 
 > Ranh giới trạng thái: các mục 2–9 mô tả target UX cho toàn bộ web/mobile.
 > Runtime web hiện có landing, invite-only auth, responsive learner shell,
-> catalog-backed Today/path/lesson overview, profile/sign-out, và honest planned
-> states. Onboarding, placement, focused activity/review, sync, AI, progress và
-> native navigation vẫn chưa đạt target này.
+> catalog-backed Today/path/lesson overview, profile/sign-out, và bounded
+> Vietnamese-first tutor turn. Onboarding, placement, focused activity/review,
+> sync, grounded/SSE AI, progress và native navigation vẫn chưa đạt target này.
 
 ## 1. Định hướng sản phẩm
 
@@ -47,7 +47,7 @@ Gói ngôn ngữ → mục tiêu (JLPT/giao tiếp) → cấp độ → lộ tr�
 | Onboarding + placement | Chào mừng → chọn mục tiêu sơ bộ → đăng nhập/đăng ký → chọn thời lượng, pack → đặt mức tự đánh giá → placement 5–8 phút → kết quả có độ tin cậy → lộ trình đầu tiên. Có tiến trình, Quay lại, lưu nháp. | Skeleton khi nạp câu; chưa có mục tiêu thì giải thích lợi ích từng lựa chọn. | Lưu cục bộ, banner “Chưa đồng bộ”; retry khi gửi kết quả. Nếu placement lỗi, giữ câu đã trả lời và cho tiếp tục/khởi động lại có xác nhận. |
 | Lesson hằng ngày | Hôm nay → một CTA “Bắt đầu bài 8–12 phút” → nghe/đọc → retrieval → feedback tiếng Việt → tóm tắt + “Ôn ngay” hoặc “Xong”. | Skeleton của activity; lesson trống hiển thị lý do và CTA chọn mục tiêu/làm placement. | Activity đã tải vẫn chạy offline; phần cần AI/audio chưa tải bị khóa có lý do, không mất đáp án. Lỗi nộp đáp án: trạng thái chưa đồng bộ + Retry. |
 | SRS review | Ôn tập → xem prompt → tự nhớ → lật/nhập đáp án → đánh giá dễ/khó hoặc chấm objective → lịch kế tiếp. Chỉ một quyết định chính mỗi thẻ. | Hiện số thẻ dự kiến; empty = “Hôm nay bạn đã ôn xong” + quay lại Hôm nay. | Cache hàng đợi trước; mỗi review là event có operation ID, device sequence và server receipt sequence. Không dùng thời gian thiết bị để last-write-wins; server merge event xác định, rebuild lịch và thông báo conflict không chặn học. |
-| AI tutor | Trợ lý → chọn ngữ cảnh (câu, lesson, nói/viết) → gửi → streaming câu trả lời theo format: đúng/sai, vì sao, ví dụ, lỗi VN hay gặp, bước tiếp. Có nút lưu vào SRS khi phù hợp. | Placeholder nêu phạm vi AI; skeleton/typing có thể hủy; lịch sử trống gợi ý ba tác vụ. | Timeout cho Retry; mất mạng giữ draft, chỉ cho xem lịch sử đã tải. Nếu AI không đủ căn cứ, nói rõ giới hạn và đưa nguồn học/đề xuất thay thế, không bịa. |
+| AI tutor | Trợ lý → chọn ngôn ngữ/cấp độ/mục tiêu → gửi câu hỏi tiếng Việt → nhận JSON bounded gồm nhận xét, giải thích, ví dụ, lỗi VN hay gặp, bài tập tiếp và ranh giới nguồn. Streaming, lưu SRS và lịch sử là bước sau. | Bounded form có cấu hình riêng, loading không giả lập nội dung, response card hiển thị đủ sáu phần. | Timeout/503/offline dùng Retry và copy an toàn; nếu AI không đủ căn cứ, nói rõ giới hạn và không bịa nguồn bài học. |
 | Tiến độ | Chọn khoảng thời gian → xem mastery theo skill, exam objective, lỗi lặp lại → CTA học/ôn một điểm yếu. | Skeleton theo khối; không đủ dữ liệu nêu cần hoàn thành bao nhiêu activity để có insight. | Dùng snapshot gần nhất kèm thời điểm; retry nền, không hiện biểu đồ trống. |
 | Cá nhân hóa AI | Từ `Bạn`/sau activity → giải thích ngắn “Vì sao đề xuất này” → chỉnh mục tiêu, lịch, skill yếu và mức thử thách → xác nhận → Hôm nay cập nhật. | Loading nêu “Đang tạo kế hoạch”; không có lịch sử thì dùng preference do người học chọn. | Không tự đổi mục tiêu khi sync lỗi; giữ cấu hình trước, retry và luôn có “Khôi phục đề xuất mặc định”. |
 

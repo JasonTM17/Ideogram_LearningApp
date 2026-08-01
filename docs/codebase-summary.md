@@ -24,7 +24,7 @@ exists as database contracts and private helpers.
 | `packages/config`          | Shared runtime/platform guard helpers                                                                                                  |
 | `packages/testing`         | Shared testing support placeholder                                                                                                     |
 | `packages/auth`            | PKCE, callback, verified-nonce exchange, and session lifecycle helper contracts                                                        |
-| `packages/api-client`      | Auth/privacy request builders plus the implemented learner-catalog descriptor and response parser                                      |
+| `packages/api-client`      | Auth/privacy/learning request builders plus shared bounded tutor request/receipt parsing and native transport                          |
 | `packages/learning-engine` | Deterministic review scheduler, idempotency, and event ordering helpers                                                                |
 | `supabase`                 | Local Auth configuration, identity/privacy migrations, RLS, and pgTAP                                                                  |
 | `docs`                     | Design, architecture, policy, and summary docs                                                                                         |
@@ -44,6 +44,8 @@ exists as database contracts and private helpers.
   calls the server-only DeepSeek gateway outside the transaction, and finalizes
   structured response, token usage, and estimated cost or a normalized failure.
   It is disabled by default and does not yet claim grounded lesson context or SSE.
+  Web and Expo consume it through the shared `@ideogram/api-client` request and
+  receipt boundary; neither client imports `@ideogram/ai`.
 - Activity submission calls `private.evaluate_and_submit_activity_attempt()` rather than the raw persistence helper. The database serializes a learner before idempotency lookup, rechecks release/enrollment on every retry, stores an immutable private receipt snapshot, reads private published content, and owns the completion state and listening score. It currently accepts only exact vocabulary acknowledgement and complete objective listening responses; unsupported activity types fail safely.
 - Mobile is still an internal beta, not a released learning flow. It now has
   SecureStore + installation-bound storage, PKCE shadow registry, native
@@ -52,7 +54,9 @@ exists as database contracts and private helpers.
   cancellation. Authenticated users read the protected catalog through the
   shared native API client; Today and Lesson render only contract-validated
   published content. Claimed HTTPS links and real-device auth validation remain
-  pending.
+  pending. The assistant screen submits bounded tutor turns with session-bound
+  bearer transport, Vietnamese preference controls, safe error states, and all
+  six response sections; durable history/offline tutor queues remain pending.
 - Worker currently boots a health object and logs readiness.
 - Shared tokens are editorial and currently expose paper, ink, muted, accent, sage, card radius, control radius, and spacing steps.
 - Self-service Supabase signup is disabled. Approved registrations, profile and
@@ -85,7 +89,7 @@ exists as database contracts and private helpers.
 ## What is only planned
 
 - Remaining learning mutation route handlers beyond activity/review submission and full interactive learner flows
-- Grounded/SSE AI chat, mobile tutor transport, offline sync, admin workflows, and production content/audio release flows
+- Grounded/SSE AI chat, durable tutor history/offline queues, offline sync, admin workflows, and production content/audio release flows
 - Claimed HTTPS link association, real-device native auth validation, and an
   authoritative session revocation adapter
 - Hosted production login credential setup for the learning write path; the
