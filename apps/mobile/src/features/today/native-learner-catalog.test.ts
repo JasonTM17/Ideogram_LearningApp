@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { findFirstCatalogLesson } from './catalog-lesson-context';
+import { findCatalogLesson, findFirstCatalogLesson } from './catalog-lesson-context';
 
 import type { LearnerCatalogResponse } from '@ideogram/contracts';
 
@@ -68,5 +68,13 @@ describe('findFirstCatalogLesson', () => {
 
   it('does not invent a lesson when every language pack is empty', () => {
     expect(findFirstCatalogLesson({ languagePacks: [] })).toBeNull();
+  });
+
+  it('finds only an exact published lesson identifier', () => {
+    expect(findCatalogLesson(catalog, 'greetings-01')).toEqual(
+      expect.objectContaining({ lesson: expect.objectContaining({ titleVietnamese: 'Lời chào đầu tiên' }) }),
+    );
+    expect(findCatalogLesson(catalog, ' greetings-01')).toBeNull();
+    expect(findCatalogLesson(catalog, 'missing-lesson')).toBeNull();
   });
 });
