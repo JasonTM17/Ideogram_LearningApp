@@ -9,6 +9,7 @@ import {
   parseSupabasePkceFlowId,
   readSupabasePkceFlowIds,
 } from './supabase-pkce-flow-registry';
+import { createNativeAuthTransactionStorageKey } from './native-auth-transaction-key';
 
 export interface InstallationSentinelPort {
   create: () => Promise<void>;
@@ -112,6 +113,7 @@ export class InstallationBoundSessionStorage implements AsyncKeyValueStorage {
       this.supabaseStorageKey,
       `${this.supabaseStorageKey}-user`,
       `${this.supabaseStorageKey}-code-verifier`,
+      createNativeAuthTransactionStorageKey(this.supabaseStorageKey),
       flowIndexKey,
       registryKey,
       ...[...new Set(flowIds)].map((flowId) =>

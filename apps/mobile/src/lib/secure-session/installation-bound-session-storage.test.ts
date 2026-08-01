@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { InstallationBoundSessionStorage } from './installation-bound-session-storage';
+import { createNativeAuthTransactionStorageKey } from './native-auth-transaction-key';
 import { createStorageForSecureStore, InMemorySecureStore } from './secure-session-test-helpers';
 import { createSupabasePkceFlowRegistryKey } from './supabase-pkce-flow-registry';
 
@@ -34,6 +35,10 @@ describe('installation-bound session storage', () => {
     const flowIds = ['12345678abcdef00', 'abcdef0012345678'];
     await innerStorage.setItem(supabaseStorageKey, 'retained-session');
     await innerStorage.setItem(`${supabaseStorageKey}-code-verifier`, 'legacy-verifier');
+    await innerStorage.setItem(
+      createNativeAuthTransactionStorageKey(supabaseStorageKey),
+      'retained-native-transaction',
+    );
     await innerStorage.setItem(
       `${supabaseStorageKey}-flows-code-verifier`,
       JSON.stringify(flowIds),

@@ -1,6 +1,7 @@
 export { ChunkedSecureSessionStorage } from './chunked-secure-session-storage';
 export { createExpoInstallationSentinel } from './expo-installation-sentinel';
 export { createExpoSecureSessionStorage } from './expo-secure-session-storage';
+export { createNativeAuthTransactionStorageKey } from './native-auth-transaction-key';
 export {
   InstallationBoundSessionStorage,
   type InstallationSentinelPort,

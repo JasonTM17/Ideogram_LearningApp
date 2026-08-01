@@ -7,6 +7,7 @@
     "@expo/log-box": "^57.0.2",
     "@expo/metro-runtime": "57.0.8",
     "@expo/vector-icons": "^15.1.1",
+    "@ideogram/contracts": "workspace:*",
     "@ideogram/design-tokens": "workspace:*",
     "@supabase/supabase-js": "2.111.0",
     "expo": "~57.0.9",
