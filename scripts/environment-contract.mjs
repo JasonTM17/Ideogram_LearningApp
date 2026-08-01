@@ -6,6 +6,8 @@ export const environmentTargets = new Set(['workspace', 'web', 'mobile', 'worker
 export const forbiddenPublicSecretNames = [
   'NEXT_PUBLIC_DEEPSEEK_API_KEY',
   'EXPO_PUBLIC_DEEPSEEK_API_KEY',
+  'NEXT_PUBLIC_LEARNING_DATABASE_URL',
+  'EXPO_PUBLIC_LEARNING_DATABASE_URL',
 ];
 export const workerOnlySupabaseSecretNames = [
   'SUPABASE_DB_PASSWORD',
@@ -77,6 +79,15 @@ const getLoadOrder = (nodeEnvironment) => [
 const isWorkerEnvironmentFile = (filePath, workspaceRoot) => {
   const workerDirectory = path.join(workspaceRoot, 'apps', 'worker');
   const relativePath = path.relative(workerDirectory, filePath);
+
+  return (
+    relativePath.length > 0 && !relativePath.startsWith('..') && !path.isAbsolute(relativePath)
+  );
+};
+
+const isWebEnvironmentFile = (filePath, workspaceRoot) => {
+  const webDirectory = path.join(workspaceRoot, 'apps', 'web');
+  const relativePath = path.relative(webDirectory, filePath);
 
   return (
     relativePath.length > 0 && !relativePath.startsWith('..') && !path.isAbsolute(relativePath)
@@ -167,6 +178,15 @@ export const inspectEnvironmentContract = ({
       }
     }
 
+    if (
+      parsedFile.LEARNING_DATABASE_URL?.trim() &&
+      !isWebEnvironmentFile(filePath, workspaceRoot)
+    ) {
+      exposedLocations.push(
+        `LEARNING_DATABASE_URL outside apps/web in ${path.relative(workspaceRoot, filePath)}`,
+      );
+    }
+
     for (const [name, value] of Object.entries(parsedFile)) {
       if (value.trim() && isPublicSupabaseSecretName(name)) {
         exposedLocations.push(`${name} in ${path.relative(workspaceRoot, filePath)}`);
@@ -186,6 +206,16 @@ export const inspectEnvironmentContract = ({
         exposedLocations.push(`${name} in the process environment outside the worker target`);
       }
     }
+  }
+
+  if (
+    target !== 'workspace' &&
+    target !== 'web' &&
+    runtimeEnvironment.LEARNING_DATABASE_URL?.trim()
+  ) {
+    exposedLocations.push(
+      `LEARNING_DATABASE_URL in the process environment outside the web target`,
+    );
   }
 
   for (const [name, value] of Object.entries(runtimeEnvironment)) {

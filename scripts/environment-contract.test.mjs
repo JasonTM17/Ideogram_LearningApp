@@ -67,6 +67,49 @@ describe('environment contract', () => {
     ).not.toThrow();
   });
 
+  it('keeps the learning database credential inside the web server boundary', () => {
+    writeFileSync(
+      path.join(workspaceRoot, 'apps', 'web', '.env.local'),
+      'LEARNING_DATABASE_URL=postgresql://learning-api@database.test/app',
+    );
+
+    expect(() =>
+      inspectEnvironmentContract({
+        runtimeEnvironment: {},
+        target: 'workspace',
+        workspaceRoot,
+      }),
+    ).not.toThrow();
+
+    writeFileSync(
+      path.join(workspaceRoot, 'apps', 'mobile', '.env.local'),
+      'LEARNING_DATABASE_URL=postgresql://learning-api@database.test/app',
+    );
+
+    expect(() =>
+      inspectEnvironmentContract({
+        runtimeEnvironment: {},
+        target: 'workspace',
+        workspaceRoot,
+      }),
+    ).toThrow(/LEARNING_DATABASE_URL outside apps\/web/u);
+  });
+
+  it.each(['NEXT_PUBLIC_LEARNING_DATABASE_URL', 'EXPO_PUBLIC_LEARNING_DATABASE_URL'])(
+    'rejects a public learning database credential named %s',
+    (name) => {
+      expect(() =>
+        inspectEnvironmentContract({
+          runtimeEnvironment: {
+            [name]: 'postgresql://learning-api@database.test/app',
+          },
+          target: 'workspace',
+          workspaceRoot,
+        }),
+      ).toThrow(new RegExp(name, 'u'));
+    },
+  );
+
   it('allows a Supabase service credential only in the worker dotenv boundary', () => {
     writeFileSync(
       path.join(workspaceRoot, 'apps', 'worker', '.env.local'),
