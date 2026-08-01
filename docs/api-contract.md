@@ -2,15 +2,16 @@
 
 ## Current implemented endpoints
 
-| Method | Path                                 | Auth / boundary                                                                                   | Request                                        | Response                                 | Status      |
-| ------ | ------------------------------------ | ------------------------------------------------------------------------------------------------- | ---------------------------------------------- | ---------------------------------------- | ----------- |
-| GET    | `/api/v1/health`                     | None                                                                                              | None                                           | Shared health contract                   | Implemented |
-| GET    | `/api/v1/learning/catalog`           | Verified Supabase bearer token or SSR cookie session                                              | None                                           | Shared learner-catalog response contract | Implemented |
-| POST   | `/api/v1/learning/activities/submit` | Verified Supabase bearer token or SSR cookie session; cookie mutations require same-origin policy | JSON body with `activityAttemptInputSchema`    | Shared activity receipt contract         | Implemented |
-| POST   | `/api/v1/learning/reviews/submit`    | Verified Supabase bearer token or SSR cookie session; cookie mutations require same-origin policy | JSON body with `reviewSubmissionInputSchema`   | Shared review receipt contract           | Implemented |
-| POST   | `/api/v1/auth/email-otp`             | Same-origin cookie mutation; no verified session required                                         | JSON body with `email` and optional `returnTo` | Generic accepted response (`202`)        | Implemented |
-| GET    | `/auth/callback`                     | Browser PKCE callback; handles optional `sb_flow_id`                                              | `code` plus optional `sb_flow_id` query values | Safe `303` redirect                      | Implemented |
-| POST   | `/api/v1/auth/sign-out`              | Verified cookie session only; bearer rejected                                                     | Empty JSON object                              | Generic signed-out response (`200`)      | Implemented |
+| Method | Path                                 | Auth / boundary                                                                                                                                | Request                                        | Response                                 | Status                     |
+| ------ | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- | ---------------------------------------- | -------------------------- |
+| GET    | `/api/v1/health`                     | None                                                                                                                                           | None                                           | Shared health contract                   | Implemented                |
+| GET    | `/api/v1/learning/catalog`           | Verified Supabase bearer token or SSR cookie session                                                                                           | None                                           | Shared learner-catalog response contract | Implemented                |
+| POST   | `/api/v1/learning/activities/submit` | Verified Supabase bearer token or SSR cookie session; cookie mutations require same-origin policy                                              | JSON body with `activityAttemptInputSchema`    | Shared activity receipt contract         | Implemented                |
+| POST   | `/api/v1/learning/reviews/submit`    | Verified Supabase bearer token or SSR cookie session; cookie mutations require same-origin policy                                              | JSON body with `reviewSubmissionInputSchema`   | Shared review receipt contract           | Implemented                |
+| POST   | `/api/v1/ai/tutor/turn`              | Verified Supabase bearer token or SSR cookie session; cookie mutations require same-origin policy; active learner, consent, and AI kill switch | JSON body with `tutorTurnRequestSchema`        | Shared completed tutor receipt contract  | Implemented (bounded JSON) |
+| POST   | `/api/v1/auth/email-otp`             | Same-origin cookie mutation; no verified session required                                                                                      | JSON body with `email` and optional `returnTo` | Generic accepted response (`202`)        | Implemented                |
+| GET    | `/auth/callback`                     | Browser PKCE callback; handles optional `sb_flow_id`                                                                                           | `code` plus optional `sb_flow_id` query values | Safe `303` redirect                      | Implemented                |
+| POST   | `/api/v1/auth/sign-out`              | Verified cookie session only; bearer rejected                                                                                                  | Empty JSON object                              | Generic signed-out response (`200`)      | Implemented                |
 
 ## Health response shape
 
@@ -29,6 +30,36 @@ The auth lifecycle routes live under `apps/web/src/server/auth/*` and use route-
 The catalog route at `apps/web/src/app/api/v1/learning/catalog/route.ts` authenticates the request with Supabase Auth verification, reads the allowlisted aggregate RPC `public.get_learner_catalog_data()`, and returns the shared learner-catalog contract through `jsonNoStore(...)`.
 The activity submission route at `apps/web/src/app/api/v1/learning/activities/submit/route.ts` authenticates first, validates the public activity envelope, and calls the database evaluator through the private transaction boundary.
 The review submission route at `apps/web/src/app/api/v1/learning/reviews/submit/route.ts` authenticates first, validates the exact review schema, and writes through the private transaction boundary with private no-store headers and an opaque request ID.
+
+The tutor route at `apps/web/src/app/api/v1/ai/tutor/turn/route.ts` authenticates
+the request, validates `tutorTurnRequestSchema`, requires `AI_TUTOR_ENABLED=true`
+and the configured provider-consent policy, reserves the turn in the private AI
+ledger, calls DeepSeek outside the database transaction, then finalizes usage and
+estimated micro-USD cost in a second short transaction. Completed retries replay
+the stored receipt; pending/failed/quota conflicts never call the provider twice.
+
+### Tutor turn receipt contract
+
+The route returns `tutorTurnReceiptSchema` with `conversationId`, `turnId`,
+`state: "completed"`, `idempotentReplay`, the six-field Vietnamese tutor response,
+and validated `usage` token counts. It emits private no-store headers and an opaque
+`X-Request-Id`; provider keys, raw provider errors, and internal SQL messages never
+reach the learner.
+
+Status behavior:
+
+| HTTP status | Meaning                                                        |
+| ----------- | -------------------------------------------------------------- |
+| `200`       | Provider result finalized or exact completed turn replayed     |
+| `400`       | Request shape or language/level pair invalid                   |
+| `403`       | Missing provider consent or inactive learner account           |
+| `409`       | Hidden/unavailable language pack or turn/conversation conflict |
+| `429`       | Atomic hourly turn/cost quota or active concurrent turn        |
+| `503`       | AI kill switch, provider, or database availability failure     |
+
+This is intentionally a bounded JSON foundation, not the accepted direct SSE
+transport. Grounded lesson retrieval, mobile tutor client, cancellation/reconnect
+semantics, long-lived history UI, and golden-set/injection evaluation remain pending.
 
 ## Shared API error shape
 

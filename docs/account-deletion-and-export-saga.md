@@ -49,7 +49,9 @@ stateDiagram-v2
   fails until controlled remediation is implemented.
 - `private.purge_learner_learning_data()` deletes learner review, progress,
   placement, enrollment, and event history, then writes one purge receipt per
-  request. If the worker retries after the receipt exists, the helper returns
+  request. Its purge-operation insert also fires the AI cleanup trigger, which
+  removes private tutor turns, rate windows, and conversations in the same
+  transaction. If the worker retries after the receipt exists, the helper returns
   the recorded counts instead of deleting the same rows twice.
 - A deletion request cannot transition to `completed` until a matching
   `private.learning_data_purge_receipts` row exists.
@@ -68,7 +70,9 @@ stateDiagram-v2
 
 - Deletion should win over export when both are in flight for the same subject.
 - The current SQL tests prove the state machine, learning purge receipt gate,
-  and ownership boundaries, not provider-side deletion or signed URL revocation.
+  AI ownership/quota/replay/purge boundaries, not provider-side deletion or signed
+  URL revocation. The existing purge receipt count object does not yet include a
+  separate AI count breakdown.
 - Do not acknowledge completion until the purge and verification steps are done.
 
 ## Open questions

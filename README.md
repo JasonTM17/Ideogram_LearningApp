@@ -7,10 +7,11 @@ Ideogram Learning is a Vietnamese-first language learning platform for Japanese-
 - Web: Next.js App Router shell in `apps/web` with public landing, sign-in, callback, and protected learner pages
 - Mobile: Expo shell in `apps/mobile` with protected session hydration, native email-link sign-in/callback screens, catalog-backed Today and Lesson read views, an internal learner shell, and a durable device-scoped activity operation identity foundation
 - Worker: Node worker stub in `apps/worker`
-- Shared packages: `packages/contracts`, `packages/design-tokens`, `packages/config`, `packages/testing`, `packages/auth`, `packages/api-client`, `packages/learning-engine`
-- Implemented API routes: `GET /api/v1/health`, `GET /api/v1/learning/catalog`, `POST /api/v1/learning/activities/submit`, `POST /api/v1/learning/reviews/submit`, `POST /api/v1/auth/email-otp`, `GET /auth/callback`, `POST /api/v1/auth/sign-out`
+- Shared packages: `packages/contracts`, `packages/ai`, `packages/design-tokens`, `packages/config`, `packages/testing`, `packages/auth`, `packages/api-client`, `packages/learning-engine`
+- Implemented API routes: `GET /api/v1/health`, `GET /api/v1/learning/catalog`, `POST /api/v1/learning/activities/submit`, `POST /api/v1/learning/reviews/submit`, bounded `POST /api/v1/ai/tutor/turn`, `POST /api/v1/auth/email-otp`, `GET /auth/callback`, `POST /api/v1/auth/sign-out`
 - Web SSR learner pages read the catalog directly; the catalog HTTP route remains the external/mobile surface
 - Phase 3 learning persistence: Supabase migrations and private helpers now implement the learning content catalog, placement flow, activity attempts, review engine, and purge receipts. Next.js now exposes the catalog read route, review submission, and a server-evaluated activity submission route for vocabulary acknowledgement and objective listening answers. The remaining learning mutation routes and full interactive learner flows are still pending.
+- Phase 6A AI boundary: the web Node route authenticates each tutor turn, requires the append-only provider-consent policy and `AI_TUTOR_ENABLED=true`, reserves an idempotent private turn/quota row, calls DeepSeek outside the DB transaction, and stores structured response/usage/cost or a normalized failure. The route is deliberately disabled by default and does not yet provide grounded lesson retrieval, SSE, history UI, or mobile tutor transport.
 - Validation: run the workspace gates below plus the two named pgTAP suites
   before shipping learner-write changes. Historical review-boundary evidence is
   retained in the engineering journal; it is not deployment evidence.
@@ -69,6 +70,9 @@ pnpm supabase:stop
 
 - Copy `.env.example` to a local ignored env file before running secret-backed features.
 - `DEEPSEEK_API_KEY` is server-only and must never be placed in `NEXT_PUBLIC_*` or `EXPO_PUBLIC_*`.
+- `AI_TUTOR_ENABLED` defaults to `false`. Enabling it requires owner approval,
+  a replacement secret loaded from a deployment secret store, an accepted
+  `AI_TUTOR_CONSENT_POLICY_KEY`, and the configured integer micro-USD price inputs.
 - `EXPO_PUBLIC_AUTH_CALLBACK_URL` is optional only in native development, where
   `ideogram-learning://auth/callback` is the fallback. A production mobile
   build must supply one exact claimed HTTPS Universal Link / App Link callback.
@@ -93,7 +97,7 @@ pnpm supabase:stop
 
 ## What is not implemented yet
 
-- Other learning mutations, interactive lesson and review UI/offline sync, onboarding, placement, SRS queue UI, AI runtime, progress write flows, and admin workflows. The native operation identity is ready for these flows, but the durable mutation queue and reconciliation remain a later phase.
+- Other learning mutations, interactive lesson and review UI/offline sync, onboarding, placement, SRS queue UI, grounded/SSE AI chat, progress write flows, mobile tutor transport, and admin workflows. The native operation identity is ready for these flows, but the durable mutation queue and reconciliation remain a later phase.
 - Activity evaluators beyond vocabulary acknowledgement and objective listening, including speaking and writing assessment
 - Production web runtime deployment or cloud provisioning (the public GHCR image is published, but no hosted runtime is configured)
 - Hosted production login credential setup for the learning write path; the provisioning SQL exists, but the secret credential and platform wiring remain external

@@ -19,15 +19,19 @@ These are closed-beta planning assumptions, not observed production metrics and 
 
 ## Safety caps
 
-| Surface                             | Cap                           |
-| ----------------------------------- | ----------------------------- |
-| Staging AI spend                    | USD 50 per month              |
-| Closed-beta variable AI/media spend | USD 250 per month             |
-| AI availability                     | Disabled until owner approval |
+| Surface                             | Cap                                                             |
+| ----------------------------------- | --------------------------------------------------------------- |
+| Staging AI spend                    | USD 50 per month                                                |
+| Closed-beta variable AI/media spend | USD 250 per month                                               |
+| AI availability                     | Disabled until owner approval                                   |
+| AI tutor per-learner window         | 20 attempts/hour and 5,000,000 micro-USD reserved/actual budget |
 
 ## Operating rules
 
 - Treat the caps as non-authorizing guardrails.
+- The private AI tutor ledger enforces the per-learner hourly cap atomically and
+  reclaims stale reservations; it is a safety boundary, not a product pricing
+  promise. Revisit it with observed usage before enabling broader beta access.
 - Recheck the assumptions before widening beta access.
 - If any assumption is exceeded, slow release rather than silently increasing spend.
 - In-process auth guardrails now rate-limit email OTP at 5 requests per email and 30 requests per network identity per 15 minutes, with 10,000 hashed buckets max; the shared network identity only applies when ingress overwrites the proxy IP headers.

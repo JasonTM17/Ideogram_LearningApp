@@ -12,7 +12,7 @@ The platform is designed as a modular monolith with three client runtimes and on
 
 ## Current state
 
-The implementation is still at the foundation stage for user-facing apps. The implemented HTTP API routes today are `GET /api/v1/health`, `GET /api/v1/learning/catalog`, `POST /api/v1/learning/activities/submit`, `POST /api/v1/learning/reviews/submit`, `POST /api/v1/auth/email-otp`, `GET /auth/callback`, and `POST /api/v1/auth/sign-out`. The web auth slice and protected learner shell pages now exist, and Phase 3 also added the learning persistence layer in Supabase: catalog tables, placement helpers, review helpers, activity attempt helpers, and purge receipts. The live activity and review write routes use `LEARNING_DATABASE_URL`, a dedicated login that can `SET LOCAL ROLE app_learning_api_executor`, and bounded transaction timeouts. Activity submission evaluates only vocabulary acknowledgement and objective listening responses at the database boundary; speaking and writing remain unavailable until their grading lifecycle exists. External/mobile clients use the catalog HTTP route; web SSR learner pages read the catalog directly after the SSR learner-page gate. The remaining learning mutation routes and interactive learner flows are still planned.
+The implementation is still at the foundation stage for user-facing apps. The implemented HTTP API routes today are `GET /api/v1/health`, `GET /api/v1/learning/catalog`, `POST /api/v1/learning/activities/submit`, `POST /api/v1/learning/reviews/submit`, `POST /api/v1/ai/tutor/turn`, `POST /api/v1/auth/email-otp`, `GET /auth/callback`, and `POST /api/v1/auth/sign-out`. The tutor route is a bounded JSON foundation and remains disabled until explicit AI policy/configuration and consent are present. The web auth slice and protected learner shell pages now exist, and Phase 3 also added the learning persistence layer in Supabase: catalog tables, placement helpers, review helpers, activity attempt helpers, and purge receipts. The live activity, review, and tutor writes use `LEARNING_DATABASE_URL`, a dedicated login that can `SET LOCAL ROLE app_learning_api_executor`, and bounded transaction timeouts. Activity submission evaluates only vocabulary acknowledgement and objective listening responses at the database boundary; speaking and writing remain unavailable until their grading lifecycle exists. External/mobile clients use the catalog HTTP route; web SSR learner pages read the catalog directly after the SSR learner-page gate. Grounded tutor retrieval, direct SSE, native tutor transport, and interactive learner flows remain planned.
 
 ## Learner catalog read flow
 
@@ -96,6 +96,39 @@ sequenceDiagram
   Route-->>Client: JSON receipt + opaque requestId
 ```
 
+## Bounded AI tutor turn flow
+
+```mermaid
+sequenceDiagram
+  participant Client as Web client (future chat UI)
+  participant Route as POST /api/v1/ai/tutor/turn
+  participant Auth as Supabase auth verification
+  participant Ledger as DB begin transaction
+  participant Provider as DeepSeek V4 Flash
+  participant Finalize as DB complete/fail transaction
+
+  Client->>Route: tutorTurnRequestSchema + UUIDs
+  Route->>Auth: verify bearer or SSR cookie session
+  Route->>Ledger: BEGIN + SET LOCAL ROLE + active learner/consent/quota/idempotency
+  Ledger-->>Route: pending reservation or completed replay
+  alt new pending turn
+    Route->>Provider: structured JSON request with user_id, no tools
+    Provider-->>Route: bounded response + token usage
+    Route->>Finalize: complete response/usage/cost, outside provider lock
+    Finalize-->>Route: completed receipt
+  else provider failure/cancel/timeout
+    Route->>Finalize: fail turn and release reservation
+  end
+  Route-->>Client: private no-store JSON receipt or safe error
+```
+
+The route never holds a database transaction across the provider network call. The
+private ledger binds the verified user, conversation, turn UUID, canonical payload
+hash, and structured response; an `AFTER INSERT` purge trigger removes these rows
+when the account-deletion worker starts the existing learning purge. Direct SSE,
+server-owned lesson retrieval, partial-response persistence, and reconnect semantics
+are follow-up work.
+
 ## Catalog scale boundary
 
 The aggregate catalog is intentionally capped at 36 releases, 360 units, 600
@@ -145,6 +178,9 @@ Identity and privacy are modeled as a database-first boundary:
 - The review submission route rechecks the active learner profile and learner
   role inside the same transaction that appends the receipt, so a revoked role
   fails closed even if the bearer session is still valid.
+- The tutor route rechecks active learner role, latest AI provider consent,
+  language-pack availability, and atomic hourly turn/cost quota in the database
+  before calling DeepSeek; its failure path stores only normalized error codes.
 - The learner authorization helper now locks `public.account_roles` before
   `public.profiles` to match the revocation path and avoid deadlock cycles.
 - Production-login provisioning fails closed on elevated attributes,
@@ -199,7 +235,9 @@ flowchart TB
 
 ## Planned behavior
 
-- Direct SSE is the preferred shape for live AI tutor responses.
+- Direct SSE is the preferred shape for live AI tutor responses, but the current
+  bounded JSON route must gain partial persistence, cancellation, and reconnect
+  semantics before that transport is enabled.
 - Heavy jobs such as transcription, embeddings, and grading belong in the worker path.
 - Search is planned as a hybrid of FTS and pgvector.
 - The remaining `/api/v1/learning/*` mutation route handlers beyond activity and review submission remain planned work for Phase 4. The catalog read route, auth lifecycle routes, activity submission, and review submission are already implemented.

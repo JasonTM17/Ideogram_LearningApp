@@ -1,11 +1,11 @@
 # Codebase Summary
 
-Updated against the current workspace on 2026-08-01 after the activity-submission slice.
+Updated against the current workspace on 2026-08-01 after the bounded AI tutor-turn slice.
 
 ## Snapshot
 
 The repository is a greenfield learning-platform workspace with three runnable
-app shells, seven shared packages, local Supabase migrations/RLS tests,
+app shells, eight shared packages, local Supabase migrations/RLS tests,
 baseline docs, and phase-planning artifacts. The product surface now includes a
 public landing page, invite-only auth, protected learner shell pages, a health
 route, and a protected learner-catalog surface. The learning product still also
@@ -13,21 +13,22 @@ exists as database contracts and private helpers.
 
 ## Top-level layout
 
-| Path                       | Purpose                                                                                                                              |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `apps/web`                 | Next.js App Router shell, public landing, sign-in/callback pages, protected learner pages, `GET /api/v1/health`, catalog/auth routes |
-| `apps/mobile`              | Expo app shell and foundation metadata                                                                                               |
-| `apps/worker`              | Node worker stub that prints a readiness line                                                                                        |
-| `packages/contracts`       | Shared API version, health response, auth flow, and error contract shapes                                                            |
-| `packages/design-tokens`   | Editorial palette, spacing, and radius tokens                                                                                        |
-| `packages/config`          | Shared runtime/platform guard helpers                                                                                                |
-| `packages/testing`         | Shared testing support placeholder                                                                                                   |
-| `packages/auth`            | PKCE, callback, verified-nonce exchange, and session lifecycle helper contracts                                                      |
-| `packages/api-client`      | Auth/privacy request builders plus the implemented learner-catalog descriptor and response parser                                    |
-| `packages/learning-engine` | Deterministic review scheduler, idempotency, and event ordering helpers                                                              |
-| `supabase`                 | Local Auth configuration, identity/privacy migrations, RLS, and pgTAP                                                                |
-| `docs`                     | Design, architecture, policy, and summary docs                                                                                       |
-| `plans`                    | Product planning and research artifacts                                                                                              |
+| Path                       | Purpose                                                                                                                                |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `apps/web`                 | Next.js App Router shell, public landing, sign-in/callback pages, protected learner pages, catalog/auth routes, bounded AI tutor route |
+| `apps/mobile`              | Expo app shell and foundation metadata                                                                                                 |
+| `apps/worker`              | Node worker stub that prints a readiness line                                                                                          |
+| `packages/contracts`       | Shared API version, health response, auth flow, and error contract shapes                                                              |
+| `packages/ai`              | Server-only DeepSeek V4 Flash gateway, timeout/abort handling, structured tutor output, token usage, and configurable cost estimate    |
+| `packages/design-tokens`   | Editorial palette, spacing, and radius tokens                                                                                          |
+| `packages/config`          | Shared runtime/platform guard helpers                                                                                                  |
+| `packages/testing`         | Shared testing support placeholder                                                                                                     |
+| `packages/auth`            | PKCE, callback, verified-nonce exchange, and session lifecycle helper contracts                                                        |
+| `packages/api-client`      | Auth/privacy request builders plus the implemented learner-catalog descriptor and response parser                                      |
+| `packages/learning-engine` | Deterministic review scheduler, idempotency, and event ordering helpers                                                                |
+| `supabase`                 | Local Auth configuration, identity/privacy migrations, RLS, and pgTAP                                                                  |
+| `docs`                     | Design, architecture, policy, and summary docs                                                                                         |
+| `plans`                    | Product planning and research artifacts                                                                                                |
 
 ## Current implementation details
 
@@ -37,6 +38,12 @@ exists as database contracts and private helpers.
 - The health endpoint returns the shared health response contract from `packages/contracts`.
 - The protected catalog route authenticates a Supabase bearer token or SSR cookie session, reads the allowlisted aggregate catalog RPC, and returns the shared learner-catalog response contract.
 - Learner write routes are `POST /api/v1/learning/activities/submit` and `POST /api/v1/learning/reviews/submit`. Both bind the verified learner, compute a canonical server-side idempotency hash, re-check active learner state inside a bounded executor transaction, and return only no-store public receipts.
+- The bounded AI route is `POST /api/v1/ai/tutor/turn`. It validates the shared
+  tutor request, requires `AI_TUTOR_ENABLED=true` plus the configured append-only
+  provider-consent policy, reserves a private conversation/turn/rate-window row,
+  calls the server-only DeepSeek gateway outside the transaction, and finalizes
+  structured response, token usage, and estimated cost or a normalized failure.
+  It is disabled by default and does not yet claim grounded lesson context or SSE.
 - Activity submission calls `private.evaluate_and_submit_activity_attempt()` rather than the raw persistence helper. The database serializes a learner before idempotency lookup, rechecks release/enrollment on every retry, stores an immutable private receipt snapshot, reads private published content, and owns the completion state and listening score. It currently accepts only exact vocabulary acknowledgement and complete objective listening responses; unsupported activity types fail safely.
 - Mobile is still an internal beta, not a released learning flow. It now has
   SecureStore + installation-bound storage, PKCE shadow registry, native
@@ -78,13 +85,13 @@ exists as database contracts and private helpers.
 ## What is only planned
 
 - Remaining learning mutation route handlers beyond activity/review submission and full interactive learner flows
-- AI tutor, offline sync, admin workflows, and production content/audio release flows
+- Grounded/SSE AI chat, mobile tutor transport, offline sync, admin workflows, and production content/audio release flows
 - Claimed HTTPS link association, real-device native auth validation, and an
   authoritative session revocation adapter
 - Hosted production login credential setup for the learning write path; the
   provisioning SQL exists, but the secret credential and platform wiring are
   still external
-- Search, embeddings, and AI orchestration beyond the current contract baseline
+- Search, embeddings, and AI orchestration beyond the current bounded tutor-turn baseline
 
 ## Evidence boundary
 
