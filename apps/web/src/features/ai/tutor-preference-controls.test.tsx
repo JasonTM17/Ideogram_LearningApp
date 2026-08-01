@@ -16,10 +16,13 @@ describe('TutorPreferenceControls', () => {
 
     expect(markup).toContain('Cấu hình Trợ lý');
     expect(markup).toContain('Tiếng Nhật');
+    expect(markup).toContain('Tiếng Trung — sắp mở');
+    expect(markup).toContain('Tiếng Hàn — sắp mở');
+    expect(markup).toContain('disabled=""');
     expect(markup).toContain('N5');
     expect(markup).toContain('Giao tiếp');
     expect(markup).toContain('Độ sâu giải thích');
     expect(markup).toContain('Giọng điệu');
-    expect(markup).toContain('Cấu hình dành cho người Việt');
+    expect(markup).toContain('hiện chỉ có Tiếng Nhật đang mở cho beta');
   });
 });

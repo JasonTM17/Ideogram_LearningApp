@@ -5,6 +5,7 @@ import { NativeApiHttpError, NativeApiSessionChangedError } from '@ideogram/api-
 import {
   defaultTutorPreferences,
   describeAssistantError,
+  getAssistantErrorCode,
   isExpectedAssistantCancellation,
   resetTutorLevelForLanguage,
   tutorLevelsForLanguage,
@@ -44,5 +45,7 @@ describe('assistant state helpers', () => {
   it('maps opaque transport errors to Vietnamese learner-safe copy', () => {
     expect(describeAssistantError(new NativeApiHttpError(503))).toContain('tạm tắt');
     expect(describeAssistantError(new Error('provider secret'))).not.toContain('provider secret');
+    expect(getAssistantErrorCode(new NativeApiHttpError(401))).toBe('UNAUTHORIZED');
+    expect(getAssistantErrorCode(new Error('provider secret'))).toBeUndefined();
   });
 });

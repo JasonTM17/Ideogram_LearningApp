@@ -1,6 +1,6 @@
 'use client';
 
-import { languageLevelCodes } from '@ideogram/contracts';
+import { isTutorLanguageAvailable, languageLevelCodes } from '@ideogram/contracts';
 
 import type { LearnerTutorPreference, LanguagePackCode } from '@ideogram/contracts';
 
@@ -16,8 +16,8 @@ export const defaultWebTutorPreferences: WebTutorPreferences = {
 
 const languageOptions = [
   { label: 'Tiếng Nhật', value: 'ja' },
-  { label: 'Tiếng Trung', value: 'zh' },
-  { label: 'Tiếng Hàn', value: 'ko' },
+  { disabled: !isTutorLanguageAvailable('zh'), label: 'Tiếng Trung — sắp mở', value: 'zh' },
+  { disabled: !isTutorLanguageAvailable('ko'), label: 'Tiếng Hàn — sắp mở', value: 'ko' },
 ] as const;
 
 const objectiveOptions = [
@@ -55,7 +55,7 @@ export function TutorPreferenceControls({
     <fieldset className="tutor-preferences" disabled={disabled}>
       <legend className="tutor-preferences__legend">Cấu hình Trợ lý</legend>
       <p className="tutor-preferences__description">
-        Cấu hình dành cho người Việt; được gửi cùng câu hỏi và không làm yếu ranh giới an toàn.
+        Cấu hình dành cho người Việt; hiện chỉ có Tiếng Nhật đang mở cho beta.
       </p>
       <div className="tutor-preferences__grid">
         <Choice
@@ -115,7 +115,7 @@ export function TutorPreferenceControls({
 interface ChoiceProps {
   label: string;
   onChange: (value: string) => void;
-  options: readonly { label: string; value: string }[];
+  options: readonly { disabled?: boolean; label: string; value: string }[];
   value: string;
 }
 
@@ -130,7 +130,7 @@ function Choice({ label, onChange, options, value }: ChoiceProps) {
         value={value}
       >
         {options.map((option) => (
-          <option key={option.value} value={option.value}>
+          <option disabled={option.disabled} key={option.value} value={option.value}>
             {option.label}
           </option>
         ))}

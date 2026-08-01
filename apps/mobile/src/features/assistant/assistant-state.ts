@@ -13,7 +13,7 @@ export type AssistantState =
   | { kind: 'idle' }
   | { kind: 'submitting' }
   | { kind: 'ready'; idempotentReplay: boolean; response: TutorTurnResponse }
-  | { kind: 'error'; message: string };
+  | { code?: NativeApiErrorCode; kind: 'error'; message: string };
 
 export const defaultTutorPreferences: TutorPreferenceState = {
   explanationDepth: 'standard',
@@ -63,3 +63,6 @@ export const describeAssistantError = (error: unknown): string => {
 
   return 'Chưa thể hoàn tất yêu cầu. Hãy thử lại sau.';
 };
+
+export const getAssistantErrorCode = (error: unknown): NativeApiErrorCode | undefined =>
+  error instanceof NativeApiError ? error.code : undefined;

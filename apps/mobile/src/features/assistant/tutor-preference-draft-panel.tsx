@@ -1,4 +1,5 @@
 import { nativeLayoutTokens } from '@ideogram/design-tokens/native';
+import { isTutorLanguageAvailable } from '@ideogram/contracts';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { AppText } from '../../components/app-text';
@@ -17,8 +18,8 @@ interface TutorPreferencePanelProps {
 
 const languageOptions = [
   { label: 'Tiếng Nhật', value: 'ja' },
-  { label: 'Tiếng Trung', value: 'zh' },
-  { label: 'Tiếng Hàn', value: 'ko' },
+  { disabled: !isTutorLanguageAvailable('zh'), label: 'Tiếng Trung · sắp mở', value: 'zh' },
+  { disabled: !isTutorLanguageAvailable('ko'), label: 'Tiếng Hàn · sắp mở', value: 'ko' },
 ] as const;
 
 const objectiveOptions = [
@@ -69,7 +70,7 @@ export function TutorPreferenceDraftPanel({
       <View style={styles.heading}>
         <AppText variant="headingMd">Cấu hình Trợ lý</AppText>
         <AppText tone="secondary" variant="bodySm">
-          Điều chỉnh câu trả lời cho người Việt; cấu hình chỉ được gửi cùng câu hỏi.
+          Điều chỉnh câu trả lời cho người Việt; hiện chỉ có Tiếng Nhật đang mở cho beta.
         </AppText>
       </View>
       <OptionGroup
@@ -122,7 +123,7 @@ export function TutorPreferenceDraftPanel({
 interface OptionGroupProps<T extends string> {
   disabled: boolean;
   label: string;
-  options: readonly { label: string; value: T }[];
+  options: readonly { disabled?: boolean; label: string; value: T }[];
   selected: T;
   theme: ReturnType<typeof useMobileTheme>['theme'];
   onSelect: (value: T) => void;
@@ -142,11 +143,12 @@ function OptionGroup<T extends string>({
       <View style={styles.options}>
         {options.map((option) => {
           const active = selected === option.value;
+          const optionDisabled = disabled || option.disabled === true;
           return (
             <Pressable
               accessibilityRole="radio"
-              accessibilityState={{ disabled, selected: active }}
-              disabled={disabled}
+              accessibilityState={{ disabled: optionDisabled, selected: active }}
+              disabled={optionDisabled}
               key={option.value}
               onPress={() => onSelect(option.value)}
               style={({ pressed }) => [
@@ -154,7 +156,7 @@ function OptionGroup<T extends string>({
                 {
                   backgroundColor: active ? theme.color.actionPrimary : theme.color.surfaceSubtle,
                   borderColor: active ? theme.color.actionPrimary : theme.color.borderSubtle,
-                  opacity: disabled ? 0.52 : pressed ? 0.72 : 1,
+                  opacity: optionDisabled ? 0.52 : pressed ? 0.72 : 1,
                 },
               ]}
             >

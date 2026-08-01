@@ -1,6 +1,6 @@
 'use client';
 
-import { createTutorTurnApiRequest } from '@ideogram/api-client';
+import { createTutorTurnApiRequest, resolveTutorTurnIdentifiers } from '@ideogram/api-client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { TutorPreferenceControls, defaultWebTutorPreferences } from './tutor-preference-controls';
@@ -30,6 +30,7 @@ const errorCopy: Record<WebTutorTurnError['code'], string> = {
 
 export function TutorPreferenceDraft() {
   const conversationId = useRef<string | null>(null);
+  const pendingTurnId = useRef<string | null>(null);
   const [message, setMessage] = useState('');
   const [preferences, setPreferences] = useState(defaultWebTutorPreferences);
   const [state, setState] = useState<TutorUiState>({ kind: 'idle' });
@@ -48,17 +49,20 @@ export function TutorPreferenceDraft() {
     }
 
     const { targetLevelCode, ...learnerPreference } = preferences;
-    const currentConversationId =
-      conversationId.current ?? (conversationId.current = crypto.randomUUID());
-    const turnId = crypto.randomUUID();
+    const identifiers = resolveTutorTurnIdentifiers(crypto.randomUUID, {
+      conversationId: conversationId.current,
+      turnId: pendingTurnId.current,
+    });
+    conversationId.current = identifiers.conversationId;
+    pendingTurnId.current = identifiers.turnId;
     let request: ReturnType<typeof createTutorTurnApiRequest>;
     try {
       request = createTutorTurnApiRequest({
-        conversationId: currentConversationId,
+        conversationId: identifiers.conversationId,
         learnerPreference,
         message: trimmedMessage,
         targetLevelCode,
-        turnId,
+        turnId: identifiers.turnId,
       });
     } catch {
       setState({ kind: 'error', message: 'Hãy kiểm tra câu hỏi, ngôn ngữ và trình độ đã chọn.' });
@@ -72,6 +76,7 @@ export function TutorPreferenceDraft() {
     try {
       const receipt = await submitWebTutorTurn(request.body, { signal: controller.signal });
       if (!controller.signal.aborted) {
+        pendingTurnId.current = null;
         setState({
           idempotentReplay: receipt.idempotentReplay,
           kind: 'ready',
@@ -104,6 +109,7 @@ export function TutorPreferenceDraft() {
         disabled={isSubmitting}
         onChange={(next) => {
           setPreferences(next);
+          pendingTurnId.current = null;
           if (state.kind !== 'idle') setState({ kind: 'idle' });
         }}
         preferences={preferences}
@@ -125,6 +131,7 @@ export function TutorPreferenceDraft() {
             maxLength={2000}
             onChange={(event) => {
               setMessage(event.target.value);
+              pendingTurnId.current = null;
               if (state.kind !== 'idle') setState({ kind: 'idle' });
             }}
             placeholder="Ví dụ: Vì sao dùng は thay vì が?"
@@ -148,6 +155,7 @@ export function TutorPreferenceDraft() {
             className="tutor-button tutor-button--secondary"
             onClick={() => {
               activeRequest.current?.abort();
+              pendingTurnId.current = null;
               setState({ kind: 'idle' });
             }}
             type="button"
