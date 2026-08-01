@@ -1,0 +1,143 @@
+'use client';
+
+import { languageLevelCodes } from '@ideogram/contracts';
+
+import type { LearnerTutorPreference, LanguagePackCode } from '@ideogram/contracts';
+
+export type WebTutorPreferences = LearnerTutorPreference & { targetLevelCode: string };
+
+export const defaultWebTutorPreferences: WebTutorPreferences = {
+  explanationDepth: 'standard',
+  preferredLanguageCode: 'ja',
+  preferredObjectiveKey: 'communication',
+  targetLevelCode: 'N5',
+  tone: 'encouraging',
+};
+
+const languageOptions = [
+  { label: 'Tiếng Nhật', value: 'ja' },
+  { label: 'Tiếng Trung', value: 'zh' },
+  { label: 'Tiếng Hàn', value: 'ko' },
+] as const;
+
+const objectiveOptions = [
+  { label: 'Giao tiếp', value: 'communication' },
+  { label: 'Thi cử', value: 'exam' },
+  { label: 'Công việc', value: 'work' },
+  { label: 'Du lịch', value: 'travel' },
+] as const;
+
+const depthOptions = [
+  { label: 'Ngắn gọn', value: 'concise' },
+  { label: 'Tiêu chuẩn', value: 'standard' },
+  { label: 'Chi tiết', value: 'detailed' },
+] as const;
+
+const toneOptions = [
+  { label: 'Khích lệ', value: 'encouraging' },
+  { label: 'Thẳng thắn', value: 'direct' },
+] as const;
+
+interface TutorPreferenceControlsProps {
+  disabled: boolean;
+  onChange: (next: WebTutorPreferences) => void;
+  preferences: WebTutorPreferences;
+}
+
+export function TutorPreferenceControls({
+  disabled,
+  onChange,
+  preferences,
+}: TutorPreferenceControlsProps) {
+  const levels = languageLevelCodes[preferences.preferredLanguageCode];
+
+  return (
+    <fieldset
+      className="grid gap-4 rounded-3xl border border-stone-200 bg-white p-5 shadow-sm"
+      disabled={disabled}
+    >
+      <legend className="text-lg font-semibold text-stone-950">Cấu hình Trợ lý</legend>
+      <p className="text-sm leading-6 text-stone-600">
+        Cấu hình dành cho người Việt; được gửi cùng câu hỏi và không làm yếu ranh giới an toàn.
+      </p>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Choice
+          label="Ngôn ngữ muốn học"
+          options={languageOptions}
+          value={preferences.preferredLanguageCode}
+          onChange={(value) => {
+            const language = value as LanguagePackCode;
+            onChange({
+              ...preferences,
+              preferredLanguageCode: language,
+              targetLevelCode: languageLevelCodes[language][0],
+            });
+          }}
+        />
+        <Choice
+          label="Trình độ"
+          options={levels.map((value) => ({ label: value.replace('_', ' '), value }))}
+          value={preferences.targetLevelCode}
+          onChange={(value) => onChange({ ...preferences, targetLevelCode: value })}
+        />
+        <Choice
+          label="Mục tiêu"
+          options={objectiveOptions}
+          value={preferences.preferredObjectiveKey}
+          onChange={(value) =>
+            onChange({
+              ...preferences,
+              preferredObjectiveKey: value as WebTutorPreferences['preferredObjectiveKey'],
+            })
+          }
+        />
+        <Choice
+          label="Độ sâu giải thích"
+          options={depthOptions}
+          value={preferences.explanationDepth}
+          onChange={(value) =>
+            onChange({
+              ...preferences,
+              explanationDepth: value as WebTutorPreferences['explanationDepth'],
+            })
+          }
+        />
+        <Choice
+          label="Giọng điệu"
+          options={toneOptions}
+          value={preferences.tone}
+          onChange={(value) =>
+            onChange({ ...preferences, tone: value as WebTutorPreferences['tone'] })
+          }
+        />
+      </div>
+    </fieldset>
+  );
+}
+
+interface ChoiceProps {
+  label: string;
+  onChange: (value: string) => void;
+  options: readonly { label: string; value: string }[];
+  value: string;
+}
+
+function Choice({ label, onChange, options, value }: ChoiceProps) {
+  return (
+    <label className="grid gap-2 text-sm font-semibold text-stone-800">
+      <span>{label}</span>
+      <select
+        aria-label={label}
+        className="min-h-11 rounded-2xl border border-stone-200 bg-stone-50 px-3 text-sm font-medium text-stone-900 outline-none focus:border-orange-600 focus:ring-2 focus:ring-orange-200"
+        onChange={(event) => onChange(event.target.value)}
+        value={value}
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}

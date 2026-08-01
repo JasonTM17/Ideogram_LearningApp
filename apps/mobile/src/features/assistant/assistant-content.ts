@@ -1,26 +1,24 @@
 export const assistantContent = {
-  description:
-    'Trợ lý sẽ chỉ phản hồi khi có ngữ cảnh học, nguồn phù hợp và cách phục hồi rõ ràng.',
+  description: 'Hỏi bằng tiếng Việt; Trợ lý trả lời theo ngôn ngữ, trình độ và mục tiêu bạn chọn.',
   eyebrow: 'Hỗ trợ có căn cứ',
   plannedCapabilities: [
     {
-      description: 'Giải thích dựa trên bài học đang mở, không phải trò chuyện chung chung.',
+      description: 'Giải thích theo cấu hình ngôn ngữ, trình độ và mục tiêu của bạn.',
       icon: 'document-text-outline',
-      label: 'Ngữ cảnh bài học',
+      label: 'Cấu hình riêng',
     },
     {
-      description: 'Nêu rõ đâu là rubric, đâu là gợi ý và khi nào thông tin chưa chắc chắn.',
+      description: 'Hiển thị ranh giới nguồn để bạn biết đâu là câu trả lời chưa có bài học.',
       icon: 'shield-checkmark-outline',
       label: 'Ranh giới tin cậy',
     },
     {
-      description: 'Giữ bản nháp khi mất mạng; không giả vờ đã gửi hoặc đã lưu.',
+      description: 'Không giả vờ đã lưu hoặc hoàn tất khi mạng hay dịch vụ gặp lỗi.',
       icon: 'cloud-offline-outline',
       label: 'Phục hồi minh bạch',
     },
   ],
-  stateDescription:
-    'Ô nhập và lịch sử trò chuyện chỉ được bật sau khi phiên đăng nhập và dịch vụ AI an toàn hoàn tất.',
-  stateTitle: 'Trợ lý chưa khả dụng',
+  stateDescription: 'Bạn có thể bắt đầu bằng một câu hỏi ngôn ngữ ngắn bằng tiếng Việt.',
+  stateTitle: 'Trợ lý đã có kết nối',
   title: 'Trợ lý',
 } as const;
