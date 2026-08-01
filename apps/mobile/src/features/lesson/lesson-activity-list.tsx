@@ -1,6 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { nativeLayoutTokens } from '@ideogram/design-tokens/native';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { AppText } from '../../components/app-text';
 import { useMobileTheme } from '../../components/use-mobile-theme';
@@ -20,43 +20,73 @@ const activityLabels: Record<LearnerCatalogActivity['activityType'], string> = {
 
 interface LessonActivityListProps {
   activities: LearnerCatalogActivity[];
+  onOpenVocabularyActivity: (activityId: string) => void;
 }
 
-export function LessonActivityList({ activities }: LessonActivityListProps) {
+export function LessonActivityList({
+  activities,
+  onOpenVocabularyActivity,
+}: LessonActivityListProps) {
   const { theme } = useMobileTheme();
 
   return (
     <View style={styles.list}>
       <AppText variant="headingMd">Hoạt động trong bài</AppText>
-      {activities.map((activity, index) => (
-        <View
-          key={activity.activityId}
-          accessibilityLabel={`Hoạt động ${index + 1}: ${activity.titleVietnamese}`}
-          style={[
-            styles.activity,
-            { backgroundColor: theme.color.surface, borderColor: theme.color.borderSubtle },
-          ]}
-        >
-          <View style={[styles.number, { backgroundColor: theme.color.surfaceSubtle }]}>
-            <AppText tone="action" variant="label">
-              {index + 1}
-            </AppText>
+      {activities.map((activity, index) => {
+        const isSupported = activity.activityType === 'vocabulary';
+        const content = (
+          <>
+            <View style={[styles.number, { backgroundColor: theme.color.surfaceSubtle }]}>
+              <AppText tone="action" variant="label">
+                {index + 1}
+              </AppText>
+            </View>
+            <View style={styles.copy}>
+              <AppText variant="headingMd">{activity.titleVietnamese}</AppText>
+              <AppText tone="secondary">{activity.instructionsVietnamese}</AppText>
+              <AppText tone="tertiary" variant="caption">
+                {`${activityLabels[activity.activityType]} · ${activity.estimatedMinutes} phút`}
+              </AppText>
+              <AppText tone={isSupported ? 'success' : 'tertiary'} variant="caption">
+                {isSupported ? 'Có thể mở để học' : 'Chưa hỗ trợ trong lượt này'}
+              </AppText>
+            </View>
+            <Ionicons
+              color={isSupported ? theme.color.actionPrimary : theme.color.textTertiary}
+              importantForAccessibility="no-hide-descendants"
+              name={isSupported ? 'chevron-forward' : 'lock-closed-outline'}
+              size={20}
+            />
+          </>
+        );
+
+        const cardStyle = [
+          styles.activity,
+          { backgroundColor: theme.color.surface, borderColor: theme.color.borderSubtle },
+        ];
+
+        return isSupported ? (
+          <Pressable
+            key={activity.activityId}
+            accessibilityHint="Mở hoạt động từ vựng để đọc và xác nhận đã học"
+            accessibilityLabel={`Mở hoạt động ${index + 1}: ${activity.titleVietnamese}`}
+            accessibilityRole="button"
+            onPress={() => onOpenVocabularyActivity(activity.activityId)}
+            style={({ pressed }) => [...cardStyle, { opacity: pressed ? 0.74 : 1 }]}
+          >
+            {content}
+          </Pressable>
+        ) : (
+          <View
+            key={activity.activityId}
+            accessibilityLabel={`Hoạt động ${index + 1}: ${activity.titleVietnamese}. Chưa hỗ trợ trong lượt này.`}
+            accessibilityState={{ disabled: true }}
+            style={cardStyle}
+          >
+            {content}
           </View>
-          <View style={styles.copy}>
-            <AppText variant="headingMd">{activity.titleVietnamese}</AppText>
-            <AppText tone="secondary">{activity.instructionsVietnamese}</AppText>
-            <AppText tone="tertiary" variant="caption">
-              {`${activityLabels[activity.activityType]} · ${activity.estimatedMinutes} phút`}
-            </AppText>
-          </View>
-          <Ionicons
-            color={theme.color.textTertiary}
-            name="chevron-forward"
-            size={20}
-            importantForAccessibility="no-hide-descendants"
-          />
-        </View>
-      ))}
+        );
+      })}
     </View>
   );
 }

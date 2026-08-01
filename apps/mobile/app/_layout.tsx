@@ -60,6 +60,10 @@ const RootNavigator = ({ canvasColor }: { canvasColor: string }) => {
           options={{ gestureEnabled: true, presentation: 'card' }}
         />
         <Stack.Screen
+          name="lessons/[lessonId]/activities/[activityId]"
+          options={{ gestureEnabled: true, presentation: 'card' }}
+        />
+        <Stack.Screen
           name="review/session"
           options={{ gestureEnabled: true, presentation: 'card' }}
         />

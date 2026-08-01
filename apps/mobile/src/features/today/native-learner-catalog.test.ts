@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { findCatalogLesson, findFirstCatalogLesson } from './catalog-lesson-context';
+import {
+  findCatalogActivity,
+  findCatalogLesson,
+  findCatalogVocabularyActivity,
+  findFirstCatalogLesson,
+} from './catalog-lesson-context';
 import { createCatalogTracks } from './catalog-track-presentation';
 
 import type { LearnerCatalogResponse } from '@ideogram/contracts';
@@ -33,6 +38,28 @@ const catalog: LearnerCatalogResponse = {
                       rubyAnnotationState: 'planned',
                       targetScript: 'kana_kanji',
                       titleVietnamese: 'Chào buổi sáng',
+                    },
+                    {
+                      activityId: 'greeting-vocabulary',
+                      activityType: 'vocabulary',
+                      estimatedMinutes: 4,
+                      instructionsVietnamese: 'Đọc từ và ví dụ trước khi xác nhận đã học.',
+                      payload: {
+                        entries: [
+                          {
+                            example: {
+                              translationVietnamese: 'Tôi là giáo viên.',
+                              value: '私は先生です。',
+                            },
+                            meaningVietnamese: 'giáo viên',
+                            reading: 'せんせい',
+                            term: '先生',
+                          },
+                        ],
+                      },
+                      rubyAnnotationState: 'planned',
+                      targetScript: 'kana_kanji',
+                      titleVietnamese: 'Từ vựng: giáo viên',
                     },
                   ],
                   estimatedMinutes: 10,
@@ -81,6 +108,23 @@ describe('findFirstCatalogLesson', () => {
     );
     expect(findCatalogLesson(catalog, ' greetings-01')).toBeNull();
     expect(findCatalogLesson(catalog, 'missing-lesson')).toBeNull();
+  });
+
+  it('resolves a vocabulary activity from the same learner-safe release context', () => {
+    expect(findCatalogActivity(catalog, 'greetings-01', 'greeting-vocabulary')).toEqual(
+      expect.objectContaining({
+        activity: expect.objectContaining({ activityType: 'vocabulary' }),
+        activitySequence: 2,
+        contentReleaseId: 'japanese-n5-v1',
+      }),
+    );
+    expect(findCatalogActivity(catalog, 'greetings-01', ' greeting-vocabulary')).toBeNull();
+    expect(findCatalogVocabularyActivity(catalog, 'greetings-01', 'greeting-vocabulary')).toEqual(
+      expect.objectContaining({
+        activity: expect.objectContaining({ activityType: 'vocabulary' }),
+      }),
+    );
+    expect(findCatalogVocabularyActivity(catalog, 'greetings-01', 'greeting-retrieval')).toBeNull();
   });
 
   it('projects published tracks without deriving learner progress', () => {

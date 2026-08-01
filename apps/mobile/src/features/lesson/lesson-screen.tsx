@@ -1,5 +1,5 @@
 import { nativeLayoutTokens } from '@ideogram/design-tokens/native';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import { AppText } from '../../components/app-text';
@@ -11,6 +11,7 @@ import { LessonActivityList } from './lesson-activity-list';
 
 export function LessonScreen() {
   const { lessonId } = useLocalSearchParams<{ lessonId?: string | string[] }>();
+  const router = useRouter();
   const { reload, state } = useNativeLearnerCatalog();
   const catalogLesson =
     state.kind === 'ready' && typeof lessonId === 'string'
@@ -55,7 +56,15 @@ export function LessonScreen() {
               {`${catalogLesson.unitTitle} · ${catalogLesson.lesson.estimatedMinutes} phút`}
             </AppText>
           </View>
-          <LessonActivityList activities={catalogLesson.lesson.activities} />
+          <LessonActivityList
+            activities={catalogLesson.lesson.activities}
+            onOpenVocabularyActivity={(activityId) => {
+              router.push({
+                params: { activityId, lessonId: catalogLesson.lesson.lessonId },
+                pathname: '/lessons/[lessonId]/activities/[activityId]',
+              });
+            }}
+          />
         </>
       ) : null}
     </TaskScreenScaffold>
