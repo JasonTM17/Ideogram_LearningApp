@@ -1,10 +1,12 @@
 ---
 phase: 4
-title: "Validation and docs"
-status: pending
+title: Validation and docs
+status: in-progress
 priority: P1
-effort: "2h"
-dependencies: [2, 3]
+effort: 2h
+dependencies:
+  - 2
+  - 3
 ---
 
 # Phase 4: Validation and docs
