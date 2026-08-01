@@ -15,6 +15,26 @@
 - `apps/mobile/app.json` is still a static Expo foundation app with no EAS config.
 - The current mobile app is still a foundation screen, not a released learning flow.
 
+## Native learning operation boundary
+
+- Native activity mutations use an Expo SecureStore-backed identity store plus a
+  document-directory installation sentinel.
+- The store creates one UUID device identity and reserves a monotonic sequence
+  before an operation is sent; failed persistence never returns the reservation.
+- The keychain item is device-only and is not a user credential. If the
+  installation sentinel is absent (including after an iOS reinstall), the old
+  keychain value is deleted before a new operation stream is created.
+- The identity is used for idempotency/replay only, not for learner
+  authorization. Reservations are serialized within one JavaScript runtime;
+  background/headless mutation workers need a transactional counter before they
+  can reserve independently.
+- This slice does not provide an offline queue, retry scheduler, or conflict
+  reconciliation. Those behaviors belong to the later mutation-queue phase and
+  must keep the server evaluator as the source of truth.
+- A fresh installation is treated as a new operation stream. Android and iOS
+  uninstall/reinstall checks remain a release validation gate for the native
+  binary and its document storage behavior.
+
 ## Pre-release enforcement work
 
 - Add an explicit device/runtime gate before claiming that devices below the

@@ -1,7 +1,7 @@
 ---
 phase: 2
 title: "Durable Operation State"
-status: pending
+status: completed
 effort: "1–2 engineer-days"
 ---
 
@@ -33,15 +33,16 @@ Phase 7 will persist pending submissions and reconciliation state.
    tests do not import Expo; serialize concurrent reservations and recover
    cleanly after failed writes.
 3. Add the Expo adapter using `expo-crypto` and `expo-secure-store` with a
-   dedicated keychain service and platform availability guard.
+   dedicated keychain service, document-directory installation sentinel, and
+   platform availability guard.
 4. Export the factory for the future activity runner without coupling it to
    Supabase session credentials or web storage.
 
 ## Success Criteria
 
-- [ ] First reservation creates one UUID and sequence `1`.
-- [ ] Restart reads the same UUID and continues at the next sequence.
-- [ ] Concurrent reservations return unique ordered sequences.
-- [ ] Failed/corrupt storage never silently resets identity or reuses a value.
-- [ ] Logout/account switch does not clear the installation identity.
-- [ ] No durable pending queue is introduced before Phase 7.
+- [x] First reservation creates one UUID and sequence `1`.
+- [x] Restart reads the same UUID and continues at the next sequence.
+- [x] Concurrent reservations return unique ordered sequences.
+- [x] Failed/corrupt storage never silently resets identity or reuses a value.
+- [x] Logout/account switch does not clear the installation identity.
+- [x] No durable pending queue is introduced before Phase 7.

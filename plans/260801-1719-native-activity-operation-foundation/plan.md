@@ -1,7 +1,7 @@
 ---
 title: "Native Activity Operation Foundation"
 description: "Harden the native activity write boundary and install-scoped operation identity before enabling interactive lesson UI."
-status: in_progress
+status: completed
 priority: P1
 branch: "main"
 tags: []
@@ -28,9 +28,9 @@ Phase 7 remains the owner of offline queue/reconciliation.
 
 | Phase | Name | Status |
 |-------|------|--------|
-| 1 | [Native Transport and Catalog Context](./phase-01-native-transport-and-catalog-context.md) | In progress |
-| 2 | [Durable Operation State](./phase-02-durable-operation-state.md) | Pending |
-| 3 | [Tests and Documentation](./phase-03-tests-and-documentation.md) | Pending |
+| 1 | [Native Transport and Catalog Context](./phase-01-native-transport-and-catalog-context.md) | Completed |
+| 2 | [Durable Operation State](./phase-02-durable-operation-state.md) | Completed |
+| 3 | [Tests and Documentation](./phase-03-tests-and-documentation.md) | Completed |
 
 ## Dependencies
 

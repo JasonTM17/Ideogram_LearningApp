@@ -5,7 +5,7 @@ Ideogram Learning is a Vietnamese-first language learning platform for Japanese-
 ## Current foundation
 
 - Web: Next.js App Router shell in `apps/web` with public landing, sign-in, callback, and protected learner pages
-- Mobile: Expo shell in `apps/mobile` with protected session hydration, native email-link sign-in/callback screens, catalog-backed Today and Lesson read views, and an internal learner shell
+- Mobile: Expo shell in `apps/mobile` with protected session hydration, native email-link sign-in/callback screens, catalog-backed Today and Lesson read views, an internal learner shell, and a durable device-scoped activity operation identity foundation
 - Worker: Node worker stub in `apps/worker`
 - Shared packages: `packages/contracts`, `packages/design-tokens`, `packages/config`, `packages/testing`, `packages/auth`, `packages/api-client`, `packages/learning-engine`
 - Implemented API routes: `GET /api/v1/health`, `GET /api/v1/learning/catalog`, `POST /api/v1/learning/activities/submit`, `POST /api/v1/learning/reviews/submit`, `POST /api/v1/auth/email-otp`, `GET /auth/callback`, `POST /api/v1/auth/sign-out`
@@ -93,9 +93,9 @@ pnpm supabase:stop
 
 ## What is not implemented yet
 
-- Other learning mutations, interactive lesson and review UI/offline sync, onboarding, placement, SRS queue UI, AI runtime, progress write flows, and admin workflows
+- Other learning mutations, interactive lesson and review UI/offline sync, onboarding, placement, SRS queue UI, AI runtime, progress write flows, and admin workflows. The native operation identity is ready for these flows, but the durable mutation queue and reconciliation remain a later phase.
 - Activity evaluators beyond vocabulary acknowledgement and objective listening, including speaking and writing assessment
-- Production deployment or cloud provisioning
+- Production web runtime deployment or cloud provisioning (the public GHCR image is published, but no hosted runtime is configured)
 - Hosted production login credential setup for the learning write path; the provisioning SQL exists, but the secret credential and platform wiring remain external
 - Any additional endpoint beyond the implemented health, catalog, activity/review submission, and auth lifecycle routes
 

@@ -79,6 +79,23 @@ review submission. The route hashes the canonical public input and calls only
 5. Unsupported activity types, including speaking and writing, return a safe
    conflict until an asynchronous grading lifecycle is implemented.
 
+## Native operation identity boundary
+
+The native client now has a small identity primitive for activity operations:
+
+- Expo SecureStore retains one device-only UUID and the next monotonic sequence;
+  a document-directory installation sentinel clears retained iOS keychain state
+  when a fresh installation is detected.
+- A sequence is persisted before the identity reservation returns, so a storage failure does
+  not expose an operation identifier that may later be reused.
+- Concurrent reservations in one JavaScript runtime serialize across store
+  instances; a future headless/background writer needs a transactional counter.
+- The identity is an idempotency/replay coordinate only; bearer session checks,
+  learner authorization, release access, and evaluation remain server-owned.
+- No durable queue, retry scheduler, or reconciliation is included yet. An
+  offline operation must not be considered complete until the server receipt is
+  accepted by the later queue phase.
+
 ## Worker-only operations
 
 | Helper                                  | Semantics                                                      |

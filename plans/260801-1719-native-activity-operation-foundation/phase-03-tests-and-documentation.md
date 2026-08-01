@@ -1,7 +1,7 @@
 ---
 phase: 3
 title: "Tests and Documentation"
-status: pending
+status: completed
 effort: "0.5–1 engineer-day"
 ---
 
@@ -34,8 +34,8 @@ remains in Phase 7/6.
 
 ## Success Criteria
 
-- [ ] Focused and workspace validation are green.
-- [ ] Docs match the code and contain no secret or unsupported launch claim.
-- [ ] Review report records findings and resolution status.
-- [ ] Commits remain narrow and conventional; push succeeds without dotenv or
+- [x] Focused and workspace validation are green.
+- [x] Docs match the code and contain no secret or unsupported launch claim.
+- [x] Review report records findings and resolution status.
+- [x] Commits remain narrow and conventional; push succeeds without dotenv or
   credential material.

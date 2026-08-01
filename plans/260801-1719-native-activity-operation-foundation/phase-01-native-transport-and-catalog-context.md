@@ -1,7 +1,7 @@
 ---
 phase: 1
 title: "Native Transport and Catalog Context"
-status: in_progress
+status: completed
 effort: "1–2 engineer-days"
 ---
 
@@ -43,7 +43,7 @@ release.
 
 ## Success Criteria
 
-- [ ] Activity POST has exact path/body/auth/header assertions.
-- [ ] HTTP, invalid JSON, session-change, timeout and abort tests remain green.
-- [ ] Both presentation contexts preserve the catalog release identifier.
-- [ ] No server-owned evaluation field is introduced in the client payload.
+- [x] Activity POST has exact path/body/auth/header assertions.
+- [x] HTTP, invalid JSON, session-change, timeout and abort tests remain green.
+- [x] Both presentation contexts preserve the catalog release identifier.
+- [x] No server-owned evaluation field is introduced in the client payload.
