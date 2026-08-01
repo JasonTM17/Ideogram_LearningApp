@@ -109,12 +109,14 @@ sequenceDiagram
 
   Client->>Route: tutorTurnRequestSchema + UUIDs
   Route->>Auth: verify bearer or SSR cookie session
+  Route->>Ledger: replay lookup under learner lifecycle lock
+  Ledger-->>Route: completed replay or no replay
   Route->>Ledger: BEGIN + SET LOCAL ROLE + active learner/consent/quota/idempotency
-  Ledger-->>Route: pending reservation or completed replay
+  Ledger-->>Route: pending reservation + attempt lease or completed replay
   alt new pending turn
-    Route->>Provider: structured JSON request with user_id, no tools
+    Route->>Provider: bounded structured JSON request, no tools or learner identifier
     Provider-->>Route: bounded response + token usage
-    Route->>Finalize: complete response/usage/cost, outside provider lock
+    Route->>Finalize: complete response/usage/cost with attempt lease
     Finalize-->>Route: completed receipt
   else provider failure/cancel/timeout
     Route->>Finalize: fail turn and release reservation
@@ -124,10 +126,11 @@ sequenceDiagram
 
 The route never holds a database transaction across the provider network call. The
 private ledger binds the verified user, conversation, turn UUID, canonical payload
-hash, and structured response; an `AFTER INSERT` purge trigger removes these rows
-when the account-deletion worker starts the existing learning purge. Direct SSE,
-server-owned lesson retrieval, partial-response persistence, and reconnect semantics
-are follow-up work.
+hash, server-generated attempt lease, and structured response; an `AFTER INSERT`
+purge trigger removes these rows when the account-deletion worker starts the
+existing learning purge. Deletion freeze and AI reservations share lifecycle lock
+namespace `7210`. Direct SSE, server-owned lesson retrieval, partial-response
+persistence, and reconnect semantics are follow-up work.
 
 ## Catalog scale boundary
 
@@ -180,7 +183,9 @@ Identity and privacy are modeled as a database-first boundary:
   fails closed even if the bearer session is still valid.
 - The tutor route rechecks active learner role, latest AI provider consent,
   language-pack availability, and atomic hourly turn/cost quota in the database
-  before calling DeepSeek; its failure path stores only normalized error codes.
+  before calling DeepSeek; every provider completion/failure requires the current
+  attempt lease, and its failure path stores only normalized error codes. Exact
+  completed replay is checked before new provider configuration/consent gates.
 - The learner authorization helper now locks `public.account_roles` before
   `public.profiles` to match the revocation path and avoid deadlock cycles.
 - Production-login provisioning fails closed on elevated attributes,
@@ -225,13 +230,14 @@ flowchart TB
 
 ## Boundaries
 
-| Boundary        | Rule                                                  |
-| --------------- | ----------------------------------------------------- |
-| Web/mobile      | Do not share DOM or native shells                     |
-| Shared packages | Share contracts, tokens, validators, and helpers only |
-| API host        | Keep versioned routes under Next.js                   |
-| Worker          | Use for heavy or deferred work only                   |
-| Secrets         | Keep AI credentials server-only                       |
+| Boundary        | Rule                                                         |
+| --------------- | ------------------------------------------------------------ |
+| Web/mobile      | Do not share DOM or native shells                            |
+| Shared packages | Share contracts, tokens, validators, and helpers only        |
+| API host        | Keep versioned routes under Next.js                          |
+| Worker          | Use for heavy or deferred work only                          |
+| Secrets         | Keep AI credentials server-only                              |
+| AI package      | `@ideogram/ai` is rejected from mobile/shared/client modules |
 
 ## Planned behavior
 
