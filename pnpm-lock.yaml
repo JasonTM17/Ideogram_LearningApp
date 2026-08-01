@@ -138,6 +138,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@ideogram/ai':
+        specifier: workspace:*
+        version: link:../../packages/ai
       '@ideogram/api-client':
         specifier: workspace:*
         version: link:../../packages/api-client
