@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { findCatalogLesson, findFirstCatalogLesson } from './catalog-lesson-context';
+import { createCatalogTracks } from './catalog-track-presentation';
 
 import type { LearnerCatalogResponse } from '@ideogram/contracts';
 
@@ -78,5 +79,21 @@ describe('findFirstCatalogLesson', () => {
     );
     expect(findCatalogLesson(catalog, ' greetings-01')).toBeNull();
     expect(findCatalogLesson(catalog, 'missing-lesson')).toBeNull();
+  });
+
+  it('projects published tracks without deriving learner progress', () => {
+    expect(createCatalogTracks(catalog)).toEqual([
+      {
+        contentReleaseId: 'japanese-n5-v1',
+        firstLessonId: 'greetings-01',
+        languageCode: 'ja',
+        languageName: 'Tiếng Nhật',
+        lessonCount: 1,
+        levelCode: 'N5',
+        releaseTitle: 'Nền tảng N5',
+        totalMinutes: 10,
+        unitCount: 1,
+      },
+    ]);
   });
 });

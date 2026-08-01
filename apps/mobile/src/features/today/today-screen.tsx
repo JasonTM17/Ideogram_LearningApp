@@ -3,13 +3,18 @@ import { useRouter } from 'expo-router';
 import { ScreenScaffold } from '../../components/screen-scaffold';
 import { StatusPanel } from '../../components/status-panel';
 import { CatalogLessonCard } from './catalog-lesson-card';
+import { CatalogTrackList } from './catalog-track-list';
 import { useNativeLearnerCatalog } from './native-learner-catalog-provider';
+import { createCatalogTracks } from './catalog-track-presentation';
 import { todayContent } from './today-content';
 
 export function TodayScreen() {
   const router = useRouter();
   const { reload, state } = useNativeLearnerCatalog();
   const nextLesson = state.kind === 'ready' ? state.nextLesson : null;
+  const tracks = state.kind === 'ready' ? createCatalogTracks(state.catalog) : [];
+  const openLesson = (lessonId: string) =>
+    router.push({ pathname: '/lessons/[lessonId]', params: { lessonId } });
 
   return (
     <ScreenScaffold
@@ -44,13 +49,11 @@ export function TodayScreen() {
       {nextLesson ? (
         <CatalogLessonCard
           lessonContext={nextLesson}
-          onStart={() =>
-            router.push({
-              pathname: '/lessons/[lessonId]',
-              params: { lessonId: nextLesson.lesson.lessonId },
-            })
-          }
+          onStart={() => openLesson(nextLesson.lesson.lessonId)}
         />
+      ) : null}
+      {state.kind === 'ready' && tracks.length > 0 ? (
+        <CatalogTrackList onSelect={openLesson} tracks={tracks} />
       ) : null}
     </ScreenScaffold>
   );
