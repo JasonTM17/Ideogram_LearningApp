@@ -1,8 +1,12 @@
-import { tutorTurnInputSchema, tutorTurnResponseSchema } from '@ideogram/contracts';
+import {
+  tutorTurnInputSchema,
+  tutorTurnResponseSchema,
+  tutorTurnUsageSchema,
+} from '@ideogram/contracts';
 
 import { createDeepSeekRequestScope } from './deepseek-request-scope';
 
-import type { TutorTurnInput, TutorTurnResponse } from '@ideogram/contracts';
+import type { TutorTurnInput, TutorTurnResponse, TutorTurnUsage } from '@ideogram/contracts';
 import type { DeepSeekTutorConfiguration } from './deepseek-tutor-configuration';
 
 export class DeepSeekTutorGatewayError extends Error {
@@ -15,8 +19,8 @@ export class DeepSeekTutorGatewayError extends Error {
 export interface DeepSeekTutorGateway {
   respond: (
     input: TutorTurnInput,
-    options?: { signal?: AbortSignal },
-  ) => Promise<TutorTurnResponse>;
+    options?: { signal?: AbortSignal; userId?: string },
+  ) => Promise<{ response: TutorTurnResponse; usage: TutorTurnUsage }>;
 }
 
 export type DeepSeekFetch = (input: string, init: RequestInit) => Promise<Response>;
@@ -35,12 +39,25 @@ const buildSystemPrompt = (input: TutorTurnInput): string => {
   ].join('\n');
 };
 
-const parseProviderResponse = async (response: Response): Promise<TutorTurnResponse> => {
+const maximumProviderResponseBytes = 131_072;
+
+const parseProviderResponse = async (
+  response: Response,
+): Promise<{ response: TutorTurnResponse; usage: TutorTurnUsage }> => {
   if (!response.ok) throw new DeepSeekTutorGatewayError();
+
+  const contentLength = Number(response.headers.get('content-length'));
+  if (Number.isFinite(contentLength) && contentLength > maximumProviderResponseBytes) {
+    throw new DeepSeekTutorGatewayError();
+  }
 
   let payload: unknown;
   try {
-    payload = await response.json();
+    const body = await response.text();
+    if (new TextEncoder().encode(body).byteLength > maximumProviderResponseBytes) {
+      throw new DeepSeekTutorGatewayError();
+    }
+    payload = JSON.parse(body) as unknown;
   } catch {
     throw new DeepSeekTutorGatewayError();
   }
@@ -57,8 +74,27 @@ const parseProviderResponse = async (response: Response): Promise<TutorTurnRespo
 
   if (typeof content !== 'string') throw new DeepSeekTutorGatewayError();
 
+  const usage =
+    payload &&
+    typeof payload === 'object' &&
+    (payload as { usage?: unknown }).usage &&
+    typeof (payload as { usage: unknown }).usage === 'object'
+      ? (
+          payload as {
+            usage: { prompt_tokens?: unknown; completion_tokens?: unknown; total_tokens?: unknown };
+          }
+        ).usage
+      : undefined;
+
   try {
-    return tutorTurnResponseSchema.parse(JSON.parse(content) as unknown);
+    return {
+      response: tutorTurnResponseSchema.parse(JSON.parse(content) as unknown),
+      usage: tutorTurnUsageSchema.parse({
+        completionTokens: usage?.completion_tokens,
+        promptTokens: usage?.prompt_tokens,
+        totalTokens: usage?.total_tokens,
+      }),
+    };
   } catch {
     throw new DeepSeekTutorGatewayError();
   }
@@ -88,6 +124,7 @@ export const createDeepSeekTutorGateway = ({
         response_format: { type: 'json_object' },
         stream: false,
         thinking: { type: configuration.thinkingMode },
+        ...(options.userId ? { user_id: options.userId } : {}),
       }),
       headers: {
         Authorization: `Bearer ${configuration.apiKey}`,
