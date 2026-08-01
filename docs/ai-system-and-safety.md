@@ -30,6 +30,11 @@ the model for Vietnamese assessment, explanation, example, frequent VN learner
 mistake, next exercise, and a source boundary. Model text never authorizes a
 write, tool call, or navigation side effect.
 
+Every public turn will also carry a client-generated `conversationId` and
+`turnId` UUID. The durable route must bind both identities to the learner and
+payload hash before it invokes a provider, so a retry resumes the same turn or
+fails rather than creating a duplicate provider charge.
+
 ## Release blockers
 
 - Rotate the credential pasted into chat and load the replacement only from a

@@ -118,6 +118,9 @@ gate riêng.
   configuration, JSON output validation, and bounded provider cancellation.
   Public chat remains blocked on the Phase 6 durable-turn, rate-limit,
   retrieval, and evaluation gates.
+- Session 9 (2026-08-01): `c42898c` added strict conversation/turn UUIDs and
+  lifecycle states to the AI contract, freezing the idempotency identifiers for
+  durable route work.
 - The approved plan is executing. Deploy, purchase, real secrets and store
   publication still require their named authority.
 
