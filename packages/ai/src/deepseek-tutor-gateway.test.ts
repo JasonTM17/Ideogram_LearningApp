@@ -64,25 +64,6 @@ describe('DeepSeek tutor gateway', () => {
     });
   });
 
-  it('passes the verified user identity without exposing it in the prompt', async () => {
-    const fetch = vi.fn().mockResolvedValue(
-      new Response(
-        JSON.stringify({
-          choices: [{ message: { content: JSON.stringify(response) } }],
-          usage: { completion_tokens: 1, prompt_tokens: 1, total_tokens: 2 },
-        }),
-        { status: 200 },
-      ),
-    );
-    const gateway = createDeepSeekTutorGateway({ configuration, fetch });
-
-    await gateway.respond(input, { userId: '123e4567-e89b-42d3-a456-426614174000' });
-
-    const body = JSON.parse(fetch.mock.calls[0]?.[1].body as string) as Record<string, unknown>;
-    expect(body.user_id).toBe('123e4567-e89b-42d3-a456-426614174000');
-    expect(JSON.stringify(body.messages)).not.toContain('123e4567-e89b-42d3-a456-426614174000');
-  });
-
   it('fails closed for an invalid provider payload', async () => {
     const gateway = createDeepSeekTutorGateway({
       configuration,
@@ -94,5 +75,42 @@ describe('DeepSeek tutor gateway', () => {
     });
 
     await expect(gateway.respond(input)).rejects.toBeInstanceOf(DeepSeekTutorGatewayError);
+  });
+
+  it('rejects an oversized chunked provider body before buffering it', async () => {
+    let cancelled = false;
+    const stream = new ReadableStream<Uint8Array>({
+      pull(controller) {
+        controller.enqueue(new Uint8Array(131_072));
+        controller.enqueue(new Uint8Array(1));
+      },
+      cancel() {
+        cancelled = true;
+      },
+    });
+    const gateway = createDeepSeekTutorGateway({
+      configuration,
+      fetch: vi.fn().mockResolvedValue(new Response(stream, { status: 200 })),
+    });
+
+    await expect(gateway.respond(input)).rejects.toBeInstanceOf(DeepSeekTutorGatewayError);
+    expect(cancelled).toBe(true);
+  });
+
+  it('aborts a chunked provider body when the caller cancels', async () => {
+    const stream = new ReadableStream<Uint8Array>({
+      pull() {
+        return new Promise(() => undefined);
+      },
+    });
+    const gateway = createDeepSeekTutorGateway({
+      configuration,
+      fetch: vi.fn().mockResolvedValue(new Response(stream, { status: 200 })),
+    });
+    const controller = new AbortController();
+    const result = gateway.respond(input, { signal: controller.signal });
+    controller.abort();
+
+    await expect(result).rejects.toMatchObject({ name: 'AbortError' });
   });
 });

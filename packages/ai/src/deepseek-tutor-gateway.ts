@@ -19,7 +19,7 @@ export class DeepSeekTutorGatewayError extends Error {
 export interface DeepSeekTutorGateway {
   respond: (
     input: TutorTurnInput,
-    options?: { signal?: AbortSignal; userId?: string },
+    options?: { signal?: AbortSignal },
   ) => Promise<{ response: TutorTurnResponse; usage: TutorTurnUsage }>;
 }
 
@@ -41,8 +41,66 @@ const buildSystemPrompt = (input: TutorTurnInput): string => {
 
 const maximumProviderResponseBytes = 131_072;
 
+const readBoundedResponseBody = async (
+  response: Response,
+  signal: AbortSignal,
+): Promise<string> => {
+  if (response.body === null) {
+    const body = await response.text();
+    if (new TextEncoder().encode(body).byteLength > maximumProviderResponseBytes) {
+      throw new DeepSeekTutorGatewayError();
+    }
+    return body;
+  }
+
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let totalBytes = 0;
+
+  const cancelReader = () => {
+    void reader.cancel();
+  };
+
+  if (signal.aborted) {
+    cancelReader();
+    throw new DOMException('The tutor request was cancelled.', 'AbortError');
+  }
+
+  signal.addEventListener('abort', cancelReader, { once: true });
+  try {
+    while (true) {
+      if (signal.aborted) {
+        throw new DOMException('The tutor request was cancelled.', 'AbortError');
+      }
+
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      totalBytes += value.byteLength;
+      if (totalBytes > maximumProviderResponseBytes) {
+        await reader.cancel();
+        throw new DeepSeekTutorGatewayError();
+      }
+      chunks.push(value);
+    }
+  } finally {
+    signal.removeEventListener('abort', cancelReader);
+    reader.releaseLock();
+  }
+
+  const body = new Uint8Array(totalBytes);
+  let offset = 0;
+  for (const chunk of chunks) {
+    body.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+
+  return new TextDecoder().decode(body);
+};
+
 const parseProviderResponse = async (
   response: Response,
+  signal: AbortSignal,
 ): Promise<{ response: TutorTurnResponse; usage: TutorTurnUsage }> => {
   if (!response.ok) throw new DeepSeekTutorGatewayError();
 
@@ -53,10 +111,7 @@ const parseProviderResponse = async (
 
   let payload: unknown;
   try {
-    const body = await response.text();
-    if (new TextEncoder().encode(body).byteLength > maximumProviderResponseBytes) {
-      throw new DeepSeekTutorGatewayError();
-    }
+    const body = await readBoundedResponseBody(response, signal);
     payload = JSON.parse(body) as unknown;
   } catch {
     throw new DeepSeekTutorGatewayError();
@@ -124,7 +179,6 @@ export const createDeepSeekTutorGateway = ({
         response_format: { type: 'json_object' },
         stream: false,
         thinking: { type: configuration.thinkingMode },
-        ...(options.userId ? { user_id: options.userId } : {}),
       }),
       headers: {
         Authorization: `Bearer ${configuration.apiKey}`,
@@ -137,7 +191,7 @@ export const createDeepSeekTutorGateway = ({
     try {
       const response = await fetch(`${configuration.baseUrl}/chat/completions`, request);
       scope.throwIfAborted();
-      return parseProviderResponse(response);
+      return await parseProviderResponse(response, scope.signal);
     } catch (error) {
       scope.throwIfAborted();
       if (error instanceof DeepSeekTutorGatewayError) throw error;
