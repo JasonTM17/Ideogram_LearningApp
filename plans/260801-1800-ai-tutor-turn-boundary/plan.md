@@ -1,7 +1,7 @@
 ---
 title: Authenticated AI Tutor Turn Boundary
 description: ''
-status: in-progress
+status: completed
 priority: P1
 branch: main
 tags: []
@@ -29,7 +29,7 @@ long-lived personalization remain explicit follow-up phases.
 | 1 | [Contract and Policy](./phase-01-contract-and-policy.md) | Completed |
 | 2 | [Database Turn Ledger](./phase-02-database-turn-ledger.md) | Completed |
 | 3 | [Authenticated Tutor Route](./phase-03-authenticated-tutor-route.md) | Completed |
-| 4 | [Validation and Documentation](./phase-04-validation-and-documentation.md) | In Progress |
+| 4 | [Validation and Documentation](./phase-04-validation-and-documentation.md) | Completed |
 
 ## Dependencies
 
