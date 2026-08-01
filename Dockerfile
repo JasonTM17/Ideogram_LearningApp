@@ -39,6 +39,9 @@ RUN addgroup --system --gid 1001 nodejs \
 
 WORKDIR /app
 
+LABEL org.opencontainers.image.source="https://github.com/JasonTM17/Ideogram_LearningApp"
+LABEL org.opencontainers.image.description="Vietnamese-first AI language learning platform for Japanese, Chinese and Korean"
+
 COPY --from=builder --chown=nextjs:nodejs /workspace/apps/web/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /workspace/apps/web/.next/static ./apps/web/.next/static
 
