@@ -12,7 +12,7 @@ The platform is designed as a modular monolith with three client runtimes and on
 
 ## Current state
 
-The implementation is still at the foundation stage for user-facing apps. The implemented HTTP API routes today are `GET /api/v1/health`, `GET /api/v1/learning/catalog`, `POST /api/v1/auth/email-otp`, `GET /auth/callback`, and `POST /api/v1/auth/sign-out`. The web auth slice and protected learner shell pages now exist, and Phase 3 also added the learning persistence layer in Supabase: catalog tables, placement helpers, review helpers, activity attempt helpers, and purge receipts. External/mobile clients use the catalog HTTP route; web SSR learner pages read the catalog directly after the SSR learner-page gate. The remaining learning mutation routes are still planned.
+The implementation is still at the foundation stage for user-facing apps. The implemented HTTP API routes today are `GET /api/v1/health`, `GET /api/v1/learning/catalog`, `POST /api/v1/learning/reviews/submit`, `POST /api/v1/auth/email-otp`, `GET /auth/callback`, and `POST /api/v1/auth/sign-out`. The web auth slice and protected learner shell pages now exist, and Phase 3 also added the learning persistence layer in Supabase: catalog tables, placement helpers, review helpers, activity attempt helpers, and purge receipts. The live review write route is the first learner mutation surface; it uses `LEARNING_DATABASE_URL`, a dedicated login that can `SET LOCAL ROLE app_learning_api_executor`, and bounded transaction timeouts. External/mobile clients use the catalog HTTP route; web SSR learner pages read the catalog directly after the SSR learner-page gate. The remaining learning mutation routes beyond review submission are still planned.
 
 ## Learner catalog read flow
 
@@ -41,10 +41,33 @@ Web SSR path:
 | External/mobile client                   | Next.js catalog route for reads only           | Client code does not read raw learner-catalog tables                                |
 | Web SSR learner pages                    | `readLearnerCatalog(client)` after session     | Server components bypass the HTTP route but keep the same auth/read boundary        |
 | Authenticated Supabase caller            | `public.get_learner_catalog_data()`            | Allowlisted aggregate RPC is callable because the `public` schema is exposed        |
+| `POST /api/v1/learning/reviews/submit`   | Review write route                             | Binds the verified learner, checks the active learner role, and stays no-store      |
 | `private.get_learner_catalog_activities` | Internal helper for the public catalog RPC     | Definer-owned helper; not granted to authenticated callers                          |
 | `app_learning_api_executor`              | Learner-safe private RPCs                      | Trusted boundary for placement, activity, review, and enrollment writes             |
 | `service_role`                           | Reserved worker-only scoring and purge helpers | The current worker runtime is readiness-only and does not execute these helpers yet |
 | `app_security_definer`                   | Narrow definer-owned helpers                   | Owns database helpers and policies; cannot log in or bypass RLS                     |
+
+## Review submission write flow
+
+```mermaid
+sequenceDiagram
+  participant Client as Web or native client
+  participant Route as POST /api/v1/learning/reviews/submit
+  participant Auth as Supabase auth verification
+  participant DB as LEARNING_DATABASE_URL transaction
+  participant Helper as private.require_active_learning_account
+  participant Submit as private.submit_review_event
+
+  Client->>Route: reviewSubmissionInputSchema body
+  Route->>Auth: verify bearer token or SSR cookie session
+  Route->>Route: compute canonical SHA-256 payload hash
+  Route->>DB: BEGIN + SET LOCAL ROLE app_learning_api_executor
+  Route->>DB: SET LOCAL statement_timeout / lock_timeout
+  Route->>Helper: lock learner-role + profile rows
+  Route->>Submit: append event, compute receipt, enforce idempotency
+  Submit-->>Route: review receipt or mapped conflict/error
+  Route-->>Client: JSON receipt + opaque requestId
+```
 
 ## Catalog scale boundary
 
@@ -92,6 +115,14 @@ Identity and privacy are modeled as a database-first boundary:
 - Native production builds must use a claimed HTTPS universal/app link; the
   `ideogram-learning://` scheme is a development fallback only, and callback
   payloads must contain no bearer tokens
+- The review submission route rechecks the active learner profile and learner
+  role inside the same transaction that appends the receipt, so a revoked role
+  fails closed even if the bearer session is still valid.
+- The learner authorization helper now locks `public.account_roles` before
+  `public.profiles` to match the revocation path and avoid deadlock cycles.
+- Production-login provisioning fails closed on elevated attributes,
+  unapproved memberships, direct ACL grants, and object ownership drift rather
+  than silently normalizing an unknown existing role.
 
 The local Supabase config keeps self-service signup disabled and exposes only
 the `public` schema through the API configuration. Storage remains available
@@ -144,7 +175,7 @@ flowchart TB
 - Direct SSE is the preferred shape for live AI tutor responses.
 - Heavy jobs such as transcription, embeddings, and grading belong in the worker path.
 - Search is planned as a hybrid of FTS and pgvector.
-- The remaining `/api/v1/learning/*` mutation route handlers remain planned work for Phase 4; the catalog read route and auth lifecycle routes are already implemented.
+- The remaining `/api/v1/learning/*` mutation route handlers beyond review submission remain planned work for Phase 4; the catalog read route, auth lifecycle routes, and review submission route are already implemented.
 - Split the aggregate catalog into paged index and lesson-detail reads before
   increasing the first-release catalog budget.
 - Canonical route documentation should continue to live under `docs/api-contract.md`.

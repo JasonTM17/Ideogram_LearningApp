@@ -29,7 +29,7 @@
 - The launch plan remains internal beta first.
 - Adult-only eligibility must remain fail-closed until the decision record is approved.
 - Foundation workspace and app-shell code are present, but hosted CI and business approvals remain release dependencies.
-- Identity/security work remains active, and the learning persistence layer plus protected catalog read route are implemented. The auth lifecycle and read-side learner pages now exist, but remaining learning mutation routes and mobile/web experiences are still pending.
+- Identity/security work remains active, and the learning persistence layer plus protected catalog read route are implemented. The auth lifecycle and read-side learner pages now exist, the review submission route is live, the review-submission slice has already passed the full local workspace gates, and the remaining activity, interactive review, offline sync, and broader mobile/web experiences are still pending.
 
 ## Open questions
 

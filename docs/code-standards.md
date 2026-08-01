@@ -33,10 +33,14 @@
 
 - `packages/contracts` owns shared API types.
 - Implemented routes today are `GET /api/v1/health`, `GET /api/v1/learning/catalog`,
-  `POST /api/v1/auth/email-otp`, `GET /auth/callback`, and `POST /api/v1/auth/sign-out`.
+  `POST /api/v1/learning/reviews/submit`, `POST /api/v1/auth/email-otp`,
+  `GET /auth/callback`, and `POST /api/v1/auth/sign-out`.
 - Planned privacy request contracts live in `packages/api-client/src/auth`.
 - The implemented learner-catalog descriptor and parser live in
   `packages/api-client/src/learning`.
+- `POST /api/v1/learning/reviews/submit` is the first learner write route; it
+  binds the verified learner, computes the canonical review payload hash, and
+  writes through the `app_learning_api_executor` role.
 - Web SSR learner pages use the server-side learner-session gate and read the
   current profile plus learner role before reading the catalog directly on the
   server; the HTTP catalog route remains the external client surface.
@@ -50,6 +54,15 @@
 - `.env.example` is non-secret and is the only committed env reference.
 - `DEEPSEEK_API_KEY` is server-only.
 - Do not place secrets in `NEXT_PUBLIC_*` or `EXPO_PUBLIC_*`.
+- `LEARNING_DATABASE_URL` is the server-only login for learner mutation routes
+  and must be able to `SET ROLE app_learning_api_executor`.
+- Production must use the dedicated `ideogram_learning_web_login` login, or a
+  pooler-style suffix for that login if the host requires it. The URL accepts
+  only `sslmode=verify-full` in its query; driver-level user, password, host,
+  database, port, TLS, and libpq-compatibility overrides are rejected.
+- `LEARNING_DATABASE_POOL_MAX` defaults to `2`, must stay in the `1` to `5`
+  range, and should keep `replicas * pool max` at or below `16` under the
+  login's 20-connection limit.
 - Local ignored env files are the expected place for developer secrets.
 - `APP_ORIGIN` is mandatory for canonical same-origin mutation and callback
   construction; open the web app using that exact origin.
@@ -70,4 +83,8 @@
 
 - Run `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, and `pnpm test` before shipping foundation changes.
 - Run `pnpm build` for production validation.
+- The review-submission slice requires workspace format/lint/typecheck/test/
+  build/audit, pgTAP (42 review assertions today), and the dedicated lock-order
+  integration test. Its GitHub Actions `database` job runs the database checks
+  against local Supabase; a configured workflow is not hosted-green evidence.
 - Use `pnpm supabase:start`, `pnpm supabase:status`, and `pnpm supabase:stop` for local backend workflow.

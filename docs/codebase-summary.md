@@ -1,6 +1,6 @@
 # Codebase Summary
 
-Updated against the current workspace on 2026-08-01 after the native catalog-read slice.
+Updated against the current workspace on 2026-08-01 after the review-submission slice.
 
 ## Snapshot
 
@@ -36,6 +36,8 @@ exists as database contracts and private helpers.
 - The protected learner pages `/today`, `/learn`, and `/lessons/[lessonId]` call the SSR learner-page gate and read the catalog directly from the server.
 - The health endpoint returns the shared health response contract from `packages/contracts`.
 - The protected catalog route authenticates a Supabase bearer token or SSR cookie session, reads the allowlisted aggregate catalog RPC, and returns the shared learner-catalog response contract.
+- The first learner write route is `POST /api/v1/learning/reviews/submit`; it validates the strict review contract, computes the canonical server-side idempotency hash, re-checks the active learner role inside the transaction, and writes through `LEARNING_DATABASE_URL` as `app_learning_api_executor`.
+- The review-submission slice has cleared the full local workspace gates: 423 tests passed with 1 intentional skip, format/lint/typecheck/build/audit are green, and pgTAP is 42/42.
 - Mobile is still an internal beta, not a released learning flow. It now has
   SecureStore + installation-bound storage, PKCE shadow registry, native
   sign-in/callback screens, state/nonce verification, session hydration route
@@ -62,6 +64,12 @@ exists as database contracts and private helpers.
   used by the private database helpers for learner-safe placement, activity,
   and review writes. `service_role` is reserved for placement scoring and
   learning-data purge work, and the current worker runtime is readiness-only.
+- Learner authorization now locks `public.account_roles` before `public.profiles`
+  inside `private.require_active_learning_account()` to match the revocation
+  path and avoid a deadlock cycle.
+- `LEARNING_DATABASE_POOL_MAX` defaults to `2`; the production login must stay
+  within the `1` to `5` pool range and keep `replicas * pool max` at or below
+  `16` under the login's `20`-connection limit.
 - Shared auth contracts guard PKCE entropy/digests, atomic state-plus-redirect
   consumption, nonce verification after adapter-level ID-token verification,
   and local sign-out cleanup. The wired web flow currently uses Supabase SSR
@@ -69,10 +77,13 @@ exists as database contracts and private helpers.
 
 ## What is only planned
 
-- Remaining learning mutation route handlers and full interactive learner flows
+- Remaining learning mutation route handlers beyond review submission and full interactive learner flows
 - AI tutor, offline sync, admin workflows, and production content/audio release flows
 - Claimed HTTPS link association, real-device native auth validation, and an
   authoritative session revocation adapter
+- Hosted production login credential setup for the learning write path; the
+  provisioning SQL exists, but the secret credential and platform wiring are
+  still external
 - Search, embeddings, and AI orchestration beyond the current contract baseline
 
 ## Evidence boundary

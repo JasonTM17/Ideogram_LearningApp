@@ -6,7 +6,8 @@ Ideogram Learning is a Vietnamese-first AI learning platform for Japanese-first
 launch, with later support planned for Chinese and Korean. The repository now
 contains the foundation layer plus a tested local identity/privacy boundary:
 workspace shells, shared contracts, design tokens, Supabase migrations/RLS,
-the public landing page, invite-only auth, and the learner catalog read path.
+the public landing page, invite-only auth, the learner catalog read path, and
+the first learner write route for review submission.
 
 ## Product requirements
 
@@ -28,7 +29,8 @@ the public landing page, invite-only auth, and the learner catalog read path.
 - Workspace structure and shared package boundaries
 - Public landing, invite-only auth, protected learner shell, and catalog read route
 - Adult-only registration approval, identity/profile/role/privacy contracts,
-  private Storage policies, and local RLS tests
+  private Storage policies, local RLS tests, and the review submission write
+  path
 - Versioned API contract surface
 - Authenticated learner catalog projection with bounded response budgets
 - Documentation baseline
@@ -38,10 +40,11 @@ the public landing page, invite-only auth, and the learner catalog read path.
 ### Not in scope today
 
 - Onboarding and placement UI
-- Interactive lesson delivery, activity submission, and review mutations
+- Interactive lesson delivery, activity submission, interactive review UI,
+  offline sync, and the remaining learning mutation routes
 - SRS queue UI and progress write flows
 - AI tutor UX and live streaming
-- Offline sync
+- Production login provisioning and deployment
 - Payments, community, marketplace, and public launch infrastructure
 
 ## Non-functional requirements
@@ -57,13 +60,20 @@ the public landing page, invite-only auth, and the learner catalog read path.
 - README links resolve and match the current repo layout
 - Docs distinguish implemented behavior from planned behavior
 - `GET /api/v1/health`, `GET /api/v1/learning/catalog`, `POST /api/v1/auth/email-otp`,
-  `GET /auth/callback`, and `POST /api/v1/auth/sign-out` are the only routes
-  described as implemented today
+  `POST /api/v1/learning/reviews/submit`, `GET /auth/callback`, and
+  `POST /api/v1/auth/sign-out` are the only routes described as implemented
+  today
 - Product decisions are cross-linked and versioned
 - No doc implies deployment or provisioning already happened
+- The current review-submission slice has a validated local evidence trail:
+  423 tests passed with 1 intentional skip, format/lint/typecheck/build/audit are
+  green, and pgTAP is 42/42
 
 ## Open questions
 
 - Final owner for product/legal sign-off on the adult-only beta
+- Final owner for production learning-login provisioning
+- Hosted credential/platform wiring for the learning write path; the SQL script
+  exists, but the real secret and release target still need an owner
 - Exact launch authentication providers
 - Cost and retention limits for AI usage beyond the planning caps

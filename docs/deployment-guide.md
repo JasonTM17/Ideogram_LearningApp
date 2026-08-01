@@ -27,7 +27,32 @@ pnpm lint
 pnpm typecheck
 pnpm test
 pnpm build
+pnpm audit --prod
+pnpm exec supabase test db supabase/tests/review_idempotency_test.sql
+pnpm test:db:review-lock-order
 ```
+
+The lock-order command needs the local DB URL from `pnpm supabase:status` in
+its process environment:
+
+```powershell
+$env:SUPABASE_DB_URL='<local-db-url>'
+pnpm test:db:review-lock-order
+```
+
+The script accepts only the local Supabase admin database on `127.0.0.1` or
+`localhost`, port `54322`, database `postgres`, user `postgres`, and no URL
+query overrides. It removes its exact test fixture before exit. Never point it
+at staging or production.
+
+The configured GitHub Actions `database` job starts local Supabase, obtains this
+ephemeral URL without printing it, then runs pgTAP and the lock-order regression.
+That is CI configuration, not hosted-green evidence; confirm the first remote
+run before treating it as release proof.
+
+The exact full local validation count is recorded with the current delivery
+commit and must be re-run after contract or test changes. pgTAP currently has
+42 assertions for review submission.
 
 Smoke validation should also cover:
 
@@ -35,6 +60,8 @@ Smoke validation should also cover:
 - `200` when an active verified learner is supplied
 - `503` when auth or data dependencies are unavailable
 - the cache-control headers plus `X-Request-Id` on both success and error responses
+- review submission success, invalid body, revoked learner role, stale item,
+  and idempotency/device-sequence conflict responses
 - generic `202` OTP acceptance plus invalid body/origin/content-type, local
   rate-limit `429`, and provider outage `503`
 - callback rejection for token-bearing or invalid flow queries, safe `303`
@@ -50,6 +77,39 @@ pnpm supabase:start
 pnpm supabase:status
 pnpm supabase:stop
 ```
+
+Current local status probes show the core Supabase services as available; the
+optional imgproxy, edge-runtime, analytics, vector, and pooler services may
+still appear stopped and are not required for the review-submission slice.
+
+## Learning login provisioning
+
+Run `supabase/production-learning-api-login.sql` from an administrative
+PostgreSQL connection after the Supabase migrations are in place. The script
+intentionally does not set a password. Use your platform or secret manager to
+set the credential separately, then store only the resulting connection URL in
+`LEARNING_DATABASE_URL`.
+
+The provisioned login is expected to be able to `SET ROLE app_learning_api_executor`.
+That role is the dedicated server boundary for learner mutation routes; the
+review submission route uses it today, and the remaining learning mutation
+routes are still pending. The production connection string should use the
+dedicated `ideogram_learning_web_login` login, or the platform-specific
+pooler-style suffix for that login if required, together with
+`sslmode=verify-full` as the only connection-string query parameter. Install
+the project CA from the Supabase SSL Configuration page in the runtime trust
+store before deployment. Query-level identity, destination, and alternate TLS
+options are rejected so they cannot override the checked URL authority.
+`LEARNING_DATABASE_POOL_MAX` defaults to `2`, must stay between `1` and `5`,
+and should keep `replicas * pool max` at or below `16` under the login's
+20-connection limit. The provisioning SQL exists in-repo, but the hosted
+credential and platform wiring remain external release work.
+
+For an existing login, the provisioning script fails closed if it finds elevated
+attributes, unapproved role memberships, executor membership with `ADMIN
+OPTION`, object/database/extension/default-ACL ownership, or direct ACL grants.
+An administrator must remove the drift and rerun the script; it deliberately
+does not silently revoke unknown production privileges.
 
 Local analytics is explicitly disabled in `supabase/config.toml`. The foundation
 does not need Logs Explorer, and keeping Logflare/Vector off avoids granting a
@@ -91,6 +151,7 @@ Supabase URL configuration and mail delivery are still unverified release gates.
 ## Open items
 
 - Production environment provisioning
+- Learning login credential setup
 - Store release ownership
 - Monitoring and alerting thresholds for live traffic
 - Hosted success of [the CI workflow](../.github/workflows/ci.yml)

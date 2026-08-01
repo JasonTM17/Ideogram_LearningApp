@@ -1,6 +1,6 @@
 # Ideogram Learning
 
-Ideogram Learning is a Vietnamese-first language learning platform for Japanese-first launch, with planned expansion to Chinese and Korean under separate quality gates. This repository is still at the foundation stage: the web shell, mobile shell, worker stub, shared contracts, public landing page, auth slice, protected learner catalog read route, and protected learner shell pages exist today; the full interactive learning product flows are not implemented yet.
+Ideogram Learning is a Vietnamese-first language learning platform for Japanese-first launch, with planned expansion to Chinese and Korean under separate quality gates. This repository is still at the foundation stage: the web shell, mobile shell, worker stub, shared contracts, public landing page, auth slice, protected learner catalog read route, protected learner shell pages, and the first learner write route exist today; the full interactive learning product flows are not implemented yet.
 
 ## Current foundation
 
@@ -8,9 +8,10 @@ Ideogram Learning is a Vietnamese-first language learning platform for Japanese-
 - Mobile: Expo shell in `apps/mobile` with protected session hydration, native email-link sign-in/callback screens, catalog-backed Today and Lesson read views, and an internal learner shell
 - Worker: Node worker stub in `apps/worker`
 - Shared packages: `packages/contracts`, `packages/design-tokens`, `packages/config`, `packages/testing`, `packages/auth`, `packages/api-client`, `packages/learning-engine`
-- Implemented API routes: `GET /api/v1/health`, `GET /api/v1/learning/catalog`, `POST /api/v1/auth/email-otp`, `GET /auth/callback`, `POST /api/v1/auth/sign-out`
+- Implemented API routes: `GET /api/v1/health`, `GET /api/v1/learning/catalog`, `POST /api/v1/learning/reviews/submit`, `POST /api/v1/auth/email-otp`, `GET /auth/callback`, `POST /api/v1/auth/sign-out`
 - Web SSR learner pages read the catalog directly; the catalog HTTP route remains the external/mobile surface
-- Phase 3 learning persistence: Supabase migrations and private helpers now implement the learning content catalog, placement flow, activity attempts, review engine, and purge receipts. The catalog read route is implemented in Next.js; the remaining learning mutation routes and full interactive learner flows are still pending.
+- Phase 3 learning persistence: Supabase migrations and private helpers now implement the learning content catalog, placement flow, activity attempts, review engine, and purge receipts. The catalog read route and the review submission route are implemented in Next.js; the remaining learning mutation routes and full interactive learner flows are still pending.
+- Validation: the review-submission slice cleared the full local workspace gates on 2026-08-01: 423 tests passed with 1 intentional skip, format/lint/typecheck/build/audit are green, and pgTAP is 42/42.
 
 ## Visual references
 
@@ -75,6 +76,13 @@ pnpm supabase:stop
   than the device's loopback address.
 - `APP_ORIGIN` must exactly match the origin opened in the browser; local Supabase
   and the example config use `http://127.0.0.1:3000`.
+- `LEARNING_DATABASE_URL` is server-only. Production must use the dedicated
+  `ideogram_learning_web_login` login, or a pooler-style suffix for that login
+  if the platform requires it, with `sslmode=verify-full` as the only query
+  parameter. Configure the Supabase CA in the runtime trust store.
+- `LEARNING_DATABASE_POOL_MAX` defaults to `2`, must stay between `1` and `5`,
+  and should keep `replicas * pool max` at or below `16` under the login's
+  20-connection limit.
 - Keep `TRUST_PROXY_IP_HEADERS=false` unless a trusted ingress overwrites
   `x-forwarded-for` and `x-real-ip`.
 - `pnpm check:env` scans framework dotenv files without printing their values and
@@ -83,10 +91,10 @@ pnpm supabase:stop
 
 ## What is not implemented yet
 
-- Next.js learning mutation routes and interactive activity/review flows
-- Onboarding, placement, activity submission, SRS queue UI, AI runtime, offline sync, progress write flows, and admin workflows
+- Other learning mutations, interactive review UI/offline sync, onboarding, placement, activity submission, SRS queue UI, AI runtime, progress write flows, and admin workflows
 - Production deployment or cloud provisioning
-- Any additional endpoint beyond the implemented health, catalog, and auth lifecycle routes
+- Hosted production login credential setup for the learning write path; the provisioning SQL exists, but the secret credential and platform wiring remain external
+- Any additional endpoint beyond the implemented health, catalog, review submission, and auth lifecycle routes
 
 ## Docs
 
