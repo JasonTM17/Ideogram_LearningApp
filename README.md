@@ -1,6 +1,6 @@
 # Ideogram Learning
 
-Ideogram Learning is a Vietnamese-first language learning platform for Japanese-first launch, with planned expansion to Chinese and Korean under separate quality gates. This repository is still at the foundation stage: the web shell, mobile shell, worker stub, shared contracts, public landing page, auth slice, protected learner catalog read route, protected learner shell pages, and the first learner write route exist today; the full interactive learning product flows are not implemented yet.
+Ideogram Learning is a Vietnamese-first language learning platform for Japanese-first launch, with planned expansion to Chinese and Korean under separate quality gates. This repository is still at the foundation stage: the web shell, mobile shell, worker stub, shared contracts, public landing page, auth slice, protected learner catalog read route, protected learner shell pages, and two guarded learner write routes exist today; the full interactive learning product flows are not implemented yet.
 
 ## Current foundation
 
@@ -8,10 +8,12 @@ Ideogram Learning is a Vietnamese-first language learning platform for Japanese-
 - Mobile: Expo shell in `apps/mobile` with protected session hydration, native email-link sign-in/callback screens, catalog-backed Today and Lesson read views, and an internal learner shell
 - Worker: Node worker stub in `apps/worker`
 - Shared packages: `packages/contracts`, `packages/design-tokens`, `packages/config`, `packages/testing`, `packages/auth`, `packages/api-client`, `packages/learning-engine`
-- Implemented API routes: `GET /api/v1/health`, `GET /api/v1/learning/catalog`, `POST /api/v1/learning/reviews/submit`, `POST /api/v1/auth/email-otp`, `GET /auth/callback`, `POST /api/v1/auth/sign-out`
+- Implemented API routes: `GET /api/v1/health`, `GET /api/v1/learning/catalog`, `POST /api/v1/learning/activities/submit`, `POST /api/v1/learning/reviews/submit`, `POST /api/v1/auth/email-otp`, `GET /auth/callback`, `POST /api/v1/auth/sign-out`
 - Web SSR learner pages read the catalog directly; the catalog HTTP route remains the external/mobile surface
-- Phase 3 learning persistence: Supabase migrations and private helpers now implement the learning content catalog, placement flow, activity attempts, review engine, and purge receipts. The catalog read route and the review submission route are implemented in Next.js; the remaining learning mutation routes and full interactive learner flows are still pending.
-- Validation: the review-submission slice cleared the full local workspace gates on 2026-08-01: 423 tests passed with 1 intentional skip, format/lint/typecheck/build/audit are green, and pgTAP is 42/42.
+- Phase 3 learning persistence: Supabase migrations and private helpers now implement the learning content catalog, placement flow, activity attempts, review engine, and purge receipts. Next.js now exposes the catalog read route, review submission, and a server-evaluated activity submission route for vocabulary acknowledgement and objective listening answers. The remaining learning mutation routes and full interactive learner flows are still pending.
+- Validation: run the workspace gates below plus the two named pgTAP suites
+  before shipping learner-write changes. Historical review-boundary evidence is
+  retained in the engineering journal; it is not deployment evidence.
 
 ## Visual references
 
@@ -91,10 +93,11 @@ pnpm supabase:stop
 
 ## What is not implemented yet
 
-- Other learning mutations, interactive review UI/offline sync, onboarding, placement, activity submission, SRS queue UI, AI runtime, progress write flows, and admin workflows
+- Other learning mutations, interactive lesson and review UI/offline sync, onboarding, placement, SRS queue UI, AI runtime, progress write flows, and admin workflows
+- Activity evaluators beyond vocabulary acknowledgement and objective listening, including speaking and writing assessment
 - Production deployment or cloud provisioning
 - Hosted production login credential setup for the learning write path; the provisioning SQL exists, but the secret credential and platform wiring remain external
-- Any additional endpoint beyond the implemented health, catalog, review submission, and auth lifecycle routes
+- Any additional endpoint beyond the implemented health, catalog, activity/review submission, and auth lifecycle routes
 
 ## Docs
 

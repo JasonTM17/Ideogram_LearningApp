@@ -33,14 +33,15 @@
 
 - `packages/contracts` owns shared API types.
 - Implemented routes today are `GET /api/v1/health`, `GET /api/v1/learning/catalog`,
-  `POST /api/v1/learning/reviews/submit`, `POST /api/v1/auth/email-otp`,
+  `POST /api/v1/learning/activities/submit`, `POST /api/v1/learning/reviews/submit`, `POST /api/v1/auth/email-otp`,
   `GET /auth/callback`, and `POST /api/v1/auth/sign-out`.
 - Planned privacy request contracts live in `packages/api-client/src/auth`.
 - The implemented learner-catalog descriptor and parser live in
   `packages/api-client/src/learning`.
-- `POST /api/v1/learning/reviews/submit` is the first learner write route; it
-  binds the verified learner, computes the canonical review payload hash, and
-  writes through the `app_learning_api_executor` role.
+- Learner write routes bind the verified learner, compute a canonical payload
+  hash, and write through the `app_learning_api_executor` role. Activity
+  submission must call the database evaluator rather than the raw activity
+  persistence helper, so scores and completion state remain server-owned.
 - Web SSR learner pages use the server-side learner-session gate and read the
   current profile plus learner role before reading the catalog directly on the
   server; the HTTP catalog route remains the external client surface.
@@ -83,8 +84,9 @@
 
 - Run `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, and `pnpm test` before shipping foundation changes.
 - Run `pnpm build` for production validation.
-- The review-submission slice requires workspace format/lint/typecheck/test/
-  build/audit, pgTAP (42 review assertions today), and the dedicated lock-order
+- Learner-write changes require workspace format/lint/typecheck/test/build/audit,
+  `supabase/tests/learning_rls_test.sql`,
+  `supabase/tests/review_idempotency_test.sql`, and the dedicated lock-order
   integration test. Its GitHub Actions `database` job runs the database checks
   against local Supabase; a configured workflow is not hosted-green evidence.
 - Use `pnpm supabase:start`, `pnpm supabase:status`, and `pnpm supabase:stop` for local backend workflow.

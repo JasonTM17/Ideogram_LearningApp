@@ -12,7 +12,7 @@ The platform is designed as a modular monolith with three client runtimes and on
 
 ## Current state
 
-The implementation is still at the foundation stage for user-facing apps. The implemented HTTP API routes today are `GET /api/v1/health`, `GET /api/v1/learning/catalog`, `POST /api/v1/learning/reviews/submit`, `POST /api/v1/auth/email-otp`, `GET /auth/callback`, and `POST /api/v1/auth/sign-out`. The web auth slice and protected learner shell pages now exist, and Phase 3 also added the learning persistence layer in Supabase: catalog tables, placement helpers, review helpers, activity attempt helpers, and purge receipts. The live review write route is the first learner mutation surface; it uses `LEARNING_DATABASE_URL`, a dedicated login that can `SET LOCAL ROLE app_learning_api_executor`, and bounded transaction timeouts. External/mobile clients use the catalog HTTP route; web SSR learner pages read the catalog directly after the SSR learner-page gate. The remaining learning mutation routes beyond review submission are still planned.
+The implementation is still at the foundation stage for user-facing apps. The implemented HTTP API routes today are `GET /api/v1/health`, `GET /api/v1/learning/catalog`, `POST /api/v1/learning/activities/submit`, `POST /api/v1/learning/reviews/submit`, `POST /api/v1/auth/email-otp`, `GET /auth/callback`, and `POST /api/v1/auth/sign-out`. The web auth slice and protected learner shell pages now exist, and Phase 3 also added the learning persistence layer in Supabase: catalog tables, placement helpers, review helpers, activity attempt helpers, and purge receipts. The live activity and review write routes use `LEARNING_DATABASE_URL`, a dedicated login that can `SET LOCAL ROLE app_learning_api_executor`, and bounded transaction timeouts. Activity submission evaluates only vocabulary acknowledgement and objective listening responses at the database boundary; speaking and writing remain unavailable until their grading lifecycle exists. External/mobile clients use the catalog HTTP route; web SSR learner pages read the catalog directly after the SSR learner-page gate. The remaining learning mutation routes and interactive learner flows are still planned.
 
 ## Learner catalog read flow
 
@@ -36,16 +36,19 @@ Web SSR path:
 
 ## Learning persistence boundary
 
-| Caller / runtime                         | Allowed surface                                | Notes                                                                               |
-| ---------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------- |
-| External/mobile client                   | Next.js catalog route for reads only           | Client code does not read raw learner-catalog tables                                |
-| Web SSR learner pages                    | `readLearnerCatalog(client)` after session     | Server components bypass the HTTP route but keep the same auth/read boundary        |
-| Authenticated Supabase caller            | `public.get_learner_catalog_data()`            | Allowlisted aggregate RPC is callable because the `public` schema is exposed        |
-| `POST /api/v1/learning/reviews/submit`   | Review write route                             | Binds the verified learner, checks the active learner role, and stays no-store      |
-| `private.get_learner_catalog_activities` | Internal helper for the public catalog RPC     | Definer-owned helper; not granted to authenticated callers                          |
-| `app_learning_api_executor`              | Learner-safe private RPCs                      | Trusted boundary for placement, activity, review, and enrollment writes             |
-| `service_role`                           | Reserved worker-only scoring and purge helpers | The current worker runtime is readiness-only and does not execute these helpers yet |
-| `app_security_definer`                   | Narrow definer-owned helpers                   | Owns database helpers and policies; cannot log in or bypass RLS                     |
+| Caller / runtime                               | Allowed surface                                | Notes                                                                               |
+| ---------------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------- |
+| External/mobile client                         | Next.js catalog route for reads only           | Client code does not read raw learner-catalog tables                                |
+| Web SSR learner pages                          | `readLearnerCatalog(client)` after session     | Server components bypass the HTTP route but keep the same auth/read boundary        |
+| Authenticated Supabase caller                  | `public.get_learner_catalog_data()`            | Allowlisted aggregate RPC is callable because the `public` schema is exposed        |
+| `POST /api/v1/learning/activities/submit`      | Activity evaluator write route                 | Binds learner; DB reads private content and owns completion/score                   |
+| `POST /api/v1/learning/reviews/submit`         | Review write route                             | Binds the verified learner, checks the active learner role, and stays no-store      |
+| `private.evaluate_and_submit_activity_attempt` | App-executable evaluator                       | Per-learner lock, safe replay, limited current evaluator set                        |
+| `private.submit_activity_attempt`              | Internal persistence helper                    | Not executable by `app_learning_api_executor`                                       |
+| `private.get_learner_catalog_activities`       | Internal helper for the public catalog RPC     | Definer-owned helper; not granted to authenticated callers                          |
+| `app_learning_api_executor`                    | Learner-safe private RPCs                      | Trusted boundary for placement, activity, review, and enrollment writes             |
+| `service_role`                                 | Reserved worker-only scoring and purge helpers | The current worker runtime is readiness-only and does not execute these helpers yet |
+| `app_security_definer`                         | Narrow definer-owned helpers                   | Owns database helpers and policies; cannot log in or bypass RLS                     |
 
 ## Review submission write flow
 
@@ -66,6 +69,30 @@ sequenceDiagram
   Route->>Helper: lock learner-role + profile rows
   Route->>Submit: append event, compute receipt, enforce idempotency
   Submit-->>Route: review receipt or mapped conflict/error
+  Route-->>Client: JSON receipt + opaque requestId
+```
+
+## Activity submission write flow
+
+```mermaid
+sequenceDiagram
+  participant Client as Web or native client
+  participant Route as POST /api/v1/learning/activities/submit
+  participant Auth as Supabase auth verification
+  participant DB as LEARNING_DATABASE_URL transaction
+  participant Evaluate as private.evaluate_and_submit_activity_attempt
+  participant Persist as private.submit_activity_attempt
+
+  Client->>Route: activityAttemptInputSchema body
+  Route->>Auth: verify bearer token or SSR cookie session
+  Route->>Route: compute canonical SHA-256 payload hash
+  Route->>DB: BEGIN + SET LOCAL ROLE + bounded timeouts
+  DB->>Evaluate: lock learner and recheck release/enrollment
+  Evaluate->>Evaluate: resolve replay from immutable private receipt
+  Evaluate->>Evaluate: load published private activity payload
+  Evaluate->>Evaluate: evaluate vocabulary or objective listening
+  Evaluate->>Persist: server-owned completion state, score, and version
+  Persist-->>Route: activity receipt or mapped conflict/error
   Route-->>Client: JSON receipt + opaque requestId
 ```
 
@@ -175,7 +202,7 @@ flowchart TB
 - Direct SSE is the preferred shape for live AI tutor responses.
 - Heavy jobs such as transcription, embeddings, and grading belong in the worker path.
 - Search is planned as a hybrid of FTS and pgvector.
-- The remaining `/api/v1/learning/*` mutation route handlers beyond review submission remain planned work for Phase 4; the catalog read route, auth lifecycle routes, and review submission route are already implemented.
+- The remaining `/api/v1/learning/*` mutation route handlers beyond activity and review submission remain planned work for Phase 4. The catalog read route, auth lifecycle routes, activity submission, and review submission are already implemented.
 - Split the aggregate catalog into paged index and lesson-detail reads before
   increasing the first-release catalog budget.
 - Canonical route documentation should continue to live under `docs/api-contract.md`.

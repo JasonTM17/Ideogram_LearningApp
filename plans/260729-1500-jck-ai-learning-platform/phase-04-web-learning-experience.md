@@ -9,11 +9,13 @@ effort: "10–14 engineer-days"
 
 ## Context and outcome
 
-The current worktree implements the read-side web/auth slice plus the first
-learner write route: public landing, invite-only sign-in, safe callback
-handling, protected learner shell pages, catalog-backed learner reads, and
-`POST /api/v1/learning/reviews/submit`. The remaining phase work is the
-interactive learning and mutation layer beyond review submission.
+The current worktree implements the read-side web/auth slice plus guarded
+learner write routes: public landing, invite-only sign-in, safe callback
+handling, protected learner shell pages, catalog-backed learner reads,
+`POST /api/v1/learning/reviews/submit`, and
+`POST /api/v1/learning/activities/submit`. Activity submission is currently
+limited to vocabulary acknowledgement and objective listening evaluation. The
+remaining phase work is the interactive learning and mutation layer.
 
 **Depends on:** Phases 1–3.
 **Can parallel with:** Phase 5 after shared contracts are frozen.
@@ -93,7 +95,8 @@ Do not edit native screens or AI provider code.
 3. Build onboarding and placement as resumable server-backed forms with Zod
    validation, keyboard flow, progress semantics and failure recovery.
 4. Build Hôm nay/path/lesson activity rendering from typed content; submit
-   answers through idempotent server APIs and focus the feedback region.
+   answers through idempotent server APIs, preserve evaluator-owned completion
+   and score fields, and focus the feedback region.
 5. Build review queue/card/summary with one recall decision at a time, explicit
    undo only where the domain contract permits it and no swipe-only action.
 6. Build progress/profile/settings with text alternatives for charts and
@@ -138,6 +141,9 @@ Do not edit native screens or AI provider code.
 - [x] `POST /api/v1/learning/reviews/submit` uses the canonical payload hash,
       the dedicated learning login, `app_learning_api_executor`, and the
       learner-role recheck inside the mutation transaction.
+- [x] `POST /api/v1/learning/activities/submit` binds the verified learner,
+      uses a private database evaluator rather than caller-supplied score/state,
+      preserves immutable retry receipts, and rechecks access on every replay.
 - [x] Current slice passed keyboard/focus, 200% text reflow, 320px layout,
       full workspace lint/type/test/build, and production review. Evidence:
       [test report](./reports/tester-20260730-web-auth-learner-entry.md) and

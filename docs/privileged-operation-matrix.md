@@ -14,7 +14,7 @@ a launch policy.
 | Authenticated learner  | Own profile preferences and allowlisted learner catalog RPC | Cannot mutate roles, consent history, or requests; raw catalog-table SELECT remains revoked, and the web learner shell requires current active profile and learner role state |
 | Support/admin actor    | Server-managed only                                         | Must reauthorize against current DB state                                                                                                                                     |
 | Worker                 | Service-role + current DB checks                            | Only runtime intended to hold the privileged secret; no direct learner-write path                                                                                             |
-| App executor           | `app_learning_api_executor`                                 | Narrow boundary for learner-safe placement, activity, and review RPCs                                                                                                         |
+| App executor           | `app_learning_api_executor`                                 | Narrow boundary for learner-safe placement, evaluated activity, and review RPCs; no raw activity-persistence execute grant                                                    |
 | Browser/mobile request | None                                                        | Must not carry service-role credentials                                                                                                                                       |
 
 ## Operation matrix
@@ -37,18 +37,19 @@ a launch policy.
 
 ## Learning operation matrix
 
-| Operation                    | DB object or helper                     | Reauthorization required                              | Notes                                                                                |
-| ---------------------------- | --------------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| Start placement session      | `private.start_placement_session()`     | Active learner account and owned release              | Learner-safe write path through the app executor                                     |
-| Record placement answer      | `private.record_placement_answer()`     | Active learner account, draft session for new answers | Idempotent replay stays valid after submission when the payload matches              |
-| Submit placement session     | `private.submit_placement_session()`    | Active learner account and owned session              | Returns the existing submitted/scored session when replayed                          |
-| Enroll learner in release    | `private.enroll_learner_in_release()`   | Active learner account and visible published release  | Creates the enrolled state used by lesson/review helpers                             |
-| Initialize review item       | `private.initialize_review_item()`      | Active learner account and visible published release  | Creates the first schedule row                                                       |
-| Submit activity attempt      | `private.submit_activity_attempt()`     | Active learner account and visible published release  | Recomputes lesson progress and preserves attempt history                             |
-| Submit review event          | `private.submit_review_event()`         | Active learner account and visible published release  | Deterministic SRS update with server receipt sequence                                |
-| Score placement session      | `private.score_placement_session()`     | Service role only                                     | Worker-only writeback of placement outcome                                           |
-| Read placement scoring input | `private.get_placement_scoring_input()` | Service role only                                     | Worker-only read path for scoring rubric and answer data                             |
-| Purge learner learning data  | `private.purge_learner_learning_data()` | Service role plus frozen deletion request             | Deletes learner learning state and writes a receipt; retry-safe after receipt exists |
+| Operation                    | DB object or helper                              | Reauthorization required                                                  | Notes                                                                                       |
+| ---------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Start placement session      | `private.start_placement_session()`              | Active learner account and owned release                                  | Learner-safe write path through the app executor                                            |
+| Record placement answer      | `private.record_placement_answer()`              | Active learner account, draft session for new answers                     | Idempotent replay stays valid after submission when the payload matches                     |
+| Submit placement session     | `private.submit_placement_session()`             | Active learner account and owned session                                  | Returns the existing submitted/scored session when replayed                                 |
+| Enroll learner in release    | `private.enroll_learner_in_release()`            | Active learner account and visible published release                      | Creates the enrolled state used by lesson/review helpers                                    |
+| Initialize review item       | `private.initialize_review_item()`               | Active learner account and visible published release                      | Creates the first schedule row                                                              |
+| Evaluate and submit activity | `private.evaluate_and_submit_activity_attempt()` | Active learner account, visible published release, and supported response | Server reads private content, computes evaluator-owned state/score, and recomputes progress |
+| Persist activity attempt     | `private.submit_activity_attempt()`              | Definer evaluator only                                                    | Raw helper is not executable by `app_learning_api_executor`                                 |
+| Submit review event          | `private.submit_review_event()`                  | Active learner account and visible published release                      | Deterministic SRS update with server receipt sequence                                       |
+| Score placement session      | `private.score_placement_session()`              | Service role only                                                         | Worker-only writeback of placement outcome                                                  |
+| Read placement scoring input | `private.get_placement_scoring_input()`          | Service role only                                                         | Worker-only read path for scoring rubric and answer data                                    |
+| Purge learner learning data  | `private.purge_learner_learning_data()`          | Service role plus frozen deletion request                                 | Deletes learner learning state and writes a receipt; retry-safe after receipt exists        |
 
 ## Security-definer rules
 
@@ -60,6 +61,12 @@ a launch policy.
   check only; it does not replace a future authoritative session-validation
   adapter.
 - `app_learning_api_executor` exists as the app-side boundary for learner-safe learning RPCs. The migration grants it to `postgres` only so the local pgTAP suite can `SET LOCAL ROLE`; production still needs a real login role.
+- The activity evaluator has a fixed `search_path`, runs as the narrow definer
+  owner, serializes per learner before idempotency lookup, rechecks current
+  release/enrollment access before replays, and is the only app-executable
+  activity write surface. Its private receipt snapshot is not readable by the
+  executor. It currently evaluates vocabulary acknowledgement and objective
+  listening only.
 - The learner shell gate independently checks `public.profiles.account_state = active`, `public.profiles.revoked_at is null`, and an active `learner` role before a protected learner page loads.
 
 ## Open questions

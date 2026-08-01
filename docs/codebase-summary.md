@@ -1,6 +1,6 @@
 # Codebase Summary
 
-Updated against the current workspace on 2026-08-01 after the review-submission slice.
+Updated against the current workspace on 2026-08-01 after the activity-submission slice.
 
 ## Snapshot
 
@@ -36,8 +36,8 @@ exists as database contracts and private helpers.
 - The protected learner pages `/today`, `/learn`, and `/lessons/[lessonId]` call the SSR learner-page gate and read the catalog directly from the server.
 - The health endpoint returns the shared health response contract from `packages/contracts`.
 - The protected catalog route authenticates a Supabase bearer token or SSR cookie session, reads the allowlisted aggregate catalog RPC, and returns the shared learner-catalog response contract.
-- The first learner write route is `POST /api/v1/learning/reviews/submit`; it validates the strict review contract, computes the canonical server-side idempotency hash, re-checks the active learner role inside the transaction, and writes through `LEARNING_DATABASE_URL` as `app_learning_api_executor`.
-- The review-submission slice has cleared the full local workspace gates: 423 tests passed with 1 intentional skip, format/lint/typecheck/build/audit are green, and pgTAP is 42/42.
+- Learner write routes are `POST /api/v1/learning/activities/submit` and `POST /api/v1/learning/reviews/submit`. Both bind the verified learner, compute a canonical server-side idempotency hash, re-check active learner state inside a bounded executor transaction, and return only no-store public receipts.
+- Activity submission calls `private.evaluate_and_submit_activity_attempt()` rather than the raw persistence helper. The database serializes a learner before idempotency lookup, rechecks release/enrollment on every retry, stores an immutable private receipt snapshot, reads private published content, and owns the completion state and listening score. It currently accepts only exact vocabulary acknowledgement and complete objective listening responses; unsupported activity types fail safely.
 - Mobile is still an internal beta, not a released learning flow. It now has
   SecureStore + installation-bound storage, PKCE shadow registry, native
   sign-in/callback screens, state/nonce verification, session hydration route
@@ -77,7 +77,7 @@ exists as database contracts and private helpers.
 
 ## What is only planned
 
-- Remaining learning mutation route handlers beyond review submission and full interactive learner flows
+- Remaining learning mutation route handlers beyond activity/review submission and full interactive learner flows
 - AI tutor, offline sync, admin workflows, and production content/audio release flows
 - Claimed HTTPS link association, real-device native auth validation, and an
   authoritative session revocation adapter

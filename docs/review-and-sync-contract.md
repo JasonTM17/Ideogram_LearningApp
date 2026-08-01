@@ -4,28 +4,29 @@
 
 This document explains how learner actions will synchronize across client,
 database, and worker boundaries. Auth/catalog reads and protected SSR learner
-pages exist; `POST /api/v1/learning/reviews/submit` now wires the first learner
-write route, but placement, activity, the other review flows, and client
+pages exist; review submission and scoped server-evaluated activity submission
+are wired, but placement, interactive lesson/review flows, and client
 synchronization are still not wired.
 
 ## Runtime boundaries
 
-| Runtime                     | Allowed work                                                                     |
-| --------------------------- | -------------------------------------------------------------------------------- |
-| Web / mobile client         | Future action writes call the app route layer only after the active learner gate |
-| Next.js review route        | `POST /api/v1/learning/reviews/submit` for verified bearer or cookie sessions    |
-| `app_learning_api_executor` | Learner-safe placement, activity, review, and enrollment writes                  |
-| `service_role`              | Placement scoring and privacy purge only                                         |
+| Runtime                     | Allowed work                                                               |
+| --------------------------- | -------------------------------------------------------------------------- |
+| Web / mobile client         | Learner writes call the app route layer only after the active learner gate |
+| Next.js write routes        | Activity/review submission for verified bearer or cookie sessions          |
+| `app_learning_api_executor` | Learner-safe placement, activity, review, and enrollment writes            |
+| `service_role`              | Placement scoring and privacy purge only                                   |
 
 ## Learner-safe operations
 
-| Helper                               | Semantics                                                                                                            |
-| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
-| `private.start_placement_session()`  | Creates a draft placement session for an owned learner                                                               |
-| `private.record_placement_answer()`  | Records a placement answer with idempotency and device sequencing                                                    |
-| `private.submit_placement_session()` | Submits a draft session after at least one answer exists                                                             |
-| `private.submit_activity_attempt()`  | Records an activity attempt and recomputes lesson progress                                                           |
-| `private.submit_review_event()`      | Records a review event and advances the schedule deterministically; now surfaced through the review submission route |
+| Helper                                           | Semantics                                                                                                            |
+| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| `private.start_placement_session()`              | Creates a draft placement session for an owned learner                                                               |
+| `private.record_placement_answer()`              | Records a placement answer with idempotency and device sequencing                                                    |
+| `private.submit_placement_session()`             | Submits a draft session after at least one answer exists                                                             |
+| `private.evaluate_and_submit_activity_attempt()` | Reads private activity content, evaluates a supported response, then persists it                                     |
+| `private.submit_activity_attempt()`              | Internal persistence helper; app executor cannot call it directly                                                    |
+| `private.submit_review_event()`                  | Records a review event and advances the schedule deterministically; now surfaced through the review submission route |
 
 ## Review submission transaction
 
@@ -56,6 +57,28 @@ The review route keeps the public payload small and the write boundary private:
 | `schedule.state`            | Review state: `learning`, `review`, `relearning`, or `suspended` |
 | `serverReceiptSequence`     | Monotonic receipt sequence for ordering                          |
 
+## Activity submission transaction
+
+`POST /api/v1/learning/activities/submit` shares the verified-session,
+same-origin, bounded-body, transaction-timeout, and active-learner checks with
+review submission. The route hashes the canonical public input and calls only
+`private.evaluate_and_submit_activity_attempt()`.
+
+1. The evaluator obtains the per-learner advisory lock before it reads an
+   idempotency record and rechecks the active release plus enrollment before
+   returning any prior result.
+2. An identical retry returns its immutable original activity receipt without
+   repeating progress work; a mismatched retry or reused device sequence fails
+   with `409`.
+3. The evaluator loads the published activity payload inside the database. It
+   accepts only exact vocabulary acknowledgement and complete objective
+   listening answer maps today.
+4. For listening, option membership and the correct answer are checked against
+   private content. The client never sends completion state, score, evaluator
+   version, or answer keys.
+5. Unsupported activity types, including speaking and writing, return a safe
+   conflict until an asynchronous grading lifecycle is implemented.
+
 ## Worker-only operations
 
 | Helper                                  | Semantics                                                      |
@@ -76,6 +99,11 @@ The review route keeps the public payload small and the write boundary private:
   if the call is replayed.
 - `private.submit_review_event()` uses the database receipt sequence, so retries do not
   double-count progress.
+- `private.evaluate_and_submit_activity_attempt()` returns an existing receipt
+  only after matching all public inputs and the current access checks. Its
+  private receipt snapshot does not change when later activity attempts update
+  the same lesson, and it does not re-evaluate an accepted retry when evaluator
+  logic changes later.
 - The web learner shell now checks active profile and learner role state before any of these helpers are reachable from the browser.
 - The review submission route re-checks the active learner profile and learner
   role inside the mutation transaction before the private helper runs.
@@ -99,6 +127,7 @@ source release is no longer active.
 | Scenario                                | Expected result                          |
 | --------------------------------------- | ---------------------------------------- |
 | Same placement answer replay            | Original placement answer receipt        |
+| Same activity attempt replay            | Original activity receipt and progress   |
 | Same review event replay                | Original review receipt and schedule     |
 | Worker purge retry after receipt exists | Recorded purge counts are returned again |
 | New mutation after archive              | Rejected                                 |

@@ -133,6 +133,16 @@ gate riêng.
   database job; hosted evidence is still pending. Final local validation counts
   are 423 tests with 1 intentional skip, pgTAP 42/42, format/lint/typecheck/
   build/audit green, and the local lock-order regression green.
+- Session 11 (2026-08-01): Activity submission now has a capability-narrow
+  `SECURITY DEFINER` evaluator for vocabulary acknowledgement and objective
+  listening. It keeps raw activity persistence unavailable to the app executor,
+  reads answer keys only in the database, serializes per learner before
+  idempotency lookup, persists immutable private receipts, and rechecks release
+  and enrollment access on every replay. Local evidence: workspace
+  format/lint/typecheck/test/build/audit passed (441 tests, 1 intentional skip),
+  pgTAP access-boundary 27/27, pgTAP learner writes 49/49, and the lock-order
+  regression passed. The independent review and follow-up are recorded in
+  [the activity submission review report](./reports/reviewer-20260801-activity-submission.md).
 - The approved plan is executing. Deploy, purchase, real secrets and store
   publication still require their named authority.
 

@@ -7,7 +7,7 @@ launch, with later support planned for Chinese and Korean. The repository now
 contains the foundation layer plus a tested local identity/privacy boundary:
 workspace shells, shared contracts, design tokens, Supabase migrations/RLS,
 the public landing page, invite-only auth, the learner catalog read path, and
-the first learner write route for review submission.
+guarded activity and review submission routes.
 
 ## Product requirements
 
@@ -29,8 +29,8 @@ the first learner write route for review submission.
 - Workspace structure and shared package boundaries
 - Public landing, invite-only auth, protected learner shell, and catalog read route
 - Adult-only registration approval, identity/profile/role/privacy contracts,
-  private Storage policies, local RLS tests, and the review submission write
-  path
+  private Storage policies, local RLS tests, and activity/review submission
+  write paths
 - Versioned API contract surface
 - Authenticated learner catalog projection with bounded response budgets
 - Documentation baseline
@@ -40,8 +40,9 @@ the first learner write route for review submission.
 ### Not in scope today
 
 - Onboarding and placement UI
-- Interactive lesson delivery, activity submission, interactive review UI,
-  offline sync, and the remaining learning mutation routes
+- Interactive lesson delivery, interactive review UI, offline sync, activity
+  evaluators beyond vocabulary acknowledgement and objective listening, and the
+  remaining learning mutation routes
 - SRS queue UI and progress write flows
 - AI tutor UX and live streaming
 - Production login provisioning and deployment
@@ -59,15 +60,16 @@ the first learner write route for review submission.
 
 - README links resolve and match the current repo layout
 - Docs distinguish implemented behavior from planned behavior
-- `GET /api/v1/health`, `GET /api/v1/learning/catalog`, `POST /api/v1/auth/email-otp`,
+- `GET /api/v1/health`, `GET /api/v1/learning/catalog`,
+  `POST /api/v1/learning/activities/submit`, `POST /api/v1/auth/email-otp`,
   `POST /api/v1/learning/reviews/submit`, `GET /auth/callback`, and
   `POST /api/v1/auth/sign-out` are the only routes described as implemented
   today
 - Product decisions are cross-linked and versioned
 - No doc implies deployment or provisioning already happened
-- The current review-submission slice has a validated local evidence trail:
-  423 tests passed with 1 intentional skip, format/lint/typecheck/build/audit are
-  green, and pgTAP is 42/42
+- Learner-write changes must retain an evidence trail for workspace
+  format/lint/typecheck/test/build/audit, both named pgTAP suites, and the
+  dedicated learner authorization lock-order probe
 
 ## Open questions
 
