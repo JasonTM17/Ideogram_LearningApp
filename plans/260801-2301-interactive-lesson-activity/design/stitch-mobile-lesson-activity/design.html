@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&family=Noto+Serif:wght@400;500;600&display=swap');
+
+        :root {
+            --paper-bg: #faf9f4;
+            --charcoal: #1b1c19;
+            --indigo-accent: #162839;
+        }
+
+        body {
+            background-color: var(--paper-bg);
+            color: var(--charcoal);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Custom hair-line for the workbook feel */
+        .hairline-b {
+            border-bottom: 1px solid #E0DDD5;
+        }
+
+        /* Japanese text focus */
+        .jp-serif {
+            font-family: 'Noto Serif', serif;
+        }
+
+        /* Interaction states */
+        .option-tile {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .option-tile:active {
+            transform: scale(0.98);
+        }
+
+        .option-tile.active {
+            background-color: #2c3e50; /* primary-container */
+            color: #ffffff;
+            border-color: #2c3e50;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-container": "#c1a17d",
+                      "on-secondary": "#ffffff",
+                      "on-background": "#1b1c19",
+                      "tertiary-fixed-dim": "#e3c19b",
+                      "on-secondary-fixed": "#012018",
+                      "surface": "#faf9f4",
+                      "on-error": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "tertiary-container": "#4e381c",
+                      "surface-tint": "#4e6073",
+                      "surface-container-high": "#e9e8e3",
+                      "primary-fixed-dim": "#b5c8df",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary-container": "#96a9be",
+                      "surface-bright": "#faf9f4",
+                      "secondary-container": "#c8eadd",
+                      "outline-variant": "#c4c6cd",
+                      "on-surface-variant": "#43474c",
+                      "error": "#ba1a1a",
+                      "tertiary": "#362308",
+                      "inverse-on-surface": "#f2f1ec",
+                      "on-primary": "#ffffff",
+                      "on-primary-fixed-variant": "#36485b",
+                      "surface-container-low": "#f5f4ef",
+                      "on-tertiary": "#ffffff",
+                      "surface-container": "#efeee9",
+                      "on-error-container": "#93000a",
+                      "inverse-surface": "#30312e",
+                      "surface-container-highest": "#e3e3de",
+                      "on-tertiary-fixed": "#291802",
+                      "on-tertiary-fixed-variant": "#5a4225",
+                      "secondary": "#46645a",
+                      "tertiary-fixed": "#ffddb7",
+                      "inverse-primary": "#b5c8df",
+                      "surface-dim": "#dbdad5",
+                      "primary-fixed": "#d1e4fb",
+                      "surface-variant": "#e3e3de",
+                      "outline": "#74777d",
+                      "background": "#faf9f4",
+                      "secondary-fixed": "#c8eadd",
+                      "on-surface": "#1b1c19",
+                      "primary-container": "#2c3e50",
+                      "on-secondary-container": "#4c6b60",
+                      "primary": "#162839",
+                      "on-secondary-fixed-variant": "#2f4c43",
+                      "on-primary-fixed": "#091d2e",
+                      "secondary-fixed-dim": "#adcec1"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "gutter": "16px",
+                      "unit": "8px",
+                      "container-padding": "24px",
+                      "section-gap": "40px",
+                      "touch-target-min": "48px"
+              },
+              "fontFamily": {
+                      "headline-md": ["Noto Serif"],
+                      "body-lg": ["Be Vietnam Pro"],
+                      "headline-lg": ["Noto Serif"],
+                      "headline-lg-mobile": ["Noto Serif"],
+                      "body-md": ["Be Vietnam Pro"],
+                      "display-jp": ["Noto Serif"],
+                      "label-caps": ["Be Vietnam Pro"]
+              },
+              "fontSize": {
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "500"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "display-jp": ["40px", {"lineHeight": "52px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky bg-surface border-b border-outline-variant flex items-center justify-between px-gutter h-touch-target-min z-50">
+<button aria-label="Exit" class="flex items-center justify-center w-touch-target-min h-touch-target-min text-on-surface-variant hover:bg-surface-container-high transition-colors active:scale-95">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+<div class="flex-1 flex justify-center">
+<span class="font-body-md text-body-md text-on-surface-variant tracking-widest">1 of 4</span>
+</div>
+<!-- Hidden placeholder for flex balance -->
+<div class="w-touch-target-min h-touch-target-min"></div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col items-center px-container-padding max-w-[800px] mx-auto w-full pt-12 pb-32">
+<!-- Context Section -->
+<div class="w-full mb-12 text-center">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest opacity-70">Bài 5: Gia đình</span>
+</div>
+<!-- Main Word Display -->
+<div class="w-full flex flex-col items-center mb-section-gap">
+<div class="flex flex-col items-center gap-1">
+<ruby class="font-display-jp text-display-jp text-on-surface jp-serif">
+                    先生 <rt class="text-label-caps font-body-md tracking-normal mb-1 opacity-60">せんせい</rt>
+</ruby>
+</div>
+<div class="mt-4 hairline-b w-12 mx-auto"></div>
+<h2 class="mt-8 font-headline-md text-headline-md text-on-surface-variant italic">Giáo viên</h2>
+</div>
+<!-- Multiple Choice Area -->
+<div class="w-full flex flex-col gap-4 mt-8" id="options-container">
+<!-- Option 1 -->
+<button class="option-tile flex items-center justify-between px-gutter h-[64px] w-full border border-outline-variant bg-surface-container-low hover:bg-surface-container transition-all group" onclick="selectOption(this)">
+<span class="font-body-lg text-body-lg text-on-surface">Giáo viên</span>
+<span class="material-symbols-outlined text-outline group-[.active]:text-white opacity-0 group-[.active]:opacity-100" data-icon="check_circle">check_circle</span>
+</button>
+<!-- Option 2 -->
+<button class="option-tile flex items-center justify-between px-gutter h-[64px] w-full border border-outline-variant bg-surface-container-low hover:bg-surface-container transition-all group" onclick="selectOption(this)">
+<span class="font-body-lg text-body-lg text-on-surface">Sinh viên</span>
+<span class="material-symbols-outlined text-outline group-[.active]:text-white opacity-0 group-[.active]:opacity-100" data-icon="check_circle">check_circle</span>
+</button>
+<!-- Option 3 -->
+<button class="option-tile flex items-center justify-between px-gutter h-[64px] w-full border border-outline-variant bg-surface-container-low hover:bg-surface-container transition-all group" onclick="selectOption(this)">
+<span class="font-body-lg text-body-lg text-on-surface">Bác sĩ</span>
+<span class="material-symbols-outlined text-outline group-[.active]:text-white opacity-0 group-[.active]:opacity-100" data-icon="check_circle">check_circle</span>
+</button>
+</div>
+<!-- Atmospheric Illustration placeholder (Subtle, professional) -->
+<div class="mt-section-gap w-full aspect-video rounded-xl overflow-hidden opacity-10 grayscale mix-blend-multiply pointer-events-none">
+<div class="bg-cover bg-center w-full h-full" data-alt="A minimalist, high-end Japanese library setting with warm, soft afternoon sunlight filtering through thin paper shoji screens. The environment is serene and academic, featuring neat stacks of ancient scrolls and modern linguistic journals. The color palette is dominated by soft beiges, warm whites, and subtle charcoal accents, reflecting a scholarly and calm atmosphere without any distracting characters." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDC3k4oiXIeJFnHP251FXl6RBZ-jcMQRqeiY5y4gza-WluVZvPA7rVMMVEfqHNDSKH_VBpgxYHpbWnZsoST52vE3JlChGdKXhFW4gQWtrI8jYCsNpN6OCQOm3wl7I19F_36pCa4Aw-cDa5LEMf29mWfjW11drzrE4jq9QTbdHnofYuGm4lWSIZyf_QJzlaQwlf_rtZOaS9cfGeTQy00Lim_BmXcfD-tST3Hh-RaOEAfFfkxhXgbswjGLUoHI28CvC1IHgt19F3zOdQ')"></div>
+</div>
+</main>
+<!-- Feedback & Footer Container -->
+<div class="fixed bottom-0 w-full bg-surface border-t border-outline-variant z-40">
+<!-- Feedback Message -->
+<div class="px-container-padding py-3 text-center bg-surface-container-low">
+<p class="font-body-md text-[14px] text-on-surface-variant italic leading-snug">
+                Hệ thống sẽ ghi nhận phản hồi của bạn để điều chỉnh lộ trình học.
+            </p>
+</div>
+<!-- Footer Primary Action -->
+<footer class="flex justify-center items-center px-container-padding py-unit h-[72px] pb-safe w-full">
+<button class="w-full max-w-[800px] h-touch-target-min bg-primary text-on-primary font-label-caps text-label-caps tracking-widest uppercase rounded-lg hover:opacity-90 active:scale-[0.98] transition-all duration-200" id="submit-btn">
+                Xác nhận
+            </button>
+</footer>
+</div>
+<script>
+        function selectOption(element) {
+            // Remove active class from all options
+            const container = document.getElementById('options-container');
+            const options = container.getElementsByTagName('button');
+
+            for (let opt of options) {
+                opt.classList.remove('active', 'bg-primary-container', 'text-on-primary-container');
+                opt.querySelector('span:first-child').classList.remove('text-white');
+            }
+
+            // Add active class to clicked option
+            element.classList.add('active', 'bg-primary-container');
+            element.querySelector('span:first-child').classList.add('text-white');
+
+            // Subtle feedback on the submit button
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.classList.remove('opacity-50');
+            submitBtn.disabled = false;
+        }
+
+        // Initialize state
+        document.addEventListener('DOMContentLoaded', () => {
+            const submitBtn = document.getElementById('submit-btn');
+            // submitBtn.classList.add('opacity-50');
+            // submitBtn.disabled = true;
+        });
+    </script>
+</body></html>
