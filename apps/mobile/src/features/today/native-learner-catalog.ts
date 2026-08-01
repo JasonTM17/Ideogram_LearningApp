@@ -2,6 +2,7 @@ import { NativeApiError } from '@ideogram/api-client/native';
 import { useCallback, useEffect, useState } from 'react';
 
 import { createMobileNativeLearningApiClient } from '../../lib/api/native-learning-api-client';
+import { createSessionBoundRequestSignal } from '../../lib/api/session-bound-request-signal';
 import { useNativeAuthSession } from '../auth/native-auth-session-provider';
 import { findFirstCatalogLesson, type CatalogLessonContext } from './catalog-lesson-context';
 
@@ -39,10 +40,10 @@ export const useManagedNativeLearnerCatalog = () => {
 
     try {
       const client = createMobileNativeLearningApiClient(sessionProvider);
-      const signal = getRequestSignal();
+      const request = createSessionBoundRequestSignal(getRequestSignal());
 
       void client
-        .getLearnerCatalog({ signal })
+        .getLearnerCatalog({ signal: request.signal })
         .then((catalog) => {
           if (isCurrent) {
             setState({ catalog, kind: 'ready', nextLesson: findFirstCatalogLesson(catalog) });
@@ -52,7 +53,15 @@ export const useManagedNativeLearnerCatalog = () => {
           if (isCurrent && !isExpectedCancellation(error)) {
             setState({ kind: 'error' });
           }
+        })
+        .finally(() => {
+          request.dispose();
         });
+
+      return () => {
+        isCurrent = false;
+        request.dispose();
+      };
     } catch {
       setState({ kind: 'error' });
     }
