@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 
 import {
   createCatalogOverview,
+  findCatalogActivity,
   findCatalogLesson,
+  findCatalogVocabularyActivity,
   flattenCatalogLessons,
 } from './catalog-presentation';
 
@@ -36,6 +38,28 @@ const catalog: LearnerCatalogResponse = {
                       rubyAnnotationState: 'not_applicable',
                       targetScript: 'kana_kanji',
                       titleVietnamese: 'Chào buổi sáng',
+                    },
+                    {
+                      activityId: 'greeting-vocabulary',
+                      activityType: 'vocabulary',
+                      estimatedMinutes: 4,
+                      instructionsVietnamese: 'Đọc từ và ví dụ trước khi xác nhận đã học.',
+                      payload: {
+                        entries: [
+                          {
+                            example: {
+                              translationVietnamese: 'Tôi là giáo viên.',
+                              value: '私は先生です。',
+                            },
+                            meaningVietnamese: 'giáo viên',
+                            reading: 'せんせい',
+                            term: '先生',
+                          },
+                        ],
+                      },
+                      rubyAnnotationState: 'planned',
+                      targetScript: 'kana_kanji',
+                      titleVietnamese: 'Từ vựng: giáo viên',
                     },
                   ],
                   estimatedMinutes: 10,
@@ -95,5 +119,26 @@ describe('catalog presentation', () => {
 
   it('returns null for an unpublished or unknown lesson identifier', () => {
     expect(findCatalogLesson(catalog, 'not-published')).toBeNull();
+  });
+
+  it('finds a learner-safe activity with its release and sequence context', () => {
+    expect(findCatalogActivity(catalog, 'greetings-01', 'greeting-vocabulary')).toEqual(
+      expect.objectContaining({
+        activity: expect.objectContaining({ activityType: 'vocabulary' }),
+        activitySequence: 2,
+        contentReleaseId: 'japanese-n5-v1',
+        lesson: expect.objectContaining({ lessonId: 'greetings-01' }),
+      }),
+    );
+    expect(findCatalogActivity(catalog, 'greetings-01', 'not-published')).toBeNull();
+  });
+
+  it('returns only vocabulary contexts to the first interactive activity route', () => {
+    expect(findCatalogVocabularyActivity(catalog, 'greetings-01', 'greeting-vocabulary')).toEqual(
+      expect.objectContaining({
+        activity: expect.objectContaining({ activityType: 'vocabulary' }),
+      }),
+    );
+    expect(findCatalogVocabularyActivity(catalog, 'greetings-01', 'greeting-retrieval')).toBeNull();
   });
 });

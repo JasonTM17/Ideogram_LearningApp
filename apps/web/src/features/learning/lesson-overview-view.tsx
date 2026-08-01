@@ -1,4 +1,4 @@
-import { ArrowLeft, Clock3, LockKeyhole, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Clock3, LockKeyhole, ShieldCheck } from 'lucide-react';
 
 import { ActionLink } from '@/components/ui/action-link';
 
@@ -66,6 +66,20 @@ export function LessonOverviewView({ lessonContext }: LessonOverviewViewProps) {
                 </p>
                 <h3 lang="vi">{activity.titleVietnamese}</h3>
                 <span>{activity.instructionsVietnamese}</span>
+                {activity.activityType === 'vocabulary' ? (
+                  <ActionLink
+                    href={`/lessons/${lesson.lessonId}/activities/${activity.activityId}`}
+                    variant="secondary"
+                  >
+                    Học từ vựng
+                    <ArrowRight aria-hidden="true" size={17} />
+                  </ActionLink>
+                ) : (
+                  <span className="lesson-overview__activity-unavailable">
+                    <LockKeyhole aria-hidden="true" size={15} />
+                    Chưa hỗ trợ trong lượt này
+                  </span>
+                )}
               </div>
             </li>
           ))}
@@ -75,10 +89,10 @@ export function LessonOverviewView({ lessonContext }: LessonOverviewViewProps) {
       <section className="lesson-runtime-note">
         <LockKeyhole aria-hidden="true" size={22} />
         <div>
-          <h2>Chế độ làm bài đang được nối an toàn</h2>
+          <h2>Chỉ hiện kết quả đã được máy chủ xác nhận</h2>
           <p>
-            Trang này chỉ dùng dữ liệu learner-safe. Đáp án, rubric nội bộ và khóa chấm không bao
-            giờ được gửi xuống trình duyệt.
+            Hoạt động từ vựng đã có thể hoàn thành. Các loại còn lại vẫn hiện rõ là chưa hỗ trợ; đáp
+            án, rubric nội bộ và khóa chấm không bao giờ được gửi xuống trình duyệt.
           </p>
         </div>
       </section>

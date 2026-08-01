@@ -37,7 +37,7 @@ const createStorageAdapter = (
   };
 };
 
-const createBrowserDeviceId = (): string => {
+export const createBrowserUuid = (): string => {
   if (typeof globalThis.crypto?.randomUUID !== 'function') {
     throw new Error('Browser UUID generation is unavailable.');
   }
@@ -54,6 +54,6 @@ export const createBrowserActivityOperationIdentityStore = (
   options: BrowserActivityOperationIdentityStoreOptions = {},
 ): ActivityOperationIdentityStore =>
   new ActivityOperationIdentityStore({
-    createDeviceId: options.createDeviceId ?? createBrowserDeviceId,
+    createDeviceId: options.createDeviceId ?? createBrowserUuid,
     storage: createStorageAdapter(options.storage),
   });

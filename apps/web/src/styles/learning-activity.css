@@ -1,0 +1,250 @@
+.vocabulary-activity {
+  display: grid;
+  width: min(100%, var(--content-measure));
+  gap: var(--space-6);
+  margin-inline: auto;
+  padding-bottom: var(--space-8);
+}
+
+.vocabulary-activity__back,
+.vocabulary-activity__progress,
+.vocabulary-activity__eyebrow,
+.vocabulary-activity__secondary-action,
+.vocabulary-activity__primary-action {
+  display: inline-flex;
+  width: fit-content;
+  min-height: var(--touch-target);
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  border-radius: var(--radius-control);
+  font-size: var(--type-label-size);
+  font-weight: 650;
+  line-height: var(--type-label-leading);
+}
+
+.vocabulary-activity__back {
+  color: var(--color-text-secondary);
+}
+
+.vocabulary-activity__header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-4);
+  align-items: end;
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding-bottom: var(--space-6);
+}
+
+.vocabulary-activity__header > div,
+.vocabulary-activity__prompt > div,
+.vocabulary-activity__confirmation > div,
+.vocabulary-activity__receipt > div,
+.vocabulary-activity__error > div {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-2);
+}
+
+.vocabulary-activity__eyebrow {
+  min-height: 0;
+  color: var(--color-accent-warm);
+  font-size: var(--type-caption-size);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.vocabulary-activity__header h1 {
+  font-size: clamp(2rem, 6vw, 3.25rem);
+  line-height: 1.15;
+  letter-spacing: -0.045em;
+}
+
+.vocabulary-activity__progress {
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-surface-subtle);
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-text-secondary);
+}
+
+.vocabulary-activity__prompt,
+.vocabulary-activity__confirmation,
+.vocabulary-activity__receipt,
+.vocabulary-activity__error {
+  display: grid;
+  gap: var(--space-4);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-surface);
+  background: var(--color-surface);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-soft);
+}
+
+.vocabulary-activity__prompt,
+.vocabulary-activity__confirmation {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.vocabulary-activity__prompt > svg,
+.vocabulary-activity__confirmation > svg {
+  color: var(--color-action-primary);
+}
+
+.vocabulary-activity__prompt h2,
+.vocabulary-activity__confirmation h2,
+.vocabulary-activity__receipt h2 {
+  font-size: var(--type-heading-md-size);
+  line-height: var(--type-heading-md-leading);
+}
+
+.vocabulary-activity__prompt p,
+.vocabulary-activity__confirmation p,
+.vocabulary-activity__receipt p,
+.vocabulary-activity__error p {
+  color: var(--color-text-secondary);
+}
+
+.vocabulary-activity__entries {
+  display: grid;
+  gap: var(--space-4);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.vocabulary-activity__entries > li {
+  display: grid;
+  gap: var(--space-2);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-surface);
+  background: color-mix(in srgb, var(--color-surface-subtle) 52%, var(--color-surface));
+  padding: var(--space-6);
+}
+
+.vocabulary-activity__term {
+  font-family: var(--font-family-learning-jp);
+  font-size: clamp(2.5rem, 12vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.vocabulary-activity__reading {
+  color: var(--color-action-primary);
+  font-family: var(--font-family-learning-jp);
+  font-size: var(--type-body-lg-size);
+}
+
+.vocabulary-activity__meaning {
+  color: var(--color-text-primary);
+  font-size: var(--type-body-lg-size);
+  font-weight: 650;
+}
+
+.vocabulary-activity blockquote {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  margin: var(--space-2) 0 0;
+  border-left: 3px solid color-mix(in srgb, var(--color-action-primary) 50%, transparent);
+  background: var(--color-surface);
+}
+
+.vocabulary-activity blockquote p {
+  font-family: var(--font-family-learning-jp);
+}
+
+.vocabulary-activity blockquote footer {
+  color: var(--color-text-secondary);
+  font-size: var(--type-body-sm-size);
+}
+
+.vocabulary-activity__confirmation {
+  align-items: start;
+  background: color-mix(in srgb, var(--color-accent-warm) 6%, var(--color-surface));
+}
+
+.vocabulary-activity__actions,
+.vocabulary-activity__error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.vocabulary-activity__confirmation .vocabulary-activity__actions {
+  grid-column: 1 / -1;
+}
+
+.vocabulary-activity__primary-action,
+.vocabulary-activity__secondary-action {
+  border: 1px solid transparent;
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    opacity var(--duration-fast) var(--ease-standard);
+}
+
+.vocabulary-activity__primary-action {
+  background: var(--color-action-primary);
+  color: var(--color-on-action-primary);
+}
+
+.vocabulary-activity__primary-action:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-action-primary) 88%, black);
+}
+
+.vocabulary-activity__secondary-action {
+  border-color: var(--color-border-subtle);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+}
+
+.vocabulary-activity__secondary-action:hover:not(:disabled) {
+  background: var(--color-surface-subtle);
+}
+
+.vocabulary-activity__primary-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.vocabulary-activity__receipt {
+  grid-template-columns: auto minmax(0, 1fr);
+  border-color: color-mix(in srgb, var(--color-success) 45%, var(--color-border-subtle));
+  background: color-mix(in srgb, var(--color-success) 8%, var(--color-surface));
+}
+
+.vocabulary-activity__receipt > svg {
+  color: var(--color-success);
+}
+
+.vocabulary-activity__replay {
+  color: var(--color-success) !important;
+  font-size: var(--type-body-sm-size);
+  font-weight: 650;
+}
+
+.vocabulary-activity__error {
+  grid-template-columns: auto minmax(0, 1fr);
+  border-color: color-mix(in srgb, var(--color-danger) 45%, var(--color-border-subtle));
+  background: color-mix(in srgb, var(--color-danger) 8%, var(--color-surface));
+}
+
+.vocabulary-activity__error > svg,
+.vocabulary-activity__error p {
+  color: var(--color-danger);
+}
+
+@media (min-width: 640px) {
+  .vocabulary-activity__confirmation {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .vocabulary-activity__confirmation .vocabulary-activity__actions {
+    grid-column: auto;
+    align-self: center;
+  }
+}
