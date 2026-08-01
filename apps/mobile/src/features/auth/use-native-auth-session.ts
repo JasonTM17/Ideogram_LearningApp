@@ -16,11 +16,18 @@ export interface NativeAuthSessionState {
   sessionProvider: () => Promise<Readonly<NativeSessionSnapshot> | null>;
   hasSession: boolean;
   isHydrating: boolean;
+  sessionEpoch: number | null;
 }
 
-const webPreviewState = {
+type NativeAuthSessionLifecycleState = Pick<
+  NativeAuthSessionState,
+  'hasSession' | 'isHydrating' | 'sessionEpoch'
+>;
+
+const webPreviewState: NativeAuthSessionLifecycleState = {
   hasSession: false,
   isHydrating: false,
+  sessionEpoch: null,
 };
 
 export const useManagedNativeAuthSession = (): NativeAuthSessionState => {
@@ -31,8 +38,10 @@ export const useManagedNativeAuthSession = (): NativeAuthSessionState => {
     return controller.signal;
   });
   const [requestScope, setRequestScope] = useState<NativeSessionRequestScope | null>(null);
-  const [state, setState] = useState(() =>
-    Platform.OS === 'web' ? webPreviewState : { hasSession: false, isHydrating: true },
+  const [state, setState] = useState<NativeAuthSessionLifecycleState>(() =>
+    Platform.OS === 'web'
+      ? webPreviewState
+      : { hasSession: false, isHydrating: true, sessionEpoch: null },
   );
 
   useEffect(() => {
@@ -53,7 +62,11 @@ export const useManagedNativeAuthSession = (): NativeAuthSessionState => {
         if (isCurrent && sessionStore.isInitialized()) {
           const session = sessionStore.getSnapshot();
           nextRequestScope.update(session);
-          setState({ hasSession: session !== null, isHydrating: false });
+          setState({
+            hasSession: session !== null,
+            isHydrating: false,
+            sessionEpoch: session?.sessionEpoch ?? null,
+          });
         }
       };
 
@@ -66,7 +79,7 @@ export const useManagedNativeAuthSession = (): NativeAuthSessionState => {
         .then(({ data, error }) => {
           if (!isCurrent || error) {
             if (isCurrent && error) {
-              setState({ hasSession: false, isHydrating: false });
+              setState({ hasSession: false, isHydrating: false, sessionEpoch: null });
             }
             return;
           }
@@ -75,12 +88,12 @@ export const useManagedNativeAuthSession = (): NativeAuthSessionState => {
         })
         .catch(() => {
           if (isCurrent) {
-            setState({ hasSession: false, isHydrating: false });
+            setState({ hasSession: false, isHydrating: false, sessionEpoch: null });
           }
         });
     } catch {
       nextRequestScope.update(null);
-      setState({ hasSession: false, isHydrating: false });
+      setState({ hasSession: false, isHydrating: false, sessionEpoch: null });
     }
 
     return () => {

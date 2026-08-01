@@ -9,6 +9,7 @@ import {
   NativeAuthSessionProvider,
   useNativeAuthSession,
 } from '../src/features/auth/native-auth-session-provider';
+import { NativeLearnerCatalogProvider } from '../src/features/today/native-learner-catalog-provider';
 
 export const unstable_settings = {
   initialRouteName: 'auth/initializing',
@@ -22,7 +23,9 @@ export default function RootLayout() {
       <ThemeProvider value={createNavigationTheme(isDark, theme)}>
         <StatusBar style={isDark ? 'light' : 'dark'} />
         <NativeAuthSessionProvider>
-          <RootNavigator canvasColor={theme.color.canvas} />
+          <NativeLearnerCatalogProvider>
+            <RootNavigator canvasColor={theme.color.canvas} />
+          </NativeLearnerCatalogProvider>
         </NativeAuthSessionProvider>
       </ThemeProvider>
     </SafeAreaProvider>
