@@ -2,16 +2,16 @@
 
 ## Current implemented endpoints
 
-| Method | Path                                 | Auth / boundary                                                                                                                                | Request                                        | Response                                 | Status                     |
-| ------ | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- | ---------------------------------------- | -------------------------- |
-| GET    | `/api/v1/health`                     | None                                                                                                                                           | None                                           | Shared health contract                   | Implemented                |
-| GET    | `/api/v1/learning/catalog`           | Verified Supabase bearer token or SSR cookie session                                                                                           | None                                           | Shared learner-catalog response contract | Implemented                |
-| POST   | `/api/v1/learning/activities/submit` | Verified Supabase bearer token or SSR cookie session; cookie mutations require same-origin policy                                              | JSON body with `activityAttemptInputSchema`    | Shared activity receipt contract         | Implemented                |
-| POST   | `/api/v1/learning/reviews/submit`    | Verified Supabase bearer token or SSR cookie session; cookie mutations require same-origin policy                                              | JSON body with `reviewSubmissionInputSchema`   | Shared review receipt contract           | Implemented                |
-| POST   | `/api/v1/ai/tutor/turn`              | Verified Supabase bearer token or SSR cookie session; cookie mutations require same-origin policy; active learner, consent, and AI kill switch | JSON body with `tutorTurnRequestSchema`        | Shared completed tutor receipt contract  | Implemented (bounded JSON) |
-| POST   | `/api/v1/auth/email-otp`             | Same-origin cookie mutation; no verified session required                                                                                      | JSON body with `email` and optional `returnTo` | Generic accepted response (`202`)        | Implemented                |
-| GET    | `/auth/callback`                     | Browser PKCE callback; handles optional `sb_flow_id`                                                                                           | `code` plus optional `sb_flow_id` query values | Safe `303` redirect                      | Implemented                |
-| POST   | `/api/v1/auth/sign-out`              | Verified cookie session only; bearer rejected                                                                                                  | Empty JSON object                              | Generic signed-out response (`200`)      | Implemented                |
+| Method | Path                                 | Auth / boundary                                                                                                                                                                                       | Request                                        | Response                                 | Status                     |
+| ------ | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- | ---------------------------------------- | -------------------------- |
+| GET    | `/api/v1/health`                     | None                                                                                                                                                                                                  | None                                           | Shared health contract                   | Implemented                |
+| GET    | `/api/v1/learning/catalog`           | Verified Supabase bearer token or SSR cookie session                                                                                                                                                  | None                                           | Shared learner-catalog response contract | Implemented                |
+| POST   | `/api/v1/learning/activities/submit` | Verified Supabase bearer token or SSR cookie session; cookie mutations require same-origin policy                                                                                                     | JSON body with `activityAttemptInputSchema`    | Shared activity receipt contract         | Implemented                |
+| POST   | `/api/v1/learning/reviews/submit`    | Verified Supabase bearer token or SSR cookie session; cookie mutations require same-origin policy                                                                                                     | JSON body with `reviewSubmissionInputSchema`   | Shared review receipt contract           | Implemented                |
+| POST   | `/api/v1/ai/tutor/turn`              | Verified Supabase bearer token or SSR cookie session; cookie mutations require same-origin policy; exact completed replays are allowed, new turns require active learner, consent, and AI kill switch | JSON body with `tutorTurnRequestSchema`        | Shared completed tutor receipt contract  | Implemented (bounded JSON) |
+| POST   | `/api/v1/auth/email-otp`             | Same-origin cookie mutation; no verified session required                                                                                                                                             | JSON body with `email` and optional `returnTo` | Generic accepted response (`202`)        | Implemented                |
+| GET    | `/auth/callback`                     | Browser PKCE callback; handles optional `sb_flow_id`                                                                                                                                                  | `code` plus optional `sb_flow_id` query values | Safe `303` redirect                      | Implemented                |
+| POST   | `/api/v1/auth/sign-out`              | Verified cookie session only; bearer rejected                                                                                                                                                         | Empty JSON object                              | Generic signed-out response (`200`)      | Implemented                |
 
 ## Health response shape
 
@@ -32,11 +32,14 @@ The activity submission route at `apps/web/src/app/api/v1/learning/activities/su
 The review submission route at `apps/web/src/app/api/v1/learning/reviews/submit/route.ts` authenticates first, validates the exact review schema, and writes through the private transaction boundary with private no-store headers and an opaque request ID.
 
 The tutor route at `apps/web/src/app/api/v1/ai/tutor/turn/route.ts` authenticates
-the request, validates `tutorTurnRequestSchema`, requires `AI_TUTOR_ENABLED=true`
-and the configured provider-consent policy, reserves the turn in the private AI
-ledger, calls DeepSeek outside the database transaction, then finalizes usage and
-estimated micro-USD cost in a second short transaction. Completed retries replay
-the stored receipt; pending/failed/quota conflicts never call the provider twice.
+the request and validates `tutorTurnRequestSchema`. An exact completed retry is
+looked up first, so it can replay its stored receipt even after the AI kill switch,
+provider-consent policy, or language configuration changes. A new turn then requires
+`AI_TUTOR_ENABLED=true` and the configured provider-consent policy, reserves the
+turn in the private AI ledger, calls DeepSeek outside the database transaction,
+and finalizes usage and estimated micro-USD cost in a second short transaction.
+Pending/failed/quota conflicts never call the provider twice; active attempts are
+fenced by a database-issued lease token before completion or failure.
 
 ### Tutor turn receipt contract
 
