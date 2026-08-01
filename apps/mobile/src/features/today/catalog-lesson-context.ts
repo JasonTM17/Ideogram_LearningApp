@@ -1,6 +1,7 @@
 import type { LearnerCatalogLesson, LearnerCatalogResponse } from '@ideogram/contracts';
 
 export interface CatalogLessonContext {
+  contentReleaseId: string;
   languageCode: string;
   languageName: string;
   lesson: LearnerCatalogLesson;
@@ -19,6 +20,7 @@ export const findFirstCatalogLesson = (
 
         if (lesson) {
           return {
+            contentReleaseId: release.contentReleaseId,
             languageCode: languagePack.languageCode,
             languageName: languagePack.displayName,
             lesson,
@@ -49,6 +51,7 @@ export const findCatalogLesson = (
 
         if (lesson) {
           return {
+            contentReleaseId: release.contentReleaseId,
             languageCode: languagePack.languageCode,
             languageName: languagePack.displayName,
             lesson,

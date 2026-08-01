@@ -11,6 +11,17 @@ const sessionProvider = async () => ({
   userId: 'learner-1',
 });
 
+const activityInput = {
+  activityId: 'ja-n5-l01-vocabulary',
+  contentReleaseId: 'ja-n5-pilot-v1',
+  deviceId: '123e4567-e89b-42d3-a456-426614174001',
+  deviceSequence: 7,
+  idempotencyKey: '123e4567-e89b-42d3-a456-426614174002',
+  responsePayload: { acknowledged: true },
+  reviewedAtClient: '2026-07-29T00:00:00.000Z',
+  timezone: 'Asia/Ho_Chi_Minh',
+} as const;
+
 afterEach(() => {
   vi.useRealTimers();
 });
@@ -39,6 +50,28 @@ describe('native learner catalog cancellation', () => {
     expect(vi.getTimerCount()).toBe(0);
   });
 
+  it('applies the same timeout boundary to activity POST requests', async () => {
+    vi.useFakeTimers();
+    let requestMethod: string | undefined;
+    const fetchImplementation: NativeApiFetch = async (_url, init) => {
+      requestMethod = init.method;
+      return new Promise(() => undefined);
+    };
+    const client = createNativeApiClient({
+      apiOrigin: 'https://api.example.test',
+      fetch: fetchImplementation,
+      requestTimeoutMs: 50,
+      sessionProvider,
+    });
+
+    const pendingRequest = client.submitActivityAttempt(activityInput);
+    const timeoutExpectation = expect(pendingRequest).rejects.toBeInstanceOf(NativeApiTimeoutError);
+    await vi.advanceTimersByTimeAsync(50);
+
+    await timeoutExpectation;
+    expect(requestMethod).toBe('POST');
+  });
+
   it('forwards caller cancellation and removes the caller listener', async () => {
     const controller = new AbortController();
     const removeListener = vi.spyOn(controller.signal, 'removeEventListener');
@@ -65,6 +98,34 @@ describe('native learner catalog cancellation', () => {
     await expect(pendingRequest).rejects.toBeInstanceOf(NativeApiCallerAbortError);
     expect(requestSignal?.aborted).toBe(true);
     expect(removeListener).toHaveBeenCalledWith('abort', expect.any(Function));
+  });
+
+  it('forwards caller cancellation for activity POST requests', async () => {
+    const controller = new AbortController();
+    let markFetchStarted: (() => void) | undefined;
+    const fetchStarted = new Promise<void>((resolve) => {
+      markFetchStarted = resolve;
+    });
+    let requestSignal: AbortSignal | undefined;
+    const fetchImplementation: NativeApiFetch = async (_url, init) => {
+      requestSignal = init.signal;
+      markFetchStarted?.();
+      return new Promise(() => undefined);
+    };
+    const client = createNativeApiClient({
+      apiOrigin: 'https://api.example.test',
+      fetch: fetchImplementation,
+      sessionProvider,
+    });
+
+    const pendingRequest = client.submitActivityAttempt(activityInput, {
+      signal: controller.signal,
+    });
+    await fetchStarted;
+    controller.abort();
+
+    await expect(pendingRequest).rejects.toBeInstanceOf(NativeApiCallerAbortError);
+    expect(requestSignal?.aborted).toBe(true);
   });
 
   it('does not start a fetch for an already-aborted caller signal', async () => {

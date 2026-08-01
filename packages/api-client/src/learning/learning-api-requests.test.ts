@@ -159,6 +159,45 @@ describe('learning API requests', () => {
     });
   });
 
+  it.each([
+    { responsePayload: { missing: undefined } },
+    { responsePayload: { notFinite: Number.NaN } },
+    { responsePayload: { notFinite: Number.POSITIVE_INFINITY } },
+    { responsePayload: { callable: () => undefined } },
+    { responsePayload: { nested: [undefined] } },
+  ])('rejects activity payloads that JSON would silently change: %o', (unsafe) => {
+    expect(() =>
+      createActivityAttemptApiRequest({
+        activityId: 'ja-n5-u1-l1-vocab',
+        contentReleaseId: 'ja-n5-pilot-v1',
+        deviceId: '123e4567-e89b-42d3-a456-426614174001',
+        deviceSequence: 8,
+        idempotencyKey: '123e4567-e89b-42d3-a456-426614174004',
+        responsePayload: unsafe.responsePayload,
+        reviewedAtClient: '2026-07-29T00:00:00.000Z',
+        timezone: 'Asia/Ho_Chi_Minh',
+      }),
+    ).toThrow();
+  });
+
+  it('rejects sparse arrays that JSON would fill with null', () => {
+    const sparse: unknown[] = [];
+    sparse[1] = 'sparse';
+
+    expect(() =>
+      createActivityAttemptApiRequest({
+        activityId: 'ja-n5-u1-l1-vocab',
+        contentReleaseId: 'ja-n5-pilot-v1',
+        deviceId: '123e4567-e89b-42d3-a456-426614174001',
+        deviceSequence: 8,
+        idempotencyKey: '123e4567-e89b-42d3-a456-426614174004',
+        responsePayload: { nested: sparse },
+        reviewedAtClient: '2026-07-29T00:00:00.000Z',
+        timezone: 'Asia/Ho_Chi_Minh',
+      }),
+    ).toThrow();
+  });
+
   it('parses the activity receipt returned by the evaluated write boundary', () => {
     const activityReceipt = {
       attemptId: '123e4567-e89b-42d3-a456-426614174005',

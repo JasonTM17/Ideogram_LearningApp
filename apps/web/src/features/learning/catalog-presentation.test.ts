@@ -61,6 +61,7 @@ describe('catalog presentation', () => {
   it('flattens published lessons while preserving their curriculum context', () => {
     expect(flattenCatalogLessons(catalog)).toEqual([
       expect.objectContaining({
+        contentReleaseId: 'japanese-n5-v1',
         languageCode: 'ja',
         lesson: expect.objectContaining({ lessonId: 'greetings-01' }),
         levelCode: 'N5',
@@ -74,6 +75,7 @@ describe('catalog presentation', () => {
       languagePackCount: 1,
       lessonCount: 1,
       nextLesson: expect.objectContaining({
+        contentReleaseId: 'japanese-n5-v1',
         lesson: expect.objectContaining({ lessonId: 'greetings-01' }),
       }),
       releaseCount: 1,

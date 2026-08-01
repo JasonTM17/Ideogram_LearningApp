@@ -1,6 +1,7 @@
 import type { LearnerCatalogLesson, LearnerCatalogResponse } from '@ideogram/contracts';
 
 export interface CatalogLessonContext {
+  contentReleaseId: string;
   languageCode: string;
   languageName: string;
   lesson: LearnerCatalogLesson;
@@ -25,6 +26,7 @@ export const flattenCatalogLessons = (catalog: LearnerCatalogResponse): CatalogL
           languageCode: languagePack.languageCode,
           languageName: languagePack.displayName,
           lesson,
+          contentReleaseId: release.contentReleaseId,
           levelCode: release.levelCode,
           releaseTitle: release.titleVietnamese,
           unitTitle: unit.titleVietnamese,

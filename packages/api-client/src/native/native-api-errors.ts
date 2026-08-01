@@ -4,6 +4,7 @@ export type NativeApiHttpErrorCode =
 export type NativeApiErrorCode =
   | 'ABORTED'
   | 'CONFIGURATION_ERROR'
+  | 'INVALID_REQUEST'
   | 'INVALID_RESPONSE'
   | 'NETWORK_ERROR'
   | 'SESSION_CHANGED'
@@ -26,6 +27,13 @@ export class NativeApiConfigurationError extends NativeApiError {
   constructor() {
     super('CONFIGURATION_ERROR', 'Native API client configuration is invalid.');
     this.name = 'NativeApiConfigurationError';
+  }
+}
+
+export class NativeApiInvalidRequestError extends NativeApiError {
+  constructor() {
+    super('INVALID_REQUEST', 'The activity request could not be serialized safely.');
+    this.name = 'NativeApiInvalidRequestError';
   }
 }
 

@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import {
   NativeApiHttpError,
+  NativeApiInvalidRequestError,
   NativeApiInvalidResponseError,
   NativeApiNetworkError,
 } from './native-api-errors';
@@ -15,6 +16,25 @@ import type {
 import type { NativeApiSessionProvider } from './native-api-session';
 
 const validCatalog = { languagePacks: [] };
+const validActivityInput = {
+  activityId: 'ja-n5-l01-vocabulary',
+  contentReleaseId: 'ja-n5-pilot-v1',
+  deviceId: '123e4567-e89b-42d3-a456-426614174001',
+  deviceSequence: 7,
+  idempotencyKey: '123e4567-e89b-42d3-a456-426614174002',
+  responsePayload: { acknowledged: true },
+  reviewedAtClient: '2026-07-29T00:00:00.000Z',
+  timezone: 'Asia/Ho_Chi_Minh',
+} as const;
+const validActivityReceipt = {
+  attemptId: '123e4567-e89b-42d3-a456-426614174004',
+  completedActivityCount: 1,
+  completionState: 'completed',
+  idempotentReplay: false,
+  lessonId: 'ja-n5-l01',
+  progressState: 'completed',
+  totalActivityCount: 1,
+} as const;
 const stableSession = {
   accessToken: 'header-safe-token',
   sessionEpoch: 4,
@@ -65,6 +85,48 @@ describe('native learner catalog HTTP transport', () => {
       redirect: 'error',
     });
     expect(capturedInit?.signal).toBeInstanceOf(AbortSignal);
+  });
+
+  it('sends a validated activity POST with the exact public body and JSON headers', async () => {
+    let capturedUrl: string | undefined;
+    let capturedInit: NativeApiFetchRequestInit | undefined;
+    const fetchImplementation: NativeApiFetch = vi.fn(async (url, init) => {
+      capturedUrl = url;
+      capturedInit = init;
+      return createResponse(200, validActivityReceipt);
+    });
+
+    await expect(
+      createClient(fetchImplementation).submitActivityAttempt(validActivityInput),
+    ).resolves.toEqual(validActivityReceipt);
+    expect(capturedUrl).toBe('https://api.example.test/api/v1/learning/activities/submit');
+    expect(capturedInit).toMatchObject({
+      body: JSON.stringify(validActivityInput),
+      credentials: 'omit',
+      headers: {
+        Accept: 'application/json',
+        Authorization: 'Bearer header-safe-token',
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      redirect: 'error',
+    });
+    expect(capturedInit?.signal).toBeInstanceOf(AbortSignal);
+  });
+
+  it('rejects malformed or non-serializable activity input as an opaque Promise error', async () => {
+    const fetchImplementation = vi.fn<NativeApiFetch>();
+    const client = createClient(fetchImplementation);
+    const cyclic: Record<string, unknown> = {};
+    cyclic.self = cyclic;
+
+    await expect(client.submitActivityAttempt({})).rejects.toBeInstanceOf(
+      NativeApiInvalidRequestError,
+    );
+    await expect(
+      client.submitActivityAttempt({ ...validActivityInput, responsePayload: { cyclic } }),
+    ).rejects.toBeInstanceOf(NativeApiInvalidRequestError);
+    expect(fetchImplementation).not.toHaveBeenCalled();
   });
 
   it.each([

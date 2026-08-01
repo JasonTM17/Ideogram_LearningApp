@@ -58,6 +58,7 @@ describe('findFirstCatalogLesson', () => {
   it('keeps the backend catalog order and preserves lesson context', () => {
     expect(findFirstCatalogLesson(catalog)).toEqual(
       expect.objectContaining({
+        contentReleaseId: 'japanese-n5-v1',
         languageCode: 'ja',
         languageName: 'Tiếng Nhật',
         levelCode: 'N5',
@@ -74,6 +75,7 @@ describe('findFirstCatalogLesson', () => {
   it('finds only an exact published lesson identifier', () => {
     expect(findCatalogLesson(catalog, 'greetings-01')).toEqual(
       expect.objectContaining({
+        contentReleaseId: 'japanese-n5-v1',
         lesson: expect.objectContaining({ titleVietnamese: 'Lời chào đầu tiên' }),
       }),
     );

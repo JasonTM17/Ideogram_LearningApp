@@ -25,13 +25,16 @@ export interface NativeApiFetchResponse {
   json: () => Promise<unknown>;
 }
 
-export interface NativeApiFetchRequestInit {
+interface NativeApiFetchRequestBase {
   readonly credentials: 'omit';
   readonly headers: Readonly<Record<string, string>>;
-  readonly method: 'GET';
   readonly redirect: 'error';
   readonly signal: AbortSignal;
 }
+
+export type NativeApiFetchRequestInit =
+  | (NativeApiFetchRequestBase & { readonly body?: never; readonly method: 'GET' })
+  | (NativeApiFetchRequestBase & { readonly body: string; readonly method: 'POST' });
 
 export type NativeApiFetch = (
   url: string,
@@ -43,6 +46,16 @@ export interface NativeApiRequestOptions {
 }
 
 interface NativeJsonGetOptions<TResult> {
+  callerSignal: AbortSignal | undefined;
+  fetchImplementation: NativeApiFetch;
+  parse: (input: unknown) => TResult;
+  sessionProvider: NativeApiSessionProvider;
+  timeoutMs: number;
+  url: string;
+}
+
+interface NativeJsonPostOptions<TResult> {
+  body: string;
   callerSignal: AbortSignal | undefined;
   fetchImplementation: NativeApiFetch;
   parse: (input: unknown) => TResult;
@@ -134,8 +147,9 @@ const inspectResponse = async <TResult>(
   }
 };
 
-export const executeNativeJsonGet = async <TResult>(
-  options: NativeJsonGetOptions<TResult>,
+const executeNativeJsonRequest = async <TResult>(
+  options: NativeJsonGetOptions<TResult> | NativeJsonPostOptions<TResult>,
+  method: 'GET' | 'POST',
 ): Promise<TResult> => {
   const scope = createNativeApiAbortScope(options.callerSignal, options.timeoutMs);
 
@@ -144,20 +158,32 @@ export const executeNativeJsonGet = async <TResult>(
     if (initialSession === null) throw new NativeApiSessionRequiredError();
     const initialIdentity = captureNativeApiSessionIdentity(initialSession);
 
-    let response: NativeApiFetchResponse;
-    try {
-      response = await scope.run(() =>
-        options.fetchImplementation(options.url, {
+    const isPost = method === 'POST';
+    const headers = {
+      Accept: 'application/json',
+      Authorization: `Bearer ${initialSession.accessToken}`,
+      ...(isPost ? { 'Content-Type': 'application/json' } : {}),
+    };
+    const requestInit: NativeApiFetchRequestInit = isPost
+      ? {
+          body: (options as NativeJsonPostOptions<TResult>).body,
           credentials: 'omit',
-          headers: {
-            Accept: 'application/json',
-            Authorization: `Bearer ${initialSession.accessToken}`,
-          },
+          headers,
+          method: 'POST',
+          redirect: 'error',
+          signal: scope.signal,
+        }
+      : {
+          credentials: 'omit',
+          headers,
           method: 'GET',
           redirect: 'error',
           signal: scope.signal,
-        }),
-      );
+        };
+
+    let response: NativeApiFetchResponse;
+    try {
+      response = await scope.run(() => options.fetchImplementation(options.url, requestInit));
     } catch {
       scope.throwIfAborted();
       throw new NativeApiNetworkError();
@@ -173,3 +199,11 @@ export const executeNativeJsonGet = async <TResult>(
     scope.dispose();
   }
 };
+
+export const executeNativeJsonGet = async <TResult>(
+  options: NativeJsonGetOptions<TResult>,
+): Promise<TResult> => executeNativeJsonRequest(options, 'GET');
+
+export const executeNativeJsonPost = async <TResult>(
+  options: NativeJsonPostOptions<TResult>,
+): Promise<TResult> => executeNativeJsonRequest(options, 'POST');

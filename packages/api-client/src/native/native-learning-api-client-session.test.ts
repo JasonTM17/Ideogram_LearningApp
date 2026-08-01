@@ -12,6 +12,31 @@ const response = (): NativeApiFetchResponse => ({
   status: 200,
 });
 
+const activityResponse = (): NativeApiFetchResponse => ({
+  headers: { get: () => 'application/json' },
+  json: async () => ({
+    attemptId: '123e4567-e89b-42d3-a456-426614174004',
+    completedActivityCount: 1,
+    completionState: 'completed',
+    idempotentReplay: false,
+    lessonId: 'ja-n5-l01',
+    progressState: 'completed',
+    totalActivityCount: 1,
+  }),
+  status: 200,
+});
+
+const activityInput = {
+  activityId: 'ja-n5-l01-vocabulary',
+  contentReleaseId: 'ja-n5-pilot-v1',
+  deviceId: '123e4567-e89b-42d3-a456-426614174001',
+  deviceSequence: 7,
+  idempotencyKey: '123e4567-e89b-42d3-a456-426614174002',
+  responsePayload: { acknowledged: true },
+  reviewedAtClient: '2026-07-29T00:00:00.000Z',
+  timezone: 'Asia/Ho_Chi_Minh',
+} as const;
+
 const session = (
   accessToken: string,
   userId = 'learner-1',
@@ -36,6 +61,22 @@ describe('native learner catalog session binding', () => {
     });
 
     await expect(client.getLearnerCatalog()).rejects.toBeInstanceOf(NativeApiSessionChangedError);
+  });
+
+  it('binds activity POST results to the same user and session epoch', async () => {
+    const sessionProvider = vi
+      .fn<() => Promise<NativeApiSession | null>>()
+      .mockResolvedValueOnce(session('initial-token'))
+      .mockResolvedValueOnce(session('next-token', 'learner-2'));
+    const client = createNativeApiClient({
+      apiOrigin: 'https://api.example.test',
+      fetch: async () => activityResponse(),
+      sessionProvider,
+    });
+
+    await expect(client.submitActivityAttempt(activityInput)).rejects.toBeInstanceOf(
+      NativeApiSessionChangedError,
+    );
   });
 
   it('requires a session before issuing the request', async () => {

@@ -1,12 +1,14 @@
 import {
+  createActivityAttemptApiRequest,
   createLearnerCatalogApiRequest,
+  parseActivityAttemptApiResponse,
   parseLearnerCatalogApiResponse,
 } from '../learning/learning-api-requests';
-import { NativeApiConfigurationError } from './native-api-errors';
-import { executeNativeJsonGet } from './native-api-json-request';
+import { NativeApiConfigurationError, NativeApiInvalidRequestError } from './native-api-errors';
+import { executeNativeJsonGet, executeNativeJsonPost } from './native-api-json-request';
 import { validateNativeApiOrigin } from './native-api-origin';
 
-import type { LearnerCatalogResponse } from '@ideogram/contracts';
+import type { ActivityAttemptReceipt, LearnerCatalogResponse } from '@ideogram/contracts';
 import type { NativeApiFetch, NativeApiRequestOptions } from './native-api-json-request';
 import type { NativeApiSessionProvider } from './native-api-session';
 
@@ -23,6 +25,10 @@ export interface CreateNativeApiClientOptions {
 
 export interface NativeApiClient {
   getLearnerCatalog: (options?: NativeApiRequestOptions) => Promise<LearnerCatalogResponse>;
+  submitActivityAttempt: (
+    input: unknown,
+    options?: NativeApiRequestOptions,
+  ) => Promise<ActivityAttemptReceipt>;
 }
 
 const validateRequestTimeout = (value: number): number => {
@@ -59,5 +65,30 @@ export const createNativeApiClient = (options: CreateNativeApiClientOptions): Na
         timeoutMs: requestTimeoutMs,
         url: `${apiOrigin}${catalogRequest.path}`,
       }),
+    submitActivityAttempt: async (input: unknown, requestOptions: NativeApiRequestOptions = {}) => {
+      let activityRequest: ReturnType<typeof createActivityAttemptApiRequest>;
+      let body: string | undefined;
+
+      try {
+        activityRequest = createActivityAttemptApiRequest(input);
+        body = JSON.stringify(activityRequest.body);
+      } catch {
+        throw new NativeApiInvalidRequestError();
+      }
+
+      if (typeof body !== 'string') {
+        throw new NativeApiInvalidRequestError();
+      }
+
+      return executeNativeJsonPost({
+        body,
+        callerSignal: requestOptions.signal,
+        fetchImplementation: options.fetch,
+        parse: parseActivityAttemptApiResponse,
+        sessionProvider: options.sessionProvider,
+        timeoutMs: requestTimeoutMs,
+        url: `${apiOrigin}${activityRequest.path}`,
+      });
+    },
   });
 };
