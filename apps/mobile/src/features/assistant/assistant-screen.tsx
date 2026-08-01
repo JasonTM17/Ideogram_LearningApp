@@ -2,6 +2,7 @@ import { FeatureListCard } from '../../components/feature-list-card';
 import { ScreenScaffold } from '../../components/screen-scaffold';
 import { StatusPanel } from '../../components/status-panel';
 import { assistantContent } from './assistant-content';
+import { TutorPreferenceDraftPanel } from './tutor-preference-draft-panel';
 
 export function AssistantScreen() {
   return (
@@ -15,6 +16,7 @@ export function AssistantScreen() {
         title={assistantContent.stateTitle}
         variant="planned"
       />
+      <TutorPreferenceDraftPanel />
       <FeatureListCard items={assistantContent.plannedCapabilities} title="Phạm vi dự kiến" />
     </ScreenScaffold>
   );
