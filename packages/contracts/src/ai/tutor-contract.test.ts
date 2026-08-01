@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { tutorTurnInputSchema, tutorTurnResponseSchema } from './tutor-contract';
+import {
+  tutorTurnInputSchema,
+  tutorTurnRequestSchema,
+  tutorTurnResponseSchema,
+} from './tutor-contract';
 
 describe('Vietnamese tutor contracts', () => {
   it('accepts a bounded Vietnamese learner turn and preference', () => {
@@ -28,6 +32,23 @@ describe('Vietnamese tutor contracts', () => {
         nextExerciseVietnamese: 'Đặt một câu với は.',
         sourceBoundaryVietnamese: 'Dựa trên nội dung đã xuất bản.',
         toolCall: 'drop database',
+      }),
+    ).toThrow();
+  });
+
+  it('requires stable turn and conversation identities for an idempotent API turn', () => {
+    expect(() =>
+      tutorTurnRequestSchema.parse({
+        conversationId: 'not-a-uuid',
+        learnerPreference: {
+          explanationDepth: 'concise',
+          preferredLanguageCode: 'ko',
+          preferredObjectiveKey: 'travel',
+          tone: 'direct',
+        },
+        message: '도와주세요',
+        targetLevelCode: 'TOPIK-1',
+        turnId: 'also-not-a-uuid',
       }),
     ).toThrow();
   });

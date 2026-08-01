@@ -22,6 +22,21 @@ export const tutorTurnInputSchema = z
   })
   .strict();
 
+export const tutorTurnStateSchema = z.enum([
+  'pending',
+  'streaming',
+  'completed',
+  'cancelled',
+  'failed',
+]);
+
+export const tutorTurnRequestSchema = tutorTurnInputSchema
+  .extend({
+    conversationId: z.uuid(),
+    turnId: z.uuid(),
+  })
+  .strict();
+
 export const tutorTurnResponseSchema = z
   .object({
     assessmentVietnamese: z.string().trim().min(1).max(1_000),
@@ -35,4 +50,5 @@ export const tutorTurnResponseSchema = z
 
 export type LearnerTutorPreference = z.infer<typeof learnerTutorPreferenceSchema>;
 export type TutorTurnInput = z.infer<typeof tutorTurnInputSchema>;
+export type TutorTurnRequest = z.infer<typeof tutorTurnRequestSchema>;
 export type TutorTurnResponse = z.infer<typeof tutorTurnResponseSchema>;
