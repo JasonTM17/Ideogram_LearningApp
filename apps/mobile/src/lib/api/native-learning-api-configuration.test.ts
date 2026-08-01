@@ -8,7 +8,10 @@ import {
 describe('readNativeLearningApiConfiguration', () => {
   it('reads a canonical HTTPS API origin for a production build', () => {
     expect(
-      readNativeLearningApiConfiguration({ EXPO_PUBLIC_API_ORIGIN: 'https://api.example.com/' }, false),
+      readNativeLearningApiConfiguration(
+        { EXPO_PUBLIC_API_ORIGIN: 'https://api.example.com/' },
+        false,
+      ),
     ).toEqual({ allowHttpLoopback: false, apiOrigin: 'https://api.example.com' });
   });
 
@@ -18,7 +21,10 @@ describe('readNativeLearningApiConfiguration', () => {
     ).toEqual({ allowHttpLoopback: true, apiOrigin: 'http://127.0.0.1:3000' });
 
     expect(() =>
-      readNativeLearningApiConfiguration({ EXPO_PUBLIC_API_ORIGIN: 'http://127.0.0.1:3000' }, false),
+      readNativeLearningApiConfiguration(
+        { EXPO_PUBLIC_API_ORIGIN: 'http://127.0.0.1:3000' },
+        false,
+      ),
     ).toThrow(NativeLearningApiConfigurationError);
   });
 
@@ -28,8 +34,8 @@ describe('readNativeLearningApiConfiguration', () => {
     'https://user:password@api.example.com',
     'https://api.example.com?mode=test',
   ])('rejects an unsafe or incomplete API origin: %s', (apiOrigin) => {
-    expect(() => readNativeLearningApiConfiguration({ EXPO_PUBLIC_API_ORIGIN: apiOrigin }, false)).toThrow(
-      NativeLearningApiConfigurationError,
-    );
+    expect(() =>
+      readNativeLearningApiConfiguration({ EXPO_PUBLIC_API_ORIGIN: apiOrigin }, false),
+    ).toThrow(NativeLearningApiConfigurationError);
   });
 });

@@ -72,7 +72,9 @@ describe('findFirstCatalogLesson', () => {
 
   it('finds only an exact published lesson identifier', () => {
     expect(findCatalogLesson(catalog, 'greetings-01')).toEqual(
-      expect.objectContaining({ lesson: expect.objectContaining({ titleVietnamese: 'Lời chào đầu tiên' }) }),
+      expect.objectContaining({
+        lesson: expect.objectContaining({ titleVietnamese: 'Lời chào đầu tiên' }),
+      }),
     );
     expect(findCatalogLesson(catalog, ' greetings-01')).toBeNull();
     expect(findCatalogLesson(catalog, 'missing-lesson')).toBeNull();

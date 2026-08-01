@@ -21,7 +21,10 @@ export function CatalogLessonCard({ lessonContext, onStart }: CatalogLessonCardP
   return (
     <View
       accessibilityLabel={`Bài học ${lesson.titleVietnamese}, ${languageName} ${levelCode}`}
-      style={[styles.card, { backgroundColor: theme.color.surface, borderColor: theme.color.borderSubtle }]}
+      style={[
+        styles.card,
+        { backgroundColor: theme.color.surface, borderColor: theme.color.borderSubtle },
+      ]}
     >
       <View style={styles.heading}>
         <View

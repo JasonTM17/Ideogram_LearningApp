@@ -17,7 +17,9 @@ export type NativeLearnerCatalogState =
 
 const isExpectedCancellation = (error: unknown): boolean =>
   error instanceof NativeApiError &&
-  (error.code === 'ABORTED' || error.code === 'SESSION_CHANGED' || error.code === 'SESSION_REQUIRED');
+  (error.code === 'ABORTED' ||
+    error.code === 'SESSION_CHANGED' ||
+    error.code === 'SESSION_REQUIRED');
 
 export const useManagedNativeLearnerCatalog = () => {
   const { getRequestSignal, hasSession, isHydrating, sessionEpoch, sessionProvider } =
