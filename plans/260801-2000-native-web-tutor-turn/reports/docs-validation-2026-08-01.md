@@ -21,6 +21,7 @@
 - README, API, architecture, safety, mobile policy, design, roadmap, and codebase-summary now distinguish the shipped bounded JSON surface from future grounded/SSE/history work.
 - The final client docs record retry identity, current Japanese-only UI availability, server-side pack authority, account-switch state reset, and native reauthentication behavior.
 - Validator, workspace format check, content lint, and environment/boundary checks passed.
+- The final GitHub CI and public GHCR publish workflows passed for `79570a5`.
 
 ## Notes
 - Worktree already contains unrelated modified and untracked files; they were left untouched.

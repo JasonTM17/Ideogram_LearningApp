@@ -56,6 +56,11 @@
 - `pnpm check:env` — passed.
 - `pnpm content:lint`, `pnpm format:check`, and docs validation — passed.
 - Full workspace `pnpm typecheck`, `pnpm lint`, `pnpm test`, and `pnpm build` — passed.
+- GitHub CI run `30706641419` for `79570a5` — quality/build and database
+  mutation regression jobs passed.
+- GitHub Container Registry publish run `30706641413` — passed; public image
+  exposes `sha-79570a5`, `main`, and `latest`. The immutable SHA tag's OCI
+  manifest was inspected successfully after publishing.
 
 ## Note
 
@@ -64,6 +69,6 @@ could return a report. This review therefore records the controller's local
 spec, checklist, and adversarial review with fresh command evidence.
 
 Status: DONE
-Concerns/Blockers: The external publish workflow still needs verification after
-the final push. Grounded retrieval, SSE, durable history, offline tutor queues,
-and enablement policy remain explicitly out of scope.
+Concerns/Blockers: None for this bounded JSON slice. Grounded retrieval, SSE,
+durable history, offline tutor queues, and enablement policy remain explicitly
+out of scope.
