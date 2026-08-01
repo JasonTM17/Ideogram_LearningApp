@@ -9,10 +9,11 @@ effort: "10–14 engineer-days"
 
 ## Context and outcome
 
-The current worktree implements the read-side web/auth slice: public landing,
-invite-only sign-in, safe callback handling, protected learner shell pages, and
-catalog-backed learner reads. The remaining phase work is the interactive
-learning and mutation layer.
+The current worktree implements the read-side web/auth slice plus the first
+learner write route: public landing, invite-only sign-in, safe callback
+handling, protected learner shell pages, catalog-backed learner reads, and
+`POST /api/v1/learning/reviews/submit`. The remaining phase work is the
+interactive learning and mutation layer beyond review submission.
 
 **Depends on:** Phases 1–3.
 **Can parallel with:** Phase 5 after shared contracts are frozen.
@@ -134,12 +135,18 @@ Do not edit native screens or AI provider code.
       active-profile/learner-role, and cookie-budget negative tests pass.
 - [x] `/today`, `/learn`, and lesson overview use the real learner-safe catalog;
       future review/AI/progress routes are labelled planned states.
+- [x] `POST /api/v1/learning/reviews/submit` uses the canonical payload hash,
+      the dedicated learning login, `app_learning_api_executor`, and the
+      learner-role recheck inside the mutation transaction.
 - [x] Current slice passed keyboard/focus, 200% text reflow, 320px layout,
       full workspace lint/type/test/build, and production review. Evidence:
       [test report](./reports/tester-20260730-web-auth-learner-entry.md) and
       [review report](./reports/reviewer-20260730-web-auth-learner.md).
+      The later review-submission slice also passed the full local workspace
+      gates on 2026-08-01; see Session 10 in the plan log and the new tester
+      report.
 - [ ] All core web routes use real typed APIs and recovery states.
-- [ ] API matrix and cookie/CSRF/CORS invariants pass positive and negative tests.
+- [x] API matrix and cookie/CSRF/CORS invariants pass positive and negative tests.
 - [ ] Stitch direction is reproduced without copying generated runtime code.
 - [ ] Responsive, keyboard, screen-reader and CJK checks pass.
-- [ ] Focused commits and browser tests are green.
+- [x] Focused commits and browser tests are green.

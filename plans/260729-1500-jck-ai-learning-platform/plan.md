@@ -121,6 +121,16 @@ gate riêng.
 - Session 9 (2026-08-01): `c42898c` added strict conversation/turn UUIDs and
   lifecycle states to the AI contract, freezing the idempotency identifiers for
   durable route work.
+- Session 10 (2026-08-01): `e963fa5`, `ebf9235`, `4a67846`, `da59161`, and
+  `c5262c7` landed the learning database boundary, transaction executor,
+  review submission route, production-login SQL, and active learner-role gate.
+  `c91bb61`, `a1fb8f4`, `da31848`, and `70ba319` then removed the revocation
+  deadlock, added a two-connection regression, enforced the production
+  login/TLS/pool budget, narrowed SQLSTATE mapping, and made runtime-mode
+  validation fail closed. Validation now includes pgTAP 42/42, local
+  role/provisioning probes, the lock-order regression, and the later full
+  workspace pass: 420 tests with 1 intentional skip, plus
+  lint/typecheck/build/audit green.
 - The approved plan is executing. Deploy, purchase, real secrets and store
   publication still require their named authority.
 
