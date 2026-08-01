@@ -14,6 +14,7 @@ type EnvironmentSource = Readonly<Record<string, string | undefined>>;
 
 const productionLoginName = 'ideogram_learning_web_login';
 const productionSslModes = new Set(['require', 'verify-ca', 'verify-full']);
+const supportedNodeEnvironments = new Set(['development', 'production', 'test']);
 
 const isDedicatedProductionLogin = (username: string): boolean =>
   username === productionLoginName || username.startsWith(`${productionLoginName}.`);
@@ -87,10 +88,15 @@ export const readLearningDatabaseConfiguration = (
     );
   }
 
-  const production = (environment.NODE_ENV?.trim() || 'production') === 'production';
+  const nodeEnvironment = environment.NODE_ENV?.trim() || 'production';
+  if (!supportedNodeEnvironments.has(nodeEnvironment)) {
+    throw new LearningDatabaseConfigurationError(
+      'NODE_ENV must be development, production, or test for the learning database runtime.',
+    );
+  }
 
   return {
-    connectionString: parseConnectionString(connectionString, production),
+    connectionString: parseConnectionString(connectionString, nodeEnvironment === 'production'),
     maxConnections: parseMaxConnections(environment.LEARNING_DATABASE_POOL_MAX),
   };
 };

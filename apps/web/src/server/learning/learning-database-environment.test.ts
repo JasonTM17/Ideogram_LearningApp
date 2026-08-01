@@ -82,6 +82,15 @@ describe('learning database environment', () => {
     ).toThrow(LearningDatabaseConfigurationError);
   });
 
+  it('rejects an unknown runtime mode instead of disabling production safeguards', () => {
+    expect(() =>
+      readLearningDatabaseConfiguration({
+        LEARNING_DATABASE_URL: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+        NODE_ENV: 'staging',
+      }),
+    ).toThrow(LearningDatabaseConfigurationError);
+  });
+
   it('does not include connection credentials in validation errors', () => {
     const sensitiveMarker = 'must-not-appear';
 
