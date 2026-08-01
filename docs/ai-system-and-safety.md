@@ -57,7 +57,11 @@ on a lesson: only a future server-owned retrieval context may add published less
 content after provenance `ai_provider_processing_allowed` and enrollment checks.
 Deletion freeze acquires the same per-learner lifecycle lock used by AI
 reservations, so the account cannot transition into purge while a reservation
-transaction is committing.
+transaction is committing. The lock is released before the network request, so a
+provider call that has already started is not cancelled retroactively by a later
+freeze; the application does not persist its result after a fenced transition.
+If product policy requires zero external processing after freeze, add a provider
+cancellation/state-fence contract before enabling that policy.
 
 ## Release blockers
 

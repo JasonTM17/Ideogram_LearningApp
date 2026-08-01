@@ -54,7 +54,10 @@ describes their current lifecycle posture.
 - The AI hardening migration acquires the same advisory lifecycle lock (`7210`)
   when a deletion request freezes an account. Executor-facing AI transitions are
   lease-token guarded; stale provider completions cannot overwrite a reclaimed
-  attempt.
+  attempt. The lock covers reservation transactions only: a DeepSeek request
+  already in flight is not cancelled retroactively by a later freeze, and its
+  response is fenced from persistence. Zero post-freeze provider processing would
+  require an explicit cancellation/state-fence policy.
 - `service_role` is the only runtime allowed to score placements or purge learning data; learner writes flow through the executor boundary.
 
 ## Open questions
