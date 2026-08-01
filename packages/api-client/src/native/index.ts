@@ -1,4 +1,6 @@
 export * from './native-api-errors';
+export { validateNativeApiOrigin } from './native-api-origin';
+export type { NativeApiOriginOptions } from './native-api-origin';
 export {
   DEFAULT_NATIVE_API_REQUEST_TIMEOUT_MS,
   createNativeApiClient,
