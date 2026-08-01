@@ -95,6 +95,13 @@ gate riêng.
   session epochs. Mobile unit coverage is 60 tests; typecheck, lint, and Expo
   Doctor 20/20 pass. Native sign-in/callback, claimed HTTPS links, root wiring,
   and account-switch request cancellation remain pending.
+- Session 5 (2026-08-01): Phase 5 native auth UI and route guard shipped in
+  `3b08b3a`, `cd2d26e`, `52220fa`, `a014795`, and `fc4417e`. Stitch design
+  `999b28cb9c894ea38b83a8780405e1a7` informed the warm native palette and
+  passwordless screens; export QA verified labelled input, disabled CTA, and
+  invalid-email feedback. Mobile typecheck/lint/build and 84 tests pass.
+  Claimed production HTTPS links, physical-device auth, learner API wiring,
+  offline support, and account-switch cancellation remain pending.
 - The approved plan is executing. Deploy, purchase, real secrets and store
   publication still require their named authority.
 

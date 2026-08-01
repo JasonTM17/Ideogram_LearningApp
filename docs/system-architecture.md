@@ -70,12 +70,14 @@ Identity and privacy are modeled as a database-first boundary:
 
 - Supabase Auth proves identity and owns the invite-only email OTP, callback, and local sign-out flow
 - The web route client uses `@supabase/ssr` to manage PKCE callback exchange and hardened session cookies
-- The native foundation uses a publishable Supabase client with chunked Expo
+- Native authentication uses a publishable Supabase client with chunked Expo
   SecureStore persistence, installation-bound reinstall cleanup, a PKCE shadow
   registry, explicit AppState refresh control, and a user-bound session epoch.
-  Native callback UI, claimed HTTPS link handling, state/nonce exchange, root
-  wiring, and the abort coordinator remain a later slice and are not yet a
-  released authentication flow.
+  Its sign-in/callback UI stores a one-use state/nonce transaction, accepts
+  only a code plus exact PKCE flow ID, and gates learner navigation until the
+  native session is hydrated. Claimed HTTPS universal/app-link association,
+  real-device validation, and request cancellation on account switch remain
+  release work.
 - OTP throttling combines provider controls with a bounded in-process hashed
   limiter; proxy-IP buckets are opt-in behind trusted ingress, and production
   horizontal scale still requires a distributed limiter

@@ -54,11 +54,23 @@ Phase 7 owns SQLite sync/media queues; Phase 6 owns AI feature implementation.
   mutation queues/reconciliation.
 
 Foundation progress note: the mobile repo already has the SecureStore +
-installation-bound session storage foundation, the PKCE shadow registry,
-native Supabase auth options, the AppState refresh controller, and the
-session-epoch primitives. What remains in this phase is the native callback UI,
-claimed HTTPS links, state/nonce exchange, root auth-provider wiring, and the
-abort coordinator.
+installation-bound session storage foundation, PKCE shadow registry, native
+Supabase auth options, AppState refresh controller, session-epoch primitives,
+sign-in/callback UI, state/nonce exchange, and root learner-route guards. What
+remains in this phase is the claimed HTTPS association, real-device auth smoke
+tests, learner API integration, offline work, and the abort coordinator.
+
+## Native auth design evidence
+
+![Stitch native sign-in design](./design/stitch-native-sign-in/design.png)
+
+![Native sign-in runtime QA](./design/native-sign-in-web-qa.png)
+
+- Stitch screen: `999b28cb9c894ea38b83a8780405e1a7`; one credit consumed from
+  the project quota on 2026-08-01.
+- The runtime QA captures the actual Expo web export. It verifies visual
+  hierarchy, disabled CTA, labelled email input, and invalid-email feedback;
+  it is not a substitute for iOS/Android device testing.
 
 ## Implementation steps
 

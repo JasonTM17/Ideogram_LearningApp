@@ -5,7 +5,7 @@ Ideogram Learning is a Vietnamese-first language learning platform for Japanese-
 ## Current foundation
 
 - Web: Next.js App Router shell in `apps/web` with public landing, sign-in, callback, and protected learner pages
-- Mobile: Expo shell in `apps/mobile`
+- Mobile: Expo shell in `apps/mobile` with protected session hydration, native email-link sign-in/callback screens, and an internal learner shell
 - Worker: Node worker stub in `apps/worker`
 - Shared packages: `packages/contracts`, `packages/design-tokens`, `packages/config`, `packages/testing`, `packages/auth`, `packages/api-client`, `packages/learning-engine`
 - Implemented API routes: `GET /api/v1/health`, `GET /api/v1/learning/catalog`, `POST /api/v1/auth/email-otp`, `GET /auth/callback`, `POST /api/v1/auth/sign-out`
@@ -66,6 +66,9 @@ pnpm supabase:stop
 
 - Copy `.env.example` to a local ignored env file before running secret-backed features.
 - `DEEPSEEK_API_KEY` is server-only and must never be placed in `NEXT_PUBLIC_*` or `EXPO_PUBLIC_*`.
+- `EXPO_PUBLIC_AUTH_CALLBACK_URL` is optional only in native development, where
+  `ideogram-learning://auth/callback` is the fallback. A production mobile
+  build must supply one exact claimed HTTPS Universal Link / App Link callback.
 - `APP_ORIGIN` must exactly match the origin opened in the browser; local Supabase
   and the example config use `http://127.0.0.1:3000`.
 - Keep `TRUST_PROXY_IP_HEADERS=false` unless a trusted ingress overwrites

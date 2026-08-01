@@ -86,7 +86,7 @@ Gói ngôn ngữ → mục tiêu (JLPT/giao tiếp) → cấp độ → lộ tr�
 | Feedback | `success`, `warning`, `danger`, `info`, cùng `on-*` | luôn đi kèm icon/text, không chỉ màu |
 | Learning | `mastery-growing`, `mastery-secure`, `review-due`, `ai-context` | trạng thái học; không dùng như thương hiệu hay gamification |
 
-- Light: canvas `#F8FAFC`, surface `#FFFFFF`, text-primary `#0F172A`, action-primary `#1E40AF`, action-secondary `#0F766E`, accent ấm `#C2410C`. Dark: canvas `#0B1220`, surface `#111827`, text-primary `#F1F5F9`, action-primary `#60A5FA`, action-secondary `#2DD4BF`, accent `#F59E0B`. Dark là palette riêng, không đảo màu; kiểm tra từng cặp `text/on-*` đạt WCAG AA.
+- Web baseline: canvas `#F8FAFC`, surface `#FFFFFF`, text-primary `#0F172A`, action-primary `#1E40AF`, action-secondary `#0F766E`, accent ấm `#C2410C`. Native uses the Stitch-aligned warm editorial variant: light canvas `#FCFAF7`, ink `#211A16`, vermilion action `#B9382E`; dark canvas `#161210`, ink `#FFF8F4`, action `#FF8A72`. Dark là palette riêng, không đảo màu; kiểm tra từng cặp `text/on-*` đạt WCAG AA.
 - Spacing 4/8pt; radius nhỏ 8–12 cho control/surface, không “pillow” hay shadow mềm quá mức. Elevation chỉ cho menu, sheet, dialog. Icon vector cùng hệ, 20/24/28 theo token, stroke nhất quán; không emoji cấu trúc.
 
 ### Typography CJK + tiếng Việt
@@ -118,6 +118,19 @@ Gói ngôn ngữ → mục tiêu (JLPT/giao tiếp) → cấp độ → lộ tr�
 - Cung cấp tối thiểu các frame: mobile Hôm nay, review card, AI tutor, progress, Bạn; desktop Hôm nay, lesson, review queue, AI tutor, progress. Đính kèm annotation về back behavior, sync state, và platform-native sheet/modal.
 
 ## 10. Bàn giao thiết kế
+
+### Native auth handoff
+
+- Stitch screen `999b28cb9c894ea38b83a8780405e1a7` was generated for the Phase 5
+  native sign-in slice. Its HTML is reference-only; Expo rebuilds the hierarchy
+  with semantic React Native controls, current tokens, safe areas, dynamic
+  text, and explicit disabled/sending/error states.
+- [Exported Stitch design](../plans/260729-1500-jck-ai-learning-platform/design/stitch-native-sign-in/design.png)
+  and [runtime visual QA](../plans/260729-1500-jck-ai-learning-platform/design/native-sign-in-web-qa.png)
+  are checked-in evidence, not a claim of iOS/Android device certification.
+- The auth screen has one task: request an invite-only email link. It avoids
+  social login, uses 48dp controls, and says neither that an account exists nor
+  that a link was definitely delivered.
 
 - Repo đã có mười export Stitch được kiểm chứng tại
   [`assets/designs/stitch/`](../assets/designs/stitch/): năm màn mobile

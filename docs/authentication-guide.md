@@ -56,9 +56,17 @@ The native foundation follows a separate runtime boundary:
    stops the SDK refresh ticker from AppState, while the session store exposes
    a user-bound `sessionEpoch`
    and initial anonymous hydration state for later native API guards.
-4. Native callback UI, claimed HTTPS universal/app links, state/nonce
-   exchange, one-use code exchange, root auth-provider wiring, and the abort
-   coordinator are still pending; the custom scheme remains development-only.
+4. The native sign-in screen uses direct PKCE OTP with `shouldCreateUser: false`.
+   It normalizes email, keeps ambiguous 400/422 responses non-enumerating, and
+   stores a one-use state/nonce transaction in installation-bound SecureStore
+   before requesting the link.
+5. The callback screen accepts only an exact configured callback base plus an
+   authorization code, Supabase PKCE flow ID, and unique state/nonce values.
+   It rejects bearer tokens, wrong origins, duplicates, expired/replayed state,
+   and exchanges the code with its exact flow ID.
+6. Root navigation hydrates a native session before exposing learner routes:
+   anonymous users receive sign-in/callback routes, authenticated users receive
+   the learner shell, and the AppState refresh lifecycle is disposed on teardown.
 
 ## Guardrails
 
@@ -92,23 +100,22 @@ The native foundation follows a separate runtime boundary:
   distributed limiter before widening access.
 - `TRUST_PROXY_IP_HEADERS` defaults to `false`. Enable it only when ingress
   strips client-supplied proxy headers and writes its own values.
-- Native SecureStore persistence is implemented as a foundation, but the app
-  still needs a production HTTPS universal/app-link configuration plus the
-  callback UI and state/nonce exchange. The current custom-scheme fallback is
-  only a development escape hatch.
-- Native callback URLs must never carry access, refresh, or ID tokens. The
-  pending native callback slice must accept only a one-use authorization code
-  bound to the app-owned state/nonce transaction and Supabase PKCE flow ID.
+- Native production builds require `EXPO_PUBLIC_AUTH_CALLBACK_URL` to be an
+  exact claimed HTTPS universal/app link ending in `/auth/callback`; it may not
+  contain credentials, a query, or a fragment. The
+  `ideogram-learning://auth/callback` scheme is development-only.
+- Native callback URLs never carry access, refresh, or ID tokens. The callback
+  accepts only a one-use authorization code bound to the app-owned state/nonce
+  transaction and the exact Supabase PKCE flow ID.
 - `private.session_claim_matches(subject_id, candidate_session_id)` only checks
   the current JWT claims against the subject. It does not prove session
   revocation state.
 
 ## Not implemented yet
 
-- Native sign-in UI, callback parsing, and production deep-link callback
-  deployment
-- Root auth-provider wiring and an in-flight cancellation coordinator for
-  logout/account switch
+- Claimed production HTTPS Universal Link / App Link association and device
+  validation for the selected domain
+- An in-flight cancellation coordinator for logout/account switch
 - Authoritative session revocation checks for sensitive server actions
 - Any additional auth provider beyond the current invite-only email OTP flow
 - An app-owned OIDC/nonce adapter if the generic `packages/auth` contract path
