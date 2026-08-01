@@ -6,6 +6,7 @@ import {
   tutorTurnResponseSchema,
   tutorTurnReceiptSchema,
   tutorTurnUsageSchema,
+  serializeTutorTurnForIdempotency,
 } from './tutor-contract';
 
 describe('Vietnamese tutor contracts', () => {
@@ -77,6 +78,23 @@ describe('Vietnamese tutor contracts', () => {
         usage: { completionTokens: 2, promptTokens: 3, totalTokens: 5 },
       }),
     ).toMatchObject({ state: 'completed' });
+  });
+
+  it('serializes idempotency fields in a stable order', () => {
+    expect(
+      serializeTutorTurnForIdempotency({
+        conversationId: '123e4567-e89b-42d3-a456-426614174000',
+        learnerPreference: {
+          explanationDepth: 'standard',
+          preferredLanguageCode: 'ja',
+          preferredObjectiveKey: 'communication',
+          tone: 'encouraging',
+        },
+        message: 'Giải thích.',
+        targetLevelCode: 'N5',
+        turnId: '123e4567-e89b-42d3-a456-426614174001',
+      }),
+    ).toContain('"conversationId":"123e4567-e89b-42d3-a456-426614174000"');
   });
 
   it('requires stable turn and conversation identities for an idempotent API turn', () => {

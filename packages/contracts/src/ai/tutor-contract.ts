@@ -97,3 +97,16 @@ export type TutorTurnRequest = z.infer<typeof tutorTurnRequestSchema>;
 export type TutorTurnResponse = z.infer<typeof tutorTurnResponseSchema>;
 export type TutorTurnReceipt = z.infer<typeof tutorTurnReceiptSchema>;
 export type TutorTurnUsage = z.infer<typeof tutorTurnUsageSchema>;
+
+/**
+ * Stable field order for the server-side SHA-256 idempotency hash. Keep this
+ * serializer free of UI-only fields so web and native transports can share it.
+ */
+export const serializeTutorTurnForIdempotency = (request: TutorTurnRequest): string =>
+  JSON.stringify({
+    conversationId: request.conversationId,
+    learnerPreference: request.learnerPreference,
+    message: request.message,
+    targetLevelCode: request.targetLevelCode,
+    turnId: request.turnId,
+  });
