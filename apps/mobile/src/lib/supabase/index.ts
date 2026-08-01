@@ -1,6 +1,7 @@
 export { startExpoAuthRefreshLifecycle } from './expo-auth-refresh-lifecycle';
 export { NativeAuthRefreshController } from './native-auth-refresh-controller';
 export { bindNativeSessionStore } from './native-session-store-binding';
+export { NativeSessionRequestScope } from './native-session-request-scope';
 export { createNativeSupabaseAuthOptions } from './native-supabase-auth-options';
 export { getNativeSupabaseClient } from './native-supabase-client';
 export {

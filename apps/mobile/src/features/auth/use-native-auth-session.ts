@@ -5,21 +5,33 @@ import {
   bindNativeSessionStore,
   getNativeSupabaseClient,
   NativeSessionStore,
+  NativeSessionRequestScope,
   startExpoAuthRefreshLifecycle,
 } from '../../lib/supabase';
 
+import type { NativeSessionSnapshot } from '../../lib/supabase';
+
 export interface NativeAuthSessionState {
+  getRequestSignal: () => AbortSignal;
+  sessionProvider: () => Promise<Readonly<NativeSessionSnapshot> | null>;
   hasSession: boolean;
   isHydrating: boolean;
 }
 
-const webPreviewState: NativeAuthSessionState = {
+const webPreviewState = {
   hasSession: false,
   isHydrating: false,
 };
 
 export const useNativeAuthSession = (): NativeAuthSessionState => {
-  const [state, setState] = useState<NativeAuthSessionState>(() =>
+  const [sessionStore] = useState(() => new NativeSessionStore());
+  const [inactiveSignal] = useState(() => {
+    const controller = new AbortController();
+    controller.abort();
+    return controller.signal;
+  });
+  const [requestScope, setRequestScope] = useState<NativeSessionRequestScope | null>(null);
+  const [state, setState] = useState(() =>
     Platform.OS === 'web' ? webPreviewState : { hasSession: false, isHydrating: true },
   );
 
@@ -29,16 +41,19 @@ export const useNativeAuthSession = (): NativeAuthSessionState => {
     }
 
     let isCurrent = true;
+    const nextRequestScope = new NativeSessionRequestScope();
+    setRequestScope(nextRequestScope);
     let disposeRefreshLifecycle: (() => Promise<void>) | undefined;
     let unsubscribe: (() => void) | undefined;
     let unbindSessionStore: (() => void) | undefined;
 
     try {
       const client = getNativeSupabaseClient();
-      const sessionStore = new NativeSessionStore();
       const syncSnapshot = () => {
         if (isCurrent && sessionStore.isInitialized()) {
-          setState({ hasSession: sessionStore.getSnapshot() !== null, isHydrating: false });
+          const session = sessionStore.getSnapshot();
+          nextRequestScope.update(session);
+          setState({ hasSession: session !== null, isHydrating: false });
         }
       };
 
@@ -64,6 +79,7 @@ export const useNativeAuthSession = (): NativeAuthSessionState => {
           }
         });
     } catch {
+      nextRequestScope.update(null);
       setState({ hasSession: false, isHydrating: false });
     }
 
@@ -72,8 +88,13 @@ export const useNativeAuthSession = (): NativeAuthSessionState => {
       unsubscribe?.();
       unbindSessionStore?.();
       void disposeRefreshLifecycle?.().catch(() => undefined);
+      nextRequestScope.dispose();
     };
-  }, []);
+  }, [sessionStore]);
 
-  return state;
+  return {
+    ...state,
+    getRequestSignal: () => requestScope?.getSignal() ?? inactiveSignal,
+    sessionProvider: sessionStore.createSessionProvider(),
+  };
 };
