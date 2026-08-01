@@ -12,12 +12,12 @@ import { nativeDesignTokens as rootNativeDesignTokens } from '../index';
 
 describe('native themes', () => {
   it('exposes the approved semantic palette in light and dark modes', () => {
-    expect(nativeLightTheme.color.actionPrimary).toBe('#1E40AF');
-    expect(nativeDarkTheme.color.actionPrimary).toBe('#60A5FA');
+    expect(nativeLightTheme.color.actionPrimary).toBe('#B9382E');
+    expect(nativeDarkTheme.color.actionPrimary).toBe('#FF8A72');
     expect(nativeLightTheme.color.onActionPrimary).toBe('#FFFFFF');
-    expect(nativeDarkTheme.color.onActionPrimary).toBe('#0B1220');
-    expect(nativeDarkTheme.color.surfaceRaised).toBe('#172033');
-    expect(nativeDarkTheme.color.aiContext).toBe('#60A5FA');
+    expect(nativeDarkTheme.color.onActionPrimary).toBe('#241310');
+    expect(nativeDarkTheme.color.surfaceRaised).toBe('#2B211E');
+    expect(nativeDarkTheme.color.aiContext).toBe('#FF8A72');
     expect(Object.keys(nativeLightTheme.color)).toEqual(Object.keys(nativeDarkTheme.color));
   });
 
