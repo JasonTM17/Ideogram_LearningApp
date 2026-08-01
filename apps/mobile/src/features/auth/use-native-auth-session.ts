@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Platform } from 'react-native';
 
 import {
@@ -92,9 +92,14 @@ export const useManagedNativeAuthSession = (): NativeAuthSessionState => {
     };
   }, [sessionStore]);
 
-  return {
-    ...state,
-    getRequestSignal: () => requestScope?.getSignal() ?? inactiveSignal,
-    sessionProvider: sessionStore.createSessionProvider(),
-  };
+  const getRequestSignal = useCallback(
+    () => requestScope?.getSignal() ?? inactiveSignal,
+    [inactiveSignal, requestScope],
+  );
+  const sessionProvider = useMemo(() => sessionStore.createSessionProvider(), [sessionStore]);
+
+  return useMemo(
+    () => ({ ...state, getRequestSignal, sessionProvider }),
+    [getRequestSignal, sessionProvider, state],
+  );
 };
