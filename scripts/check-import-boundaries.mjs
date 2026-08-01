@@ -52,6 +52,11 @@ const probes = [
     shouldReject: true,
   },
   {
+    filePath: 'apps/mobile/src/ai-server-package-probe.ts',
+    importSource: "import '@ideogram/ai';",
+    shouldReject: true,
+  },
+  {
     filePath: 'apps/mobile/src/cross-app-probe.ts',
     importSource: "import '../../worker/src/worker-health';",
     shouldReject: true,
@@ -191,6 +196,11 @@ const probes = [
     filePath: 'apps/web/src/app/client-next-navigation-probe.tsx',
     importSource: "'use client'; import 'next/navigation'; export const ClientProbe = null;",
     shouldReject: false,
+  },
+  {
+    filePath: 'apps/web/src/app/client-ai-server-package-probe.tsx',
+    importSource: "'use client'; import '@ideogram/ai'; export const ClientProbe = null;",
+    shouldReject: true,
   },
   {
     filePath: 'apps/web/components/client-node-built-in-probe.tsx',

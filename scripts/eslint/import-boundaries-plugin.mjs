@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const appsRoot = path.join(projectRoot, 'apps');
 const mobileRoot = path.join(appsRoot, 'mobile');
+const serverOnlyPackageNames = new Set(['@ideogram/ai']);
 const nodeBuiltIns = new Set(builtinModules.map((moduleName) => moduleName.replace(/^node:/, '')));
 const appPackageNames = new Set(
   readdirSync(appsRoot, { withFileTypes: true })
@@ -76,6 +77,7 @@ const restrictionReason = (target, filename, specifier) => {
   if (target === 'mobile') {
     if (
       specifier === 'server-only' ||
+      [...serverOnlyPackageNames].some((packageName) => isPackageImport(specifier, packageName)) ||
       isPackageImport(specifier, 'next') ||
       (importedAppPackage && importedAppPackage !== '@ideogram/mobile')
     ) {
@@ -92,7 +94,10 @@ const restrictionReason = (target, filename, specifier) => {
   }
 
   if (target === 'shared') {
-    if (isSharedPlatformImport(specifier)) {
+    if (
+      isSharedPlatformImport(specifier) ||
+      [...serverOnlyPackageNames].some((packageName) => isPackageImport(specifier, packageName))
+    ) {
       return 'shared packages must remain platform-neutral';
     }
 
@@ -108,6 +113,7 @@ const restrictionReason = (target, filename, specifier) => {
   if (target === 'web-client') {
     if (
       specifier === 'server-only' ||
+      [...serverOnlyPackageNames].some((packageName) => isPackageImport(specifier, packageName)) ||
       isNextServerOnlyImport(specifier) ||
       (importedAppPackage && importedAppPackage !== '@ideogram/web')
     ) {
