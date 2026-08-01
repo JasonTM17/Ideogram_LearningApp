@@ -80,3 +80,50 @@ jobs:
 
       - name: Audit production dependencies
         run: pnpm audit --prod --audit-level=high
+
+  database:
+    name: Database mutation regressions
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+        with:
+          version: 11.0.9
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Start local Supabase
+        run: pnpm supabase:start
+
+      - name: Load local database test URL
+        shell: bash
+        run: |
+          pnpm exec supabase status -o json > supabase-status.json
+          database_url="$(node -e "const value = JSON.parse(require('node:fs').readFileSync('supabase-status.json', 'utf8')).DB_URL; if (!value) throw new Error('Supabase status did not return DB_URL.'); process.stdout.write(value);")"
+          echo "::add-mask::$database_url"
+          echo "SUPABASE_DB_URL=$database_url" >> "$GITHUB_ENV"
+          rm supabase-status.json
+
+      - name: Run pgTAP review submission tests
+        run: pnpm exec supabase test db supabase/tests/review_idempotency_test.sql
+
+      - name: Run review authorization lock-order regression
+        run: pnpm test:db:review-lock-order
+
+      - name: Stop local Supabase
+        if: always()
+        run: pnpm supabase:stop
