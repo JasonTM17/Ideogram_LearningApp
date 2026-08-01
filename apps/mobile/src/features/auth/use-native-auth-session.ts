@@ -23,7 +23,7 @@ const webPreviewState = {
   isHydrating: false,
 };
 
-export const useNativeAuthSession = (): NativeAuthSessionState => {
+export const useManagedNativeAuthSession = (): NativeAuthSessionState => {
   const [sessionStore] = useState(() => new NativeSessionStore());
   const [inactiveSignal] = useState(() => {
     const controller = new AbortController();

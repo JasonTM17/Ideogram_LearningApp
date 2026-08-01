@@ -5,7 +5,10 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { useMobileTheme } from '../src/components/use-mobile-theme';
 import { getNativeAuthRoutePolicy } from '../src/features/auth/native-auth-route-policy';
-import { useNativeAuthSession } from '../src/features/auth/use-native-auth-session';
+import {
+  NativeAuthSessionProvider,
+  useNativeAuthSession,
+} from '../src/features/auth/native-auth-session-provider';
 
 export const unstable_settings = {
   initialRouteName: 'auth/initializing',
@@ -13,13 +16,63 @@ export const unstable_settings = {
 
 export default function RootLayout() {
   const { isDark, theme } = useMobileTheme();
+
+  return (
+    <SafeAreaProvider>
+      <ThemeProvider value={createNavigationTheme(isDark, theme)}>
+        <StatusBar style={isDark ? 'light' : 'dark'} />
+        <NativeAuthSessionProvider>
+          <RootNavigator canvasColor={theme.color.canvas} />
+        </NativeAuthSessionProvider>
+      </ThemeProvider>
+    </SafeAreaProvider>
+  );
+}
+
+const RootNavigator = ({ canvasColor }: { canvasColor: string }) => {
   const authSession = useNativeAuthSession();
   const routePolicy = getNativeAuthRoutePolicy({
     ...authSession,
     isWeb: Platform.OS === 'web',
   });
+
+  return (
+    <Stack
+      screenOptions={{
+        animation: 'slide_from_right',
+        contentStyle: { backgroundColor: canvasColor },
+        headerShown: false,
+      }}
+    >
+      <Stack.Protected guard={routePolicy.canAccessInitializing}>
+        <Stack.Screen name="auth/initializing" options={{ animation: 'fade' }} />
+      </Stack.Protected>
+      <Stack.Protected guard={routePolicy.canAccessAuthentication}>
+        <Stack.Screen name="sign-in" options={{ animation: 'fade', presentation: 'card' }} />
+      </Stack.Protected>
+      <Stack.Protected guard={routePolicy.canAccessLearner}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen
+          name="lessons/[lessonId]"
+          options={{ gestureEnabled: true, presentation: 'card' }}
+        />
+        <Stack.Screen
+          name="review/session"
+          options={{ gestureEnabled: true, presentation: 'card' }}
+        />
+      </Stack.Protected>
+      <Stack.Screen name="auth/callback" options={{ animation: 'fade', presentation: 'card' }} />
+    </Stack>
+  );
+};
+
+const createNavigationTheme = (
+  isDark: boolean,
+  theme: ReturnType<typeof useMobileTheme>['theme'],
+) => {
   const baseTheme = isDark ? DarkTheme : DefaultTheme;
-  const navigationTheme = {
+
+  return {
     ...baseTheme,
     colors: {
       ...baseTheme.colors,
@@ -31,41 +84,4 @@ export default function RootLayout() {
       text: theme.color.textPrimary,
     },
   };
-
-  return (
-    <SafeAreaProvider>
-      <ThemeProvider value={navigationTheme}>
-        <StatusBar style={isDark ? 'light' : 'dark'} />
-        <Stack
-          screenOptions={{
-            animation: 'slide_from_right',
-            contentStyle: { backgroundColor: theme.color.canvas },
-            headerShown: false,
-          }}
-        >
-          <Stack.Protected guard={routePolicy.canAccessInitializing}>
-            <Stack.Screen name="auth/initializing" options={{ animation: 'fade' }} />
-          </Stack.Protected>
-          <Stack.Protected guard={routePolicy.canAccessAuthentication}>
-            <Stack.Screen name="sign-in" options={{ animation: 'fade', presentation: 'card' }} />
-          </Stack.Protected>
-          <Stack.Protected guard={routePolicy.canAccessLearner}>
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen
-              name="lessons/[lessonId]"
-              options={{ gestureEnabled: true, presentation: 'card' }}
-            />
-            <Stack.Screen
-              name="review/session"
-              options={{ gestureEnabled: true, presentation: 'card' }}
-            />
-          </Stack.Protected>
-          <Stack.Screen
-            name="auth/callback"
-            options={{ animation: 'fade', presentation: 'card' }}
-          />
-        </Stack>
-      </ThemeProvider>
-    </SafeAreaProvider>
-  );
-}
+};
