@@ -1,6 +1,19 @@
 begin;
 
-select plan(41);
+select plan(42);
+
+select ok(
+  position(
+    'from public.account_roles' in pg_get_functiondef(
+      'private.require_active_learning_account(uuid)'::regprocedure
+    )
+  ) < position(
+    'from public.profiles' in pg_get_functiondef(
+      'private.require_active_learning_account(uuid)'::regprocedure
+    )
+  ),
+  'learning authorization locks learner role before profile to match revocation order'
+);
 
 select ok(
   position(

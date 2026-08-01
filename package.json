@@ -21,6 +21,7 @@
     "supabase:start": "supabase start",
     "supabase:status": "supabase status",
     "supabase:stop": "supabase stop",
+    "test:db:review-lock-order": "node apps/web/scripts/review-role-lock-order.integration.mjs",
     "test": "pnpm test:root && turbo run test",
     "test:root": "vitest run scripts/environment-contract.test.mjs scripts/content-lint.test.mjs scripts/content-lint-security.test.mjs",
     "typecheck": "turbo run typecheck"
