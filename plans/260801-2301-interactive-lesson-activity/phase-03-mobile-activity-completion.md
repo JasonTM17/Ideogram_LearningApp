@@ -1,10 +1,11 @@
 ---
 phase: 3
-title: "Mobile activity completion"
-status: pending
+title: Mobile activity completion
+status: in-progress
 priority: P1
-effort: "5h"
-dependencies: [1]
+effort: 5h
+dependencies:
+  - 1
 ---
 
 # Phase 3: Mobile activity completion

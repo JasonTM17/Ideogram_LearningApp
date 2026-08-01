@@ -1,7 +1,7 @@
 ---
 phase: 2
 title: Web activity completion
-status: in-progress
+status: completed
 priority: P1
 effort: 5h
 dependencies:
