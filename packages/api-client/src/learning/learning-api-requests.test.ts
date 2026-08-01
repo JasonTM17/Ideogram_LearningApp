@@ -5,6 +5,7 @@ import {
   createLearnerCatalogApiRequest,
   createReviewSubmissionApiRequest,
   parseLearnerCatalogApiResponse,
+  parseReviewSubmissionApiResponse,
   plannedLearningApiRoutes,
 } from './learning-api-requests';
 
@@ -107,6 +108,31 @@ describe('learning API requests', () => {
       method: 'POST',
       path: plannedLearningApiRoutes.reviewSubmit,
     });
+  });
+
+  it('parses the review receipt envelope returned by the web API', () => {
+    const reviewReceipt = {
+      eventId: '123e4567-e89b-42d3-a456-426614174004',
+      idempotentReplay: false,
+      schedule: {
+        algorithmVersion: 'srs-v1' as const,
+        dueAt: '2026-07-30T00:00:00.000Z',
+        easeFactor: 2.55,
+        intervalMinutes: 1440,
+        lapseCount: 0,
+        repetitionCount: 1,
+        state: 'review' as const,
+      },
+      serverReceiptSequence: 8,
+    };
+
+    expect(parseReviewSubmissionApiResponse(reviewReceipt)).toEqual(reviewReceipt);
+    expect(() =>
+      parseReviewSubmissionApiResponse({
+        ...reviewReceipt,
+        schedule: { ...reviewReceipt.schedule, intervalMinutes: 0 },
+      }),
+    ).toThrow();
   });
 
   it('fails closed when a device sequence is not a positive integer', () => {

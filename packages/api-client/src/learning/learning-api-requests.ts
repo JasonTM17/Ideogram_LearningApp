@@ -2,12 +2,14 @@ import {
   activityAttemptInputSchema,
   learnerCatalogResponseSchema,
   reviewSubmissionInputSchema,
+  reviewSubmissionReceiptSchema,
 } from '@ideogram/contracts';
 
 import type {
   ActivityAttemptInput,
   LearnerCatalogResponse,
   ReviewSubmissionInput,
+  ReviewSubmissionReceipt,
 } from '@ideogram/contracts';
 
 export const plannedLearningApiRoutes = {
@@ -62,3 +64,6 @@ export const createReviewSubmissionApiRequest = (input: unknown): ReviewSubmissi
 
 export const parseLearnerCatalogApiResponse = (input: unknown): LearnerCatalogResponse =>
   learnerCatalogResponseSchema.parse(input);
+
+export const parseReviewSubmissionApiResponse = (input: unknown): ReviewSubmissionReceipt =>
+  reviewSubmissionReceiptSchema.parse(input);
