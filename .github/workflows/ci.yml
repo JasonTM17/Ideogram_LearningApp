@@ -118,7 +118,10 @@ jobs:
           echo "SUPABASE_DB_URL=$database_url" >> "$GITHUB_ENV"
           rm supabase-status.json
 
-      - name: Run pgTAP review submission tests
+      - name: Run pgTAP learning access-boundary tests
+        run: pnpm exec supabase test db supabase/tests/learning_rls_test.sql
+
+      - name: Run pgTAP learner write tests
         run: pnpm exec supabase test db supabase/tests/review_idempotency_test.sql
 
       - name: Run review authorization lock-order regression

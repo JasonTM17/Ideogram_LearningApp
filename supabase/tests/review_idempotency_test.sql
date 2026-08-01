@@ -1,6 +1,6 @@
 begin;
 
-select plan(42);
+select plan(49);
 
 select ok(
   position(
@@ -26,6 +26,18 @@ select ok(
     )
   ),
   'activity event time is captured after its per-learner serialization lock'
+);
+select ok(
+  position(
+    'pg_advisory_xact_lock' in pg_get_functiondef(
+      'private.evaluate_and_submit_activity_attempt(uuid,text,text,uuid,bigint,uuid,text,jsonb,timestamp with time zone,text)'::regprocedure
+    )
+  ) < position(
+    'from public.learner_activity_attempts' in pg_get_functiondef(
+      'private.evaluate_and_submit_activity_attempt(uuid,text,text,uuid,bigint,uuid,text,jsonb,timestamp with time zone,text)'::regprocedure
+    )
+  ),
+  'activity evaluation serializes each learner before reading an idempotency record'
 );
 select ok(
   position(
@@ -228,6 +240,52 @@ values (
         }
       }
     ]
+  }'::jsonb,
+  'published',
+  '21000000-0000-0000-0000-000000000001'
+);
+
+insert into public.activities (
+  activity_id,
+  content_release_id,
+  lesson_id,
+  sequence,
+  activity_type,
+  target_script,
+  title_vietnamese,
+  instructions_vietnamese,
+  estimated_minutes,
+  payload,
+  status,
+  provenance_id
+)
+values (
+  'ja-n5-review-u1-l1-listening',
+  'ja-n5-review-test-v1',
+  'ja-n5-review-u1-l1',
+  2,
+  'listening',
+  'kana_kanji',
+  'Nghe ôn tập',
+  'Chọn đáp án nghe đúng.',
+  5,
+  '{
+    "audioAssetPath": "media/ja/n5/review.mp3",
+    "audioProductionStatus": "recorded",
+    "audioSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "questions": [
+      {
+        "questionId": "review-listening-q1",
+        "prompt": "Người nói chào thế nào?",
+        "explanationVietnamese": "Lời chào buổi sáng là おはよう。",
+        "options": [
+          { "optionId": "ohayo", "text": "おはよう", "isCorrect": true },
+          { "optionId": "konbanwa", "text": "こんばんは", "isCorrect": false }
+        ]
+      }
+    ],
+    "transcript": "おはよう。",
+    "transcriptVietnamese": "Chào buổi sáng."
   }'::jsonb,
   'published',
   '21000000-0000-0000-0000-000000000001'
@@ -681,7 +739,7 @@ select throws_ok(
 select is(
   (
     select progress_state
-    from private.submit_activity_attempt(
+    from private.evaluate_and_submit_activity_attempt(
       '11000000-0000-0000-0000-000000000001',
       'ja-n5-review-test-v1',
       'ja-n5-review-u1-l1-vocab',
@@ -689,15 +747,12 @@ select is(
       1,
       '71000000-0000-0000-0000-000000000001',
       repeat('a', 64),
-      '{"answer":"私"}'::jsonb,
-      'completed',
-      1.0,
-      'activity-evaluator-v1',
+      '{"acknowledged":true}'::jsonb,
       '2026-07-29T12:05:00.000Z'::timestamptz,
       'Asia/Ho_Chi_Minh'
     )
   ),
-  'completed',
+  'in_progress',
   'a completed activity transaction recomputes lesson progress'
 );
 select is(
@@ -707,13 +762,13 @@ select is(
     where user_id = '11000000-0000-0000-0000-000000000001'
       and lesson_id = 'ja-n5-review-u1-l1'
   ),
-  '1/1',
-  'one completed activity yields full lesson progress for the one-activity lesson'
+  '1/2',
+  'one completed activity yields partial progress for the two-activity lesson'
 );
 select ok(
   (
     select idempotent_replay
-    from private.submit_activity_attempt(
+    from private.evaluate_and_submit_activity_attempt(
       '11000000-0000-0000-0000-000000000001',
       'ja-n5-review-test-v1',
       'ja-n5-review-u1-l1-vocab',
@@ -721,10 +776,7 @@ select ok(
       1,
       '71000000-0000-0000-0000-000000000001',
       repeat('a', 64),
-      '{"answer":"私"}'::jsonb,
-      'completed',
-      1.0,
-      'activity-evaluator-v1',
+      '{"acknowledged":true}'::jsonb,
       '2026-07-29T12:05:00.000Z'::timestamptz,
       'Asia/Ho_Chi_Minh'
     )
@@ -847,6 +899,115 @@ select throws_ok(
   'an activity key cannot reuse an unchanged hash with another evaluator version'
 );
 
+set local role app_learning_api_executor;
+select *
+from private.evaluate_and_submit_activity_attempt(
+  '11000000-0000-0000-0000-000000000001',
+  'ja-n5-review-test-v1',
+  'ja-n5-review-u1-l1-listening',
+  '81000000-0000-0000-0000-000000000001',
+  3,
+  '71000000-0000-0000-0000-000000000003',
+  repeat('e', 64),
+  '{"answers":{"review-listening-q1":"ohayo"}}'::jsonb,
+  '2026-07-29T12:10:00.000Z'::timestamptz,
+  'Asia/Ho_Chi_Minh'
+);
+reset role;
+select is(
+  (
+    select completion_state
+    from public.learner_activity_attempts
+    where idempotency_key = '71000000-0000-0000-0000-000000000003'
+  ),
+  'completed',
+  'the executor can submit a server-evaluated listening answer'
+);
+select is(
+  (
+    select score::text
+    from public.learner_activity_attempts
+    where idempotency_key = '71000000-0000-0000-0000-000000000003'
+  ),
+  '1.0000',
+  'the listening score is derived from the private answer key'
+);
+select is(
+  (
+    select progress_state || ':' || completed_activity_count || '/' || total_activity_count
+    from private.evaluate_and_submit_activity_attempt(
+      '11000000-0000-0000-0000-000000000001',
+      'ja-n5-review-test-v1',
+      'ja-n5-review-u1-l1-vocab',
+      '81000000-0000-0000-0000-000000000001',
+      1,
+      '71000000-0000-0000-0000-000000000001',
+      repeat('a', 64),
+      '{"acknowledged":true}'::jsonb,
+      '2026-07-29T12:05:00.000Z'::timestamptz,
+      'Asia/Ho_Chi_Minh'
+    )
+  ),
+  'in_progress:1/2',
+  'an activity retry preserves the original receipt after later lesson progress'
+);
+set local role app_learning_api_executor;
+do $invalid_listening_answer$
+begin
+  perform *
+  from private.evaluate_and_submit_activity_attempt(
+    '11000000-0000-0000-0000-000000000001',
+    'ja-n5-review-test-v1',
+    'ja-n5-review-u1-l1-listening',
+    '81000000-0000-0000-0000-000000000001',
+    4,
+    '71000000-0000-0000-0000-000000000004',
+    repeat('f', 64),
+    '{"answers":{"review-listening-q1":"forged-option"}}'::jsonb,
+    '2026-07-29T12:10:00.000Z'::timestamptz,
+    'Asia/Ho_Chi_Minh'
+  );
+exception
+  when sqlstate '22023' then
+    perform set_config('test.invalid_listening_answer_rejected', 'true', true);
+end;
+$invalid_listening_answer$;
+reset role;
+select is(
+  current_setting('test.invalid_listening_answer_rejected', true),
+  'true',
+  'the evaluator rejects an option that is not part of the private question'
+);
+
+update public.learner_enrollments
+set enrollment_state = 'paused'
+where user_id = '11000000-0000-0000-0000-000000000001'
+  and content_release_id = 'ja-n5-review-test-v1';
+select throws_ok(
+  $$
+    select *
+    from private.evaluate_and_submit_activity_attempt(
+      '11000000-0000-0000-0000-000000000001',
+      'ja-n5-review-test-v1',
+      'ja-n5-review-u1-l1-vocab',
+      '81000000-0000-0000-0000-000000000001',
+      1,
+      '71000000-0000-0000-0000-000000000001',
+      repeat('a', 64),
+      '{"acknowledged":true}'::jsonb,
+      '2026-07-29T12:05:00.000Z'::timestamptz,
+      'Asia/Ho_Chi_Minh'
+    )
+  $$,
+  '42501',
+  'Learning operations require an active enrollment for the content release.',
+  'an activity replay rechecks active enrollment before returning its receipt'
+);
+update public.learner_enrollments
+set enrollment_state = 'active'
+where user_id = '11000000-0000-0000-0000-000000000001'
+  and content_release_id = 'ja-n5-review-test-v1';
+
 select set_config('request.jwt.claim.sub', '11000000-0000-0000-0000-000000000001', true);
 set local role authenticated;
 
@@ -924,6 +1085,26 @@ select is(
   ),
   9::bigint,
   'release archival preserves immutable review history'
+);
+select throws_ok(
+  $$
+    select *
+    from private.evaluate_and_submit_activity_attempt(
+      '11000000-0000-0000-0000-000000000001',
+      'ja-n5-review-test-v1',
+      'ja-n5-review-u1-l1-vocab',
+      '81000000-0000-0000-0000-000000000001',
+      1,
+      '71000000-0000-0000-0000-000000000001',
+      repeat('a', 64),
+      '{"acknowledged":true}'::jsonb,
+      '2026-07-29T12:05:00.000Z'::timestamptz,
+      'Asia/Ho_Chi_Minh'
+    )
+  $$,
+  '42501',
+  'Learning operations require a published active content release.',
+  'an activity replay rechecks release visibility before returning its receipt'
 );
 select throws_ok(
   $$

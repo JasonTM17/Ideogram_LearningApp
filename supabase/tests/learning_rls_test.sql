@@ -1,6 +1,6 @@
 begin;
 
-select plan(25);
+select plan(27);
 
 select is(
   (
@@ -421,7 +421,7 @@ select ok(
 select ok(
   has_function_privilege(
     'app_learning_api_executor',
-    'private.submit_activity_attempt(uuid,text,text,uuid,bigint,uuid,text,jsonb,text,numeric,text,timestamp with time zone,text)',
+    'private.evaluate_and_submit_activity_attempt(uuid,text,text,uuid,bigint,uuid,text,jsonb,timestamp with time zone,text)',
     'execute'
   )
   and has_function_privilege(
@@ -429,7 +429,28 @@ select ok(
     'private.submit_review_event(uuid,uuid,uuid,uuid,bigint,text,text,timestamp with time zone,text)',
     'execute'
   ),
-  'the restricted API executor can invoke only the private learning transactions'
+  'the restricted API executor can invoke only the capability-narrow learning transactions'
+);
+select ok(
+  not has_function_privilege(
+    'app_learning_api_executor',
+    'private.submit_activity_attempt(uuid,text,text,uuid,bigint,uuid,text,jsonb,text,numeric,text,timestamp with time zone,text)',
+    'execute'
+  ),
+  'the restricted API executor cannot submit caller-supplied activity scores or completion state'
+);
+select ok(
+  not has_table_privilege(
+    'app_learning_api_executor',
+    'private.activity_attempt_receipts',
+    'select'
+  )
+  and not has_table_privilege(
+    'app_learning_api_executor',
+    'private.activity_attempt_receipts',
+    'insert'
+  ),
+  'the restricted API executor cannot read or forge immutable activity receipts'
 );
 select ok(
   not has_table_privilege(
