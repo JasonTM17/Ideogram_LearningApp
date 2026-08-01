@@ -102,7 +102,14 @@ const parseProviderResponse = async (
   response: Response,
   signal: AbortSignal,
 ): Promise<{ response: TutorTurnResponse; usage: TutorTurnUsage }> => {
-  if (!response.ok) throw new DeepSeekTutorGatewayError();
+  if (!response.ok) {
+    try {
+      await response.body?.cancel();
+    } catch {
+      // The provider error is already normalized; cleanup failure must not expose details.
+    }
+    throw new DeepSeekTutorGatewayError();
+  }
 
   const contentLength = Number(response.headers.get('content-length'));
   if (Number.isFinite(contentLength) && contentLength > maximumProviderResponseBytes) {

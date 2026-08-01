@@ -77,6 +77,25 @@ describe('DeepSeek tutor gateway', () => {
     await expect(gateway.respond(input)).rejects.toBeInstanceOf(DeepSeekTutorGatewayError);
   });
 
+  it('cancels a non-success provider body before normalizing the error', async () => {
+    let cancelled = false;
+    const stream = new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.enqueue(new TextEncoder().encode('provider failure details'));
+      },
+      cancel() {
+        cancelled = true;
+      },
+    });
+    const gateway = createDeepSeekTutorGateway({
+      configuration,
+      fetch: vi.fn().mockResolvedValue(new Response(stream, { status: 503 })),
+    });
+
+    await expect(gateway.respond(input)).rejects.toBeInstanceOf(DeepSeekTutorGatewayError);
+    expect(cancelled).toBe(true);
+  });
+
   it('rejects an oversized chunked provider body before buffering it', async () => {
     let cancelled = false;
     const stream = new ReadableStream<Uint8Array>({
