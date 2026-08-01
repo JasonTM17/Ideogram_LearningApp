@@ -44,6 +44,11 @@ export default function RootLayout() {
             name="review/session"
             options={{ gestureEnabled: true, presentation: 'card' }}
           />
+          <Stack.Screen name="sign-in" options={{ animation: 'fade', presentation: 'card' }} />
+          <Stack.Screen
+            name="auth/callback"
+            options={{ animation: 'fade', presentation: 'card' }}
+          />
         </Stack>
       </ThemeProvider>
     </SafeAreaProvider>
