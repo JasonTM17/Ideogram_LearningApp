@@ -1,6 +1,6 @@
 begin;
 
-select plan(40);
+select plan(41);
 
 select ok(
   position(
@@ -558,6 +558,32 @@ select throws_ok(
   '42501',
   'Learning operations require an active enrollment for the content release.',
   'a paused enrollment cannot mutate review state'
+);
+
+update public.account_roles
+set
+  revoked_at = clock_timestamp(),
+  revocation_reason = 'review mutation authorization regression test'
+where user_id = '11000000-0000-0000-0000-000000000002'
+  and role = 'learner';
+select throws_ok(
+  $$
+    select *
+    from private.submit_review_event(
+      '11000000-0000-0000-0000-000000000002',
+      '41000000-0000-0000-0000-000000000003',
+      '51000000-0000-0000-0000-000000000009',
+      '61000000-0000-0000-0000-000000000002',
+      2,
+      repeat('9', 64),
+      'good',
+      clock_timestamp(),
+      'Asia/Ho_Chi_Minh'
+    )
+  $$,
+  '42501',
+  'Only active learner accounts may mutate learning state.',
+  'a revoked learner role cannot mutate review state'
 );
 
 do $block$
