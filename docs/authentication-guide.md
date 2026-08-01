@@ -10,19 +10,19 @@ exist, but they are not the wired web implementation.
 
 ## Verified contracts
 
-| Contract / route           | Source                                                                      | Current purpose / status                                                                                                                                                                                                 |
-| -------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Web auth route config      | `apps/web/src/lib/supabase/auth-route-config.ts`                            | Derives the exact trusted origin and callback URL for the web auth flow                                                                                                                                                  |
-| Protected request auth     | `apps/web/src/lib/supabase/request-auth.ts`                                 | Verifies bearer or SSR cookie sessions with Supabase Auth verification                                                                                                                                                   |
-| Learner page session gate  | `apps/web/src/lib/supabase/learner-session.ts`                              | Requires a verified user, active profile, and active learner role before SSR rendering                                                                                                                                   |
-| Email OTP route            | `apps/web/src/server/auth/email-otp-route.ts`                               | Invite-only request with `shouldCreateUser: false`, safe return cookie, generic `202`                                                                                                                                    |
-| Callback route             | `apps/web/src/server/auth/callback-route.ts`                                | Browser `GET /auth/callback` PKCE exchange and safe redirect                                                                                                                                                             |
-| Sign-out route             | `apps/web/src/server/auth/sign-out-route.ts`                                | Cookie-session-only local sign-out with empty JSON body                                                                                                                                                                  |
-| Catalog route              | `apps/web/src/app/api/v1/learning/catalog/route.ts`                         | Protected learner-catalog read path                                                                                                                                                                                      |
-| Session cookies            | `packages/contracts/src/auth/auth-session.ts`                               | Hardened web cookie attributes used by the auth/session helpers                                                                                                                                                          |
-| Generic auth contracts     | `packages/auth/src/*`                                                       | Provider-agnostic PKCE, callback, nonce, and session helpers; contract-level only here                                                                                                                                   |
-| Auth API request envelopes | `packages/api-client/src/auth/auth-api-requests.ts`                         | Email OTP and sign-out request builders only; no callback builder exists                                                                                                                                                 |
-| Native Supabase foundation | `apps/mobile/src/lib/supabase/*` and `apps/mobile/src/lib/secure-session/*` | SecureStore persistence, installation-bound cleanup, PKCE shadow registry handling, native auth options, AppState refresh control, and session epochs; native callback UI and claimed HTTPS link handling remain pending |
+| Contract / route           | Source                                                                                                    | Current purpose / status                                                                                                                                                                                            |
+| -------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Web auth route config      | `apps/web/src/lib/supabase/auth-route-config.ts`                                                          | Derives the exact trusted origin and callback URL for the web auth flow                                                                                                                                             |
+| Protected request auth     | `apps/web/src/lib/supabase/request-auth.ts`                                                               | Verifies bearer or SSR cookie sessions with Supabase Auth verification                                                                                                                                              |
+| Learner page session gate  | `apps/web/src/lib/supabase/learner-session.ts`                                                            | Requires a verified user, active profile, and active learner role before SSR rendering                                                                                                                              |
+| Email OTP route            | `apps/web/src/server/auth/email-otp-route.ts`                                                             | Invite-only request with `shouldCreateUser: false`, safe return cookie, generic `202`                                                                                                                               |
+| Callback route             | `apps/web/src/server/auth/callback-route.ts`                                                              | Browser `GET /auth/callback` PKCE exchange and safe redirect                                                                                                                                                        |
+| Sign-out route             | `apps/web/src/server/auth/sign-out-route.ts`                                                              | Cookie-session-only local sign-out with empty JSON body                                                                                                                                                             |
+| Catalog route              | `apps/web/src/app/api/v1/learning/catalog/route.ts`                                                       | Protected learner-catalog read path                                                                                                                                                                                 |
+| Session cookies            | `packages/contracts/src/auth/auth-session.ts`                                                             | Hardened web cookie attributes used by the auth/session helpers                                                                                                                                                     |
+| Generic auth contracts     | `packages/auth/src/*`                                                                                     | Provider-agnostic PKCE, callback, nonce, and session helpers; contract-level only here                                                                                                                              |
+| Auth API request envelopes | `packages/api-client/src/auth/auth-api-requests.ts`                                                       | Email OTP and sign-out request builders only; no callback builder exists                                                                                                                                            |
+| Native Supabase foundation | `apps/mobile/src/lib/supabase/*`, `apps/mobile/src/lib/secure-session/*`, and `apps/mobile/src/lib/api/*` | SecureStore persistence, installation-bound cleanup, PKCE shadow registry, native sign-in/callback UI, AppState refresh, session epochs, account-switch request cancellation, and a bearer-only catalog read client |
 
 ## Allowed flow
 
@@ -67,6 +67,10 @@ The native foundation follows a separate runtime boundary:
 6. Root navigation hydrates a native session before exposing learner routes:
    anonymous users receive sign-in/callback routes, authenticated users receive
    the learner shell, and the AppState refresh lifecycle is disposed on teardown.
+7. The mobile learner catalog client validates its public API origin, sends the
+   current access token as a bearer header with cookies omitted, and aborts
+   in-flight reads when the session identity changes. The response is parsed by
+   the shared catalog contract before Today or Lesson renders it.
 
 ## Guardrails
 
@@ -107,6 +111,9 @@ The native foundation follows a separate runtime boundary:
 - Native callback URLs never carry access, refresh, or ID tokens. The callback
   accepts only a one-use authorization code bound to the app-owned state/nonce
   transaction and the exact Supabase PKCE flow ID.
+- `EXPO_PUBLIC_API_ORIGIN` contains only the public API origin: no credentials,
+  path, query, or fragment. It is HTTPS outside development; a loopback HTTP
+  exception is deliberately limited to development builds.
 - `private.session_claim_matches(subject_id, candidate_session_id)` only checks
   the current JWT claims against the subject. It does not prove session
   revocation state.
@@ -115,7 +122,6 @@ The native foundation follows a separate runtime boundary:
 
 - Claimed production HTTPS Universal Link / App Link association and device
   validation for the selected domain
-- An in-flight cancellation coordinator for logout/account switch
 - Authoritative session revocation checks for sensitive server actions
 - Any additional auth provider beyond the current invite-only email OTP flow
 - An app-owned OIDC/nonce adapter if the generic `packages/auth` contract path

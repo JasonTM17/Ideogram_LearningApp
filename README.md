@@ -5,7 +5,7 @@ Ideogram Learning is a Vietnamese-first language learning platform for Japanese-
 ## Current foundation
 
 - Web: Next.js App Router shell in `apps/web` with public landing, sign-in, callback, and protected learner pages
-- Mobile: Expo shell in `apps/mobile` with protected session hydration, native email-link sign-in/callback screens, and an internal learner shell
+- Mobile: Expo shell in `apps/mobile` with protected session hydration, native email-link sign-in/callback screens, catalog-backed Today and Lesson read views, and an internal learner shell
 - Worker: Node worker stub in `apps/worker`
 - Shared packages: `packages/contracts`, `packages/design-tokens`, `packages/config`, `packages/testing`, `packages/auth`, `packages/api-client`, `packages/learning-engine`
 - Implemented API routes: `GET /api/v1/health`, `GET /api/v1/learning/catalog`, `POST /api/v1/auth/email-otp`, `GET /auth/callback`, `POST /api/v1/auth/sign-out`
@@ -69,6 +69,10 @@ pnpm supabase:stop
 - `EXPO_PUBLIC_AUTH_CALLBACK_URL` is optional only in native development, where
   `ideogram-learning://auth/callback` is the fallback. A production mobile
   build must supply one exact claimed HTTPS Universal Link / App Link callback.
+- `EXPO_PUBLIC_API_ORIGIN` is public configuration for the mobile read client,
+  not a credential. It must be an HTTPS origin in production; development can
+  use loopback HTTP. A physical device needs a reachable HTTPS endpoint rather
+  than the device's loopback address.
 - `APP_ORIGIN` must exactly match the origin opened in the browser; local Supabase
   and the example config use `http://127.0.0.1:3000`.
 - Keep `TRUST_PROXY_IP_HEADERS=false` unless a trusted ingress overwrites
@@ -79,7 +83,7 @@ pnpm supabase:stop
 
 ## What is not implemented yet
 
-- Next.js learning mutation routes and full interactive learning flows
+- Next.js learning mutation routes and interactive activity/review flows
 - Onboarding, placement, activity submission, SRS queue UI, AI runtime, offline sync, progress write flows, and admin workflows
 - Production deployment or cloud provisioning
 - Any additional endpoint beyond the implemented health, catalog, and auth lifecycle routes

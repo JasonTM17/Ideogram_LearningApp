@@ -56,9 +56,11 @@ Phase 7 owns SQLite sync/media queues; Phase 6 owns AI feature implementation.
 Foundation progress note: the mobile repo already has the SecureStore +
 installation-bound session storage foundation, PKCE shadow registry, native
 Supabase auth options, AppState refresh controller, session-epoch primitives,
-sign-in/callback UI, state/nonce exchange, and root learner-route guards. What
-remains in this phase is the claimed HTTPS association, real-device auth smoke
-tests, learner API integration, offline work, and the abort coordinator.
+sign-in/callback UI, state/nonce exchange, root learner-route guards, and an
+account-switch abort scope. Authenticated Today and Lesson views now render
+contract-validated catalog content through a strict bearer-only native client.
+What remains in this phase is the claimed HTTPS association, real-device auth
+smoke tests, activity/review interactions, and offline work.
 
 ## Native auth design evidence
 

@@ -75,9 +75,10 @@ Identity and privacy are modeled as a database-first boundary:
   registry, explicit AppState refresh control, and a user-bound session epoch.
   Its sign-in/callback UI stores a one-use state/nonce transaction, accepts
   only a code plus exact PKCE flow ID, and gates learner navigation until the
-  native session is hydrated. Claimed HTTPS universal/app-link association,
-  real-device validation, and request cancellation on account switch remain
-  release work.
+  native session is hydrated. Its catalog read client uses a strict public API
+  origin, bearer authentication with cookies omitted, response-contract parsing,
+  and a session-identity abort scope. Claimed HTTPS universal/app-link
+  association and real-device validation remain release work.
 - OTP throttling combines provider controls with a bounded in-process hashed
   limiter; proxy-IP buckets are opt-in behind trusted ingress, and production
   horizontal scale still requires a distributed limiter

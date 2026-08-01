@@ -102,6 +102,13 @@ gate riêng.
   invalid-email feedback. Mobile typecheck/lint/build and 84 tests pass.
   Claimed production HTTPS links, physical-device auth, learner API wiring,
   offline support, and account-switch cancellation remain pending.
+- Session 6 (2026-08-01): Native catalog delivery shipped in `a71379d`,
+  `6b0bd18`, `b0a3df0`, `037a81b`, and `16f8627`: session-identity request
+  cancellation, shared auth/catalog providers, strict public API-origin
+  configuration, bearer-only catalog reads, and contract-backed Today/Lesson
+  views. Mobile tests pass 96/96 with typecheck and lint. Real-device smoke,
+  claimed production links, activity/review writes, offline, and AI remain
+  pending.
 - The approved plan is executing. Deploy, purchase, real secrets and store
   publication still require their named authority.
 

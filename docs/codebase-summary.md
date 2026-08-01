@@ -1,6 +1,6 @@
 # Codebase Summary
 
-Generated from the current workspace on 2026-07-30 after a repository pack pass.
+Updated against the current workspace on 2026-08-01 after the native catalog-read slice.
 
 ## Snapshot
 
@@ -39,8 +39,10 @@ exists as database contracts and private helpers.
 - Mobile is still an internal beta, not a released learning flow. It now has
   SecureStore + installation-bound storage, PKCE shadow registry, native
   sign-in/callback screens, state/nonce verification, session hydration route
-  guards, refresh control, and session-epoch primitives. Claimed HTTPS links,
-  real-device auth validation, and account-switch request cancellation remain
+  guards, refresh control, session-epoch primitives, and account-switch request
+  cancellation. Authenticated users read the protected catalog through the
+  shared native API client; Today and Lesson render only contract-validated
+  published content. Claimed HTTPS links and real-device auth validation remain
   pending.
 - Worker currently boots a health object and logs readiness.
 - Shared tokens are editorial and currently expose paper, ink, muted, accent, sage, card radius, control radius, and spacing steps.
@@ -69,9 +71,8 @@ exists as database contracts and private helpers.
 
 - Remaining learning mutation route handlers and full interactive learner flows
 - AI tutor, offline sync, admin workflows, and production content/audio release flows
-- Claimed HTTPS link association, real-device native auth validation,
-  in-flight cancellation on account switch, and an authoritative session
-  revocation adapter
+- Claimed HTTPS link association, real-device native auth validation, and an
+  authoritative session revocation adapter
 - Search, embeddings, and AI orchestration beyond the current contract baseline
 
 ## Evidence boundary
