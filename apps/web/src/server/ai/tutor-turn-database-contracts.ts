@@ -29,6 +29,7 @@ export const tutorTurnBeginRowSchema = z
     conversation_id: z.uuid(),
     estimated_cost_microusd: databaseInteger(10_000_000),
     idempotent_replay: z.boolean(),
+    lease_token: z.uuid(),
     prompt_tokens: nullableDatabaseInteger(1_000_000),
     response_payload: z.unknown().nullable(),
     state: tutorTurnStateSchema,
@@ -38,6 +39,7 @@ export const tutorTurnBeginRowSchema = z
   .strict();
 
 export const tutorTurnCompleteRowSchema = tutorTurnBeginRowSchema;
+export const tutorTurnReplayRowSchema = tutorTurnBeginRowSchema;
 
 export const tutorTurnFailureRowSchema = z
   .object({

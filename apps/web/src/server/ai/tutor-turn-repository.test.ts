@@ -7,6 +7,7 @@ import {
   beginTutorTurn,
   completeTutorTurn,
   failTutorTurn,
+  readTutorTurnReplay,
   type TutorTurnExecutor,
 } from './tutor-turn-repository';
 
@@ -42,12 +43,14 @@ const response = {
   sourceBoundaryVietnamese: 'Chưa có nguồn bài học.',
 };
 const usage = { completionTokens: 20, promptTokens: 30, totalTokens: 50 } as const;
+const leaseToken = '123e4567-e89b-42d3-a456-426614174003';
 
 const pendingRow = {
   completion_tokens: null,
   conversation_id: request.conversationId,
   estimated_cost_microusd: '0',
   idempotent_replay: false,
+  lease_token: leaseToken,
   prompt_tokens: null,
   response_payload: null,
   state: 'pending',
@@ -88,6 +91,7 @@ describe('AI tutor turn repository', () => {
     ).resolves.toEqual({
       conversationId: request.conversationId,
       idempotentReplay: false,
+      leaseToken,
       state: 'pending',
       turnId: request.turnId,
     });
@@ -96,12 +100,13 @@ describe('AI tutor turn repository', () => {
     expect(call).toBeDefined();
     if (!call) throw new Error('Expected begin SQL to run.');
     const [sql, values] = call;
-    expect(sql).toContain('private.begin_ai_tutor_turn');
+    expect(sql).toContain('private.begin_ai_tutor_turn_v2');
     expect(values).toEqual([
       userId,
       request.conversationId,
       request.turnId,
       payloadHash,
+      serializeTutorTurnForIdempotency(request),
       serializeTutorTurnForIdempotency(request),
       'ja',
       'N5',
@@ -130,6 +135,22 @@ describe('AI tutor turn repository', () => {
     });
   });
 
+  it('reads a completed replay without requiring a new-turn reservation', async () => {
+    const query = createQuery([{ ...completedRow, idempotent_replay: true }]);
+
+    await expect(
+      readTutorTurnReplay({ request, userId }, createExecutor(query)),
+    ).resolves.toMatchObject({ idempotentReplay: true, state: 'completed', usage });
+
+    expect(query.mock.calls[0]?.[0]).toContain('private.read_ai_tutor_turn_replay');
+    expect(query.mock.calls[0]?.[1]).toEqual([
+      userId,
+      request.conversationId,
+      request.turnId,
+      payloadHash,
+    ]);
+  });
+
   it('finalizes provider usage and cost through the second short SQL boundary', async () => {
     const query = createQuery([completedRow]);
 
@@ -139,6 +160,7 @@ describe('AI tutor turn repository', () => {
           configurationVersion: 'deepseek-v4-flash:high:disabled',
           conversationId: request.conversationId,
           estimatedCostMicrousd: 123,
+          leaseToken,
           providerModel: 'deepseek-v4-flash',
           request,
           response,
@@ -157,11 +179,12 @@ describe('AI tutor turn repository', () => {
     expect(completeCall).toBeDefined();
     if (!completeCall) throw new Error('Expected complete SQL to run.');
     const [sql, values] = completeCall;
-    expect(sql).toContain('private.complete_ai_tutor_turn');
+    expect(sql).toContain('private.complete_ai_tutor_turn_v2');
     expect(values).toEqual([
       userId,
       request.conversationId,
       request.turnId,
+      leaseToken,
       payloadHash,
       JSON.stringify(response),
       30,
@@ -188,6 +211,7 @@ describe('AI tutor turn repository', () => {
         {
           conversationId: request.conversationId,
           errorCode: 'provider_timeout',
+          leaseToken,
           request,
           userId,
         },
@@ -198,6 +222,7 @@ describe('AI tutor turn repository', () => {
       userId,
       request.conversationId,
       request.turnId,
+      leaseToken,
       payloadHash,
       'provider_timeout',
     ]);

@@ -1,6 +1,6 @@
 begin;
 
-select plan(24);
+select plan(29);
 
 select ok(
   (select relrowsecurity from pg_class where oid = 'private.ai_tutor_conversations'::regclass),
@@ -17,10 +17,10 @@ select ok(
 select ok(
   has_function_privilege(
     'app_learning_api_executor',
-    'private.begin_ai_tutor_turn(uuid,uuid,uuid,text,jsonb,text,text,text,text,text,text,timestamptz)',
+    'private.begin_ai_tutor_turn_v2(uuid,uuid,uuid,text,jsonb,text,text,text,text,text,text,text)',
     'execute'
   ),
-  'the narrow begin transition is executable by the app learning executor'
+  'the guarded begin transition is executable by the app learning executor'
 );
 select ok(
   not has_table_privilege('authenticated', 'private.ai_tutor_turns', 'select'),
@@ -35,6 +35,16 @@ select ok(
       and not tgisinternal
   ),
   'learning data purge installs the AI cleanup trigger'
+);
+select ok(
+  exists (
+    select 1
+    from pg_trigger
+    where tgrelid = 'public.data_subject_requests'::regclass
+      and tgname = 'ai_tutor_lifecycle_lock_before_deletion_freeze'
+      and not tgisinternal
+  ),
+  'deletion freeze shares the AI lifecycle lock namespace'
 );
 
 grant execute on function private.begin_ai_tutor_turn(
@@ -212,6 +222,55 @@ select ok(
   ),
   'an exact retry returns the stored receipt without a new reservation'
 );
+insert into public.consent_records (
+  user_id,
+  policy_key,
+  policy_version,
+  policy_document_digest,
+  decision,
+  source,
+  idempotency_key
+)
+values (
+  '12000000-0000-0000-0000-000000000001',
+  'ai-tutor-provider-processing-v1',
+  'v1',
+  repeat('e', 64),
+  'revoked',
+  'web',
+  '32000000-0000-0000-0000-000000000006'
+);
+select is(
+  (
+    select state
+    from private.read_ai_tutor_turn_replay(
+      '12000000-0000-0000-0000-000000000001',
+      '22000000-0000-0000-0000-000000000001',
+      '32000000-0000-0000-0000-000000000001',
+      repeat('a', 64)
+    )
+  ),
+  'completed',
+  'exact completed replay remains available after consent is revoked'
+);
+insert into public.consent_records (
+  user_id,
+  policy_key,
+  policy_version,
+  policy_document_digest,
+  decision,
+  source,
+  idempotency_key
+)
+values (
+  '12000000-0000-0000-0000-000000000001',
+  'ai-tutor-provider-processing-v1',
+  'v1',
+  repeat('0', 64),
+  'accepted',
+  'web',
+  '32000000-0000-0000-0000-000000000008'
+);
 select throws_ok(
   $$
     select *
@@ -272,6 +331,126 @@ select is(
   ),
   500000::bigint,
   'stale reclaim releases the previous reservation before reserving again'
+);
+
+insert into public.consent_records (
+  user_id,
+  policy_key,
+  policy_version,
+  policy_document_digest,
+  decision,
+  source,
+  idempotency_key
+)
+values (
+  '12000000-0000-0000-0000-000000000001',
+  'ai-tutor-provider-processing-v1',
+  'v1',
+  repeat('f', 64),
+  'accepted',
+  'web',
+  '32000000-0000-0000-0000-000000000007'
+);
+create temp table ai_tutor_lease_race_tokens (
+  old_token uuid,
+  new_token uuid
+) on commit drop;
+do $function$
+declare
+  canonical_payload constant text := '{"message":"lease race","targetLevelCode":"N5"}';
+  first_token uuid;
+  second_token uuid;
+  first_result record;
+  second_result record;
+begin
+  select *
+  into first_result
+  from private.begin_ai_tutor_turn_v2(
+    '12000000-0000-0000-0000-000000000001',
+    '22000000-0000-0000-0000-000000000006',
+    '32000000-0000-0000-0000-000000000006',
+    pg_catalog.encode(extensions.digest(pg_catalog.convert_to(canonical_payload, 'UTF8'), 'sha256'), 'hex'),
+    canonical_payload::jsonb,
+    canonical_payload,
+    'ja', 'N5', 'communication', 'standard', 'encouraging',
+    'ai-tutor-provider-processing-v1'
+  );
+  first_token := first_result.lease_token;
+
+  update private.ai_tutor_turns
+  set lease_expires_at = clock_timestamp() - interval '1 second'
+  where turn_id = '32000000-0000-0000-0000-000000000006';
+
+  select *
+  into second_result
+  from private.begin_ai_tutor_turn_v2(
+    '12000000-0000-0000-0000-000000000001',
+    '22000000-0000-0000-0000-000000000006',
+    '32000000-0000-0000-0000-000000000006',
+    pg_catalog.encode(extensions.digest(pg_catalog.convert_to(canonical_payload, 'UTF8'), 'sha256'), 'hex'),
+    canonical_payload::jsonb,
+    canonical_payload,
+    'ja', 'N5', 'communication', 'standard', 'encouraging',
+    'ai-tutor-provider-processing-v1'
+  );
+  second_token := second_result.lease_token;
+
+  insert into ai_tutor_lease_race_tokens values (first_token, second_token);
+end;
+$function$;
+select throws_ok(
+  $$
+    select *
+    from private.complete_ai_tutor_turn_v2(
+      '12000000-0000-0000-0000-000000000001',
+      '22000000-0000-0000-0000-000000000006',
+      '32000000-0000-0000-0000-000000000006',
+      (select old_token from ai_tutor_lease_race_tokens),
+      pg_catalog.encode(extensions.digest(pg_catalog.convert_to('{"message":"lease race","targetLevelCode":"N5"}', 'UTF8'), 'sha256'), 'hex'),
+      null::jsonb, null, null, null, null, 'deepseek-v4-flash', 'deepseek-v4-flash:high:disabled'
+    )
+  $$,
+  '22023',
+  'Tutor turn lease is stale.',
+  'a superseded provider attempt cannot finalize a reclaimed turn'
+);
+select is(
+  (
+    select state
+    from private.complete_ai_tutor_turn_v2(
+      '12000000-0000-0000-0000-000000000001',
+      '22000000-0000-0000-0000-000000000006',
+      '32000000-0000-0000-0000-000000000006',
+      (select new_token from ai_tutor_lease_race_tokens),
+      pg_catalog.encode(extensions.digest(pg_catalog.convert_to('{"message":"lease race","targetLevelCode":"N5"}', 'UTF8'), 'sha256'), 'hex'),
+      jsonb_build_object(
+        'assessmentVietnamese', 'Đúng hướng.',
+        'explanationVietnamese', 'Giải thích.',
+        'example', 'これは本です。',
+        'frequentVietnameseMistake', 'Không có.',
+        'nextExerciseVietnamese', 'Đặt câu.',
+        'sourceBoundaryVietnamese', 'Không có nguồn bài học.'
+      ),
+      10, 5, 15, 100000, 'deepseek-v4-flash', 'deepseek-v4-flash:high:disabled'
+    )
+  ),
+  'completed',
+  'the current lease can finalize after a stale attempt is rejected'
+);
+select throws_ok(
+  $$
+    select *
+    from private.begin_ai_tutor_turn_v2(
+      '12000000-0000-0000-0000-000000000001',
+      '22000000-0000-0000-0000-000000000007',
+      '32000000-0000-0000-0000-000000000007',
+      repeat('0', 64), '{}', '{}', 'ja', 'N5', 'communication', 'standard', 'encouraging',
+      'ai-tutor-provider-processing-v1'
+    )
+  $$,
+  '22023',
+  'Tutor request input is invalid.',
+  'the database recomputes the canonical request hash'
 );
 
 insert into public.consent_records (

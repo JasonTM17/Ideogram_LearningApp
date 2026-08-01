@@ -16,6 +16,7 @@ import {
   tutorTurnBeginRowSchema,
   tutorTurnFailureRowSchema,
   tutorTurnCompleteRowSchema,
+  tutorTurnReplayRowSchema,
 } from './tutor-turn-database-contracts';
 
 import type { TutorTurnResponse, TutorTurnUsage } from '@ideogram/contracts';
@@ -26,6 +27,7 @@ interface TutorTurnBeginDatabaseRow extends QueryResultRow {
   conversation_id: unknown;
   estimated_cost_microusd: unknown;
   idempotent_replay: unknown;
+  lease_token: unknown;
   prompt_tokens: unknown;
   response_payload: unknown;
   state: unknown;
@@ -43,6 +45,7 @@ interface TutorTurnFailureDatabaseRow extends QueryResultRow {
 export interface TutorTurnReservation {
   conversationId: string;
   idempotentReplay: boolean;
+  leaseToken: string;
   receipt?: TutorTurnReceipt;
   state: 'pending' | 'streaming' | 'completed' | 'cancelled' | 'failed';
   turnId: string;
@@ -58,6 +61,7 @@ export interface CompleteTutorTurnOptions {
   configurationVersion: string;
   conversationId: string;
   estimatedCostMicrousd: number;
+  leaseToken: string;
   providerModel: string;
   request: TutorTurnRequest;
   response: TutorTurnResponse;
@@ -68,6 +72,7 @@ export interface CompleteTutorTurnOptions {
 export interface FailTutorTurnOptions {
   conversationId: string;
   errorCode: string;
+  leaseToken: string;
   request: TutorTurnRequest;
   userId: string;
 }
@@ -82,15 +87,31 @@ const beginTutorTurnSql = `
     conversation_id,
     estimated_cost_microusd,
     idempotent_replay,
+    lease_token,
     prompt_tokens,
     response_payload,
     state,
     total_tokens,
     turn_id
-  from private.begin_ai_tutor_turn(
-    $1::uuid, $2::uuid, $3::uuid, $4::text, $5::jsonb,
-    $6::text, $7::text, $8::text, $9::text, $10::text, $11::text
+  from private.begin_ai_tutor_turn_v2(
+    $1::uuid, $2::uuid, $3::uuid, $4::text, $5::jsonb, $6::text,
+    $7::text, $8::text, $9::text, $10::text, $11::text, $12::text
   )
+`;
+
+const replayTutorTurnSql = `
+  select
+    completion_tokens,
+    conversation_id,
+    estimated_cost_microusd,
+    idempotent_replay,
+    lease_token,
+    prompt_tokens,
+    response_payload,
+    state,
+    total_tokens,
+    turn_id
+  from private.read_ai_tutor_turn_replay($1::uuid, $2::uuid, $3::uuid, $4::text)
 `;
 
 const completeTutorTurnSql = `
@@ -99,21 +120,22 @@ const completeTutorTurnSql = `
     conversation_id,
     estimated_cost_microusd,
     idempotent_replay,
+    lease_token,
     prompt_tokens,
     response_payload,
     state,
     total_tokens,
     turn_id
-  from private.complete_ai_tutor_turn(
-    $1::uuid, $2::uuid, $3::uuid, $4::text, $5::jsonb,
-    $6::bigint, $7::bigint, $8::bigint, $9::bigint,
-    $10::text, $11::text
+  from private.complete_ai_tutor_turn_v2(
+    $1::uuid, $2::uuid, $3::uuid, $4::uuid, $5::text, $6::jsonb,
+    $7::bigint, $8::bigint, $9::bigint, $10::bigint,
+    $11::text, $12::text
   )
 `;
 
 const failTutorTurnSql = `
   select conversation_id, idempotent_replay, state, turn_id
-  from private.fail_ai_tutor_turn($1::uuid, $2::uuid, $3::uuid, $4::text, $5::text)
+  from private.fail_ai_tutor_turn_v2($1::uuid, $2::uuid, $3::uuid, $4::uuid, $5::text, $6::text)
 `;
 
 const hashTutorTurnRequest = (request: TutorTurnRequest): string =>
@@ -138,6 +160,7 @@ const toReservation = (
   const reservation: TutorTurnReservation = {
     conversationId: row.conversation_id,
     idempotentReplay: row.idempotent_replay,
+    leaseToken: row.lease_token,
     state: row.state,
     turnId: row.turn_id,
   };
@@ -209,6 +232,7 @@ export const beginTutorTurn = async (
         parsedRequest.turnId,
         payloadHash,
         serializeTutorTurnForIdempotency(parsedRequest),
+        serializeTutorTurnForIdempotency(parsedRequest),
         parsedRequest.learnerPreference.preferredLanguageCode,
         parsedRequest.targetLevelCode,
         parsedRequest.learnerPreference.preferredObjectiveKey,
@@ -225,11 +249,37 @@ export const beginTutorTurn = async (
   }
 };
 
+export const readTutorTurnReplay = async (
+  { request, userId }: { request: TutorTurnRequest; userId: string },
+  execute: TutorTurnExecutor = withLearningExecutorTransaction,
+): Promise<TutorTurnReceipt | undefined> => {
+  const parsedRequest = tutorTurnRequestSchema.parse(request);
+  const payloadHash = hashTutorTurnRequest(parsedRequest);
+
+  try {
+    return await execute(async (client) => {
+      const result = await client.query<TutorTurnBeginDatabaseRow>(replayTutorTurnSql, [
+        userId,
+        parsedRequest.conversationId,
+        parsedRequest.turnId,
+        payloadHash,
+      ]);
+      if (result.rows.length === 0) return undefined;
+
+      const row = tutorTurnReplayRowSchema.parse(parseOneRow(result.rows, result.rowCount));
+      return tutorTurnReceiptSchema.parse(parseTutorTurnReceipt(row));
+    });
+  } catch (error) {
+    return mapTutorTurnDatabaseError(error);
+  }
+};
+
 export const completeTutorTurn = async (
   {
     configurationVersion,
     conversationId,
     estimatedCostMicrousd,
+    leaseToken,
     providerModel,
     request,
     response,
@@ -247,6 +297,7 @@ export const completeTutorTurn = async (
         userId,
         conversationId,
         parsedRequest.turnId,
+        leaseToken,
         payloadHash,
         JSON.stringify(response),
         usage.promptTokens,
@@ -265,7 +316,7 @@ export const completeTutorTurn = async (
 };
 
 export const failTutorTurn = async (
-  { conversationId, errorCode, request, userId }: FailTutorTurnOptions,
+  { conversationId, errorCode, leaseToken, request, userId }: FailTutorTurnOptions,
   execute: TutorTurnExecutor = withLearningExecutorTransaction,
 ): Promise<void> => {
   const parsedRequest = tutorTurnRequestSchema.parse(request);
@@ -277,6 +328,7 @@ export const failTutorTurn = async (
         userId,
         conversationId,
         parsedRequest.turnId,
+        leaseToken,
         payloadHash,
         errorCode,
       ]);

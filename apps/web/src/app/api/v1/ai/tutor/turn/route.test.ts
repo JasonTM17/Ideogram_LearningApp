@@ -73,6 +73,7 @@ const authenticatedRequest = (): AuthenticatedSupabaseRequest => ({
 const pendingReservation = {
   conversationId: tutorRequest.conversationId,
   idempotentReplay: false,
+  leaseToken: '123e4567-e89b-42d3-a456-426614174003',
   state: 'pending' as const,
   turnId: tutorRequest.turnId,
 };
@@ -90,6 +91,7 @@ const baseDependencies = (
   createGateway: () => createGateway({ response: tutorResponse, usage }),
   failTurn: async () => undefined,
   readBody: async () => tutorRequest,
+  readReplay: async () => undefined,
   readConfiguration: () => configuration,
   readTrustedOrigin: () => trustedOrigin,
   ...overrides,
@@ -121,13 +123,13 @@ describe('POST /api/v1/ai/tutor/turn', () => {
     });
     expect(gateway.respond).toHaveBeenCalledWith(tutorRequest, {
       signal: request.signal,
-      userId,
     });
     expect(calculateCost).toHaveBeenCalledWith({ configuration, usage });
     expect(completeTurn).toHaveBeenCalledWith({
       configurationVersion: 'deepseek-v4-flash:high:disabled',
       conversationId: tutorRequest.conversationId,
       estimatedCostMicrousd: 123,
+      leaseToken: pendingReservation.leaseToken,
       providerModel: 'deepseek-v4-flash',
       request: tutorRequest,
       response: tutorResponse,
@@ -140,23 +142,40 @@ describe('POST /api/v1/ai/tutor/turn', () => {
 
   it('returns a completed replay without calling DeepSeek again', async () => {
     const gateway = createGateway({ response: tutorResponse, usage });
-    const beginTurn = vi.fn(async () => ({
-      ...pendingReservation,
-      idempotentReplay: true,
-      receipt,
-      state: 'completed' as const,
-    }));
+    const beginTurn = vi.fn(async () => pendingReservation);
+    const readReplay = vi.fn(async () => ({ ...receipt, idempotentReplay: true }));
     const completeTurn = vi.fn(async () => receipt);
     const route = createPostTutorTurnRoute(
-      baseDependencies({ beginTurn, completeTurn, createGateway: () => gateway }),
+      baseDependencies({ beginTurn, completeTurn, createGateway: () => gateway, readReplay }),
     );
 
     const response = await route(request);
 
     expect(response.status).toBe(200);
-    await expect(response.json()).resolves.toEqual(receipt);
+    await expect(response.json()).resolves.toEqual({ ...receipt, idempotentReplay: true });
     expect(gateway.respond).not.toHaveBeenCalled();
+    expect(readReplay).toHaveBeenCalledWith({ request: tutorRequest, userId });
+    expect(beginTurn).not.toHaveBeenCalled();
     expect(completeTurn).not.toHaveBeenCalled();
+  });
+
+  it('returns an exact replay even when new provider configuration is disabled', async () => {
+    const readReplay = vi.fn(async () => ({ ...receipt, idempotentReplay: true }));
+    const readConfiguration = vi.fn(() => {
+      throw new ApiHttpError({
+        code: 'UNAVAILABLE',
+        message: 'Gia sư AI chưa được bật cho môi trường này.',
+        status: 503,
+      });
+    });
+    const route = createPostTutorTurnRoute(baseDependencies({ readConfiguration, readReplay }));
+
+    const response = await route(request);
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toEqual({ ...receipt, idempotentReplay: true });
+    expect(readReplay).toHaveBeenCalledOnce();
+    expect(readConfiguration).not.toHaveBeenCalled();
   });
 
   it('rejects malformed input before a reservation or provider call', async () => {
@@ -219,6 +238,7 @@ describe('POST /api/v1/ai/tutor/turn', () => {
     expect(failTurn).toHaveBeenCalledWith({
       conversationId: pendingReservation.conversationId,
       errorCode: 'provider_unavailable',
+      leaseToken: pendingReservation.leaseToken,
       request: tutorRequest,
       userId,
     });

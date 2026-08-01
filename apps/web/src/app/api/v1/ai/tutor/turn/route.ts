@@ -24,6 +24,7 @@ import {
   beginTutorTurn,
   completeTutorTurn,
   failTutorTurn,
+  readTutorTurnReplay,
   type TutorTurnReservation,
 } from '@/server/ai/tutor-turn-repository';
 
@@ -37,6 +38,7 @@ export interface TutorTurnRouteDependencies {
   createGateway: (configuration: DeepSeekTutorConfiguration) => DeepSeekTutorGateway;
   failTurn: typeof failTutorTurn;
   readBody: typeof readJsonMutationBody;
+  readReplay: typeof readTutorTurnReplay;
   readConfiguration: () => DeepSeekTutorConfiguration;
   readTrustedOrigin: () => string;
 }
@@ -95,6 +97,7 @@ const defaultDependencies: TutorTurnRouteDependencies = {
     }),
   failTurn: failTutorTurn,
   readBody: readJsonMutationBody,
+  readReplay: readTutorTurnReplay,
   readConfiguration: readTutorConfiguration,
   readTrustedOrigin,
 };
@@ -115,6 +118,7 @@ const markTutorTurnFailed = async (
   dependencies: TutorTurnRouteDependencies,
   reservation: TutorTurnReservation,
   request: TutorTurnRequest,
+  requestId: string,
   userId: string,
   errorCode: string,
 ): Promise<void> => {
@@ -122,11 +126,16 @@ const markTutorTurnFailed = async (
     await dependencies.failTurn({
       conversationId: reservation.conversationId,
       errorCode,
+      leaseToken: reservation.leaseToken,
       request,
       userId,
     });
   } catch {
-    // The original provider/HTTP error is safer than exposing a second failure.
+    console.error('AI tutor failure transition was not persisted.', {
+      errorCode,
+      requestId,
+      turnId: request.turnId,
+    });
   }
 };
 
@@ -147,6 +156,14 @@ export const createPostTutorTurnRoute =
           trustedOrigin: dependencies.readTrustedOrigin(),
         }),
       );
+      const replay = await dependencies.readReplay({ request: parsedRequest, userId });
+      if (replay) {
+        return jsonNoStore(replay, {
+          headers: authenticatedRequest.responseHeaders,
+          requestId,
+        });
+      }
+
       const configuration = dependencies.readConfiguration();
 
       reservation = await dependencies.beginTurn({
@@ -175,13 +192,13 @@ export const createPostTutorTurnRoute =
       try {
         providerResult = await gateway.respond(parsedRequest, {
           signal: request.signal,
-          userId,
         });
       } catch (error) {
         await markTutorTurnFailed(
           dependencies,
           reservation,
           parsedRequest,
+          requestId,
           userId,
           classifyProviderFailure(error),
         );
@@ -196,6 +213,7 @@ export const createPostTutorTurnRoute =
             configuration,
             usage: providerResult.usage,
           }),
+          leaseToken: reservation.leaseToken,
           providerModel: configuration.model,
           request: parsedRequest,
           response: providerResult.response,
@@ -212,6 +230,7 @@ export const createPostTutorTurnRoute =
           dependencies,
           reservation,
           parsedRequest,
+          requestId,
           userId,
           'completion_failed',
         );
