@@ -107,5 +107,6 @@ pnpm supabase:stop
 - [Project roadmap](docs/project-roadmap.md)
 - [Content governance](docs/content-governance.md)
 - [Learning engine contract](docs/learning-engine-contract.md)
+- [AI system and safety](docs/ai-system-and-safety.md)
 - [Review and sync contract](docs/review-and-sync-contract.md)
 - [Foundation engineering journal](docs/journals/2026-07-29-foundation-safety-rails.md)

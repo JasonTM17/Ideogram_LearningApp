@@ -113,6 +113,11 @@ gate riêng.
   shipped in `6445490` and `5d57ff0`: published tracks surface actual
   language/level releases, and retry/unmount/account-switch all abort stale
   catalog transport. Mobile tests pass 100/100 with typecheck and lint.
+- Session 8 (2026-08-01): AI foundation shipped in `c872714`, `bd0138e`, and
+  `e0b4324`: strict Vietnamese tutor contracts, server-only DeepSeek V4 Flash
+  configuration, JSON output validation, and bounded provider cancellation.
+  Public chat remains blocked on the Phase 6 durable-turn, rate-limit,
+  retrieval, and evaluation gates.
 - The approved plan is executing. Deploy, purchase, real secrets and store
   publication still require their named authority.
 
