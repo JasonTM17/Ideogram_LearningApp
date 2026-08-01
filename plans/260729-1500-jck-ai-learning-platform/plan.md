@@ -63,7 +63,7 @@ gate riêng.
 | 2 | [Identity Data and Security](./phase-02-identity-data-and-security.md) | In progress |
 | 3 | [Learning Domain and Content](./phase-03-learning-domain-and-content.md) | In progress |
 | 4 | [Web Learning Experience](./phase-04-web-learning-experience.md) | In progress |
-| 5 | [Mobile Learning Experience](./phase-05-mobile-learning-experience.md) | Pending |
+| 5 | [Mobile Learning Experience](./phase-05-mobile-learning-experience.md) | In progress |
 | 6 | [AI Tutor and Personalization](./phase-06-ai-tutor-and-personalization.md) | Pending |
 | 7 | [Media Offline and Sync](./phase-07-media-offline-and-sync.md) | Pending |
 | 8 | [Admin Quality and Observability](./phase-08-admin-quality-and-observability.md) | Pending |
@@ -89,6 +89,12 @@ gate riêng.
   [production review](./reports/reviewer-20260730-web-auth-learner.md),
   [security scan](./reports/security-scan-20260730-web-auth.md), and
   [docs sync](./reports/docs-manager-20260730-web-auth-learner-sync.md).
+- Session 4 (2026-08-01): Native authentication foundation shipped in
+  `608773a` and `4830c8b`: installation-bound SecureStore, PKCE orphan-slot
+  cleanup, strict public-client configuration, AppState refresh control, and
+  session epochs. Mobile unit coverage is 60 tests; typecheck, lint, and Expo
+  Doctor 20/20 pass. Native sign-in/callback, claimed HTTPS links, root wiring,
+  and account-switch request cancellation remain pending.
 - The approved plan is executing. Deploy, purchase, real secrets and store
   publication still require their named authority.
 

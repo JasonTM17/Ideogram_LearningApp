@@ -1,7 +1,7 @@
 ---
 phase: 5
 title: "Mobile Learning Experience"
-status: pending
+status: in_progress
 effort: "12–16 engineer-days"
 ---
 
@@ -52,6 +52,13 @@ Phase 7 owns SQLite sync/media queues; Phase 6 owns AI feature implementation.
 - Before Phase 7, network-dependent actions expose truthful retry/offline
   messages and never claim offline completion. Phase 7 alone owns durable
   mutation queues/reconciliation.
+
+Foundation progress note: the mobile repo already has the SecureStore +
+installation-bound session storage foundation, the PKCE shadow registry,
+native Supabase auth options, the AppState refresh controller, and the
+session-epoch primitives. What remains in this phase is the native callback UI,
+claimed HTTPS links, state/nonce exchange, root auth-provider wiring, and the
+abort coordinator.
 
 ## Implementation steps
 

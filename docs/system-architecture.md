@@ -70,6 +70,12 @@ Identity and privacy are modeled as a database-first boundary:
 
 - Supabase Auth proves identity and owns the invite-only email OTP, callback, and local sign-out flow
 - The web route client uses `@supabase/ssr` to manage PKCE callback exchange and hardened session cookies
+- The native foundation uses a publishable Supabase client with chunked Expo
+  SecureStore persistence, installation-bound reinstall cleanup, a PKCE shadow
+  registry, explicit AppState refresh control, and a user-bound session epoch.
+  Native callback UI, claimed HTTPS link handling, state/nonce exchange, root
+  wiring, and the abort coordinator remain a later slice and are not yet a
+  released authentication flow.
 - OTP throttling combines provider controls with a bounded in-process hashed
   limiter; proxy-IP buckets are opt-in behind trusted ingress, and production
   horizontal scale still requires a distributed limiter
@@ -80,6 +86,9 @@ Identity and privacy are modeled as a database-first boundary:
 - `app_security_definer` cannot log in and does not bypass RLS
 - The worker is the only runtime intended to hold the service-role secret
 - `APP_ORIGIN` must match the exact web origin, and the callback allowlist must include the query-bearing `/auth/callback*` route shape
+- Native production builds must use a claimed HTTPS universal/app link; the
+  `ideogram-learning://` scheme is a development fallback only, and callback
+  payloads must contain no bearer tokens
 
 The local Supabase config keeps self-service signup disabled and exposes only
 the `public` schema through the API configuration. Storage remains available

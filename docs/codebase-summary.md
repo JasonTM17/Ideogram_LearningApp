@@ -36,7 +36,11 @@ exists as database contracts and private helpers.
 - The protected learner pages `/today`, `/learn`, and `/lessons/[lessonId]` call the SSR learner-page gate and read the catalog directly from the server.
 - The health endpoint returns the shared health response contract from `packages/contracts`.
 - The protected catalog route authenticates a Supabase bearer token or SSR cookie session, reads the allowlisted aggregate catalog RPC, and returns the shared learner-catalog response contract.
-- Mobile is still an internal beta foundation screen, not a released learning flow.
+- Mobile is still an internal beta foundation screen, not a released learning flow;
+  its SecureStore + installation-bound storage, PKCE shadow registry, native
+  Supabase auth options, refresh controller, and session-epoch primitives are
+  present, but native callback UI, claimed HTTPS links, state/nonce exchange,
+  and root auth-provider wiring are still pending.
 - Worker currently boots a health object and logs readiness.
 - Shared tokens are editorial and currently expose paper, ink, muted, accent, sage, card radius, control radius, and spacing steps.
 - Self-service Supabase signup is disabled. Approved registrations, profile and
@@ -64,7 +68,9 @@ exists as database contracts and private helpers.
 
 - Remaining learning mutation route handlers and full interactive learner flows
 - AI tutor, offline sync, admin workflows, and production content/audio release flows
-- Secure native credential storage and an authoritative session revocation adapter
+- Native callback UI, claimed HTTPS links, state/nonce exchange, root
+  auth-provider integration, in-flight cancellation on account switch, and an
+  authoritative session revocation adapter
 - Search, embeddings, and AI orchestration beyond the current contract baseline
 
 ## Evidence boundary
