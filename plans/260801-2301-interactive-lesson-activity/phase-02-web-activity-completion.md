@@ -1,10 +1,11 @@
 ---
 phase: 2
-title: "Web activity completion"
-status: pending
+title: Web activity completion
+status: in-progress
 priority: P1
-effort: "5h"
-dependencies: [1]
+effort: 5h
+dependencies:
+  - 1
 ---
 
 # Phase 2: Web activity completion

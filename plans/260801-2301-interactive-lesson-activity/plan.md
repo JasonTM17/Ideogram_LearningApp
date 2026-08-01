@@ -70,8 +70,8 @@ components; do not import the generated HTML into production code.
 
 | Phase | Name | Status |
 |-------|------|--------|
-| 1 | [Lesson activity foundation](./phase-01-lesson-activity-foundation.md) | In Progress |
-| 2 | [Web activity completion](./phase-02-web-activity-completion.md) | Pending |
+| 1 | [Lesson activity foundation](./phase-01-lesson-activity-foundation.md) | Completed |
+| 2 | [Web activity completion](./phase-02-web-activity-completion.md) | In Progress |
 | 3 | [Mobile activity completion](./phase-03-mobile-activity-completion.md) | Pending |
 | 4 | [Validation and docs](./phase-04-validation-and-docs.md) | Pending |
 

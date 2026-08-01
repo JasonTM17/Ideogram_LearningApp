@@ -1,7 +1,7 @@
 ---
 phase: 1
 title: Lesson activity foundation
-status: in-progress
+status: completed
 priority: P1
 effort: 4h
 dependencies: []
