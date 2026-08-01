@@ -28,13 +28,13 @@ const readPostgresErrorCode = (error: unknown): string | undefined => {
 };
 
 const createLearningExecutorPool = (): Pool => {
-  const { connectionString } = readLearningDatabaseConfiguration();
+  const { connectionString, maxConnections } = readLearningDatabaseConfiguration();
   const pool = new Pool({
     application_name: 'ideogram-learning-web',
     connectionString,
     connectionTimeoutMillis: 5_000,
     idleTimeoutMillis: 10_000,
-    max: 5,
+    max: maxConnections,
     maxLifetimeSeconds: 300,
   });
 

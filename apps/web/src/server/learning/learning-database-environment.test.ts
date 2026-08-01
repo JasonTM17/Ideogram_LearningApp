@@ -8,11 +8,36 @@ import {
 describe('learning database environment', () => {
   it('accepts a dedicated PostgreSQL connection URL without rewriting credentials', () => {
     const connectionString =
-      'postgresql://learning-api@database.example.test:5432/learning?sslmode=require';
+      'postgresql://ideogram_learning_web_login:secret@database.example.test:5432/learning?sslmode=require';
 
     expect(readLearningDatabaseConfiguration({ LEARNING_DATABASE_URL: connectionString })).toEqual({
       connectionString,
+      maxConnections: 2,
     });
+  });
+
+  it('accepts a bounded pool size and a Supavisor-style dedicated login', () => {
+    const connectionString =
+      'postgresql://ideogram_learning_web_login.project-ref:secret@pooler.example.test:5432/learning?sslmode=verify-full';
+
+    expect(
+      readLearningDatabaseConfiguration({
+        LEARNING_DATABASE_POOL_MAX: '4',
+        LEARNING_DATABASE_URL: connectionString,
+        NODE_ENV: 'production',
+      }),
+    ).toEqual({ connectionString, maxConnections: 4 });
+  });
+
+  it('allows a local development login without TLS', () => {
+    const connectionString = 'postgresql://postgres:postgres@127.0.0.1:54322/postgres';
+
+    expect(
+      readLearningDatabaseConfiguration({
+        LEARNING_DATABASE_URL: connectionString,
+        NODE_ENV: 'development',
+      }),
+    ).toEqual({ connectionString, maxConnections: 2 });
   });
 
   it.each([
@@ -26,6 +51,34 @@ describe('learning database environment', () => {
   ])('rejects an incomplete or unsafe connection URL: %s', (connectionString) => {
     expect(() =>
       readLearningDatabaseConfiguration({ LEARNING_DATABASE_URL: connectionString }),
+    ).toThrow(LearningDatabaseConfigurationError);
+  });
+
+  it.each([
+    'postgresql://postgres:secret@database.example.test/learning?sslmode=require',
+    'postgresql://ideogram_learning_web_login@database.example.test/learning?sslmode=require',
+    'postgresql://ideogram_learning_web_login:secret@database.example.test/learning',
+    'postgresql://ideogram_learning_web_login:secret@database.example.test/learning?sslmode=disable',
+    'postgresql://ideogram_learning_web_login:secret@database.example.test/learning?sslmode=require&sslmode=disable',
+  ])(
+    'rejects a production URL without the dedicated encrypted boundary: %s',
+    (connectionString) => {
+      expect(() =>
+        readLearningDatabaseConfiguration({
+          LEARNING_DATABASE_URL: connectionString,
+          NODE_ENV: 'production',
+        }),
+      ).toThrow(LearningDatabaseConfigurationError);
+    },
+  );
+
+  it.each(['0', '6', '1.5', 'many'])('rejects an unsafe pool size: %s', (maxConnections) => {
+    expect(() =>
+      readLearningDatabaseConfiguration({
+        LEARNING_DATABASE_POOL_MAX: maxConnections,
+        LEARNING_DATABASE_URL:
+          'postgresql://ideogram_learning_web_login:secret@database.example.test/learning?sslmode=require',
+      }),
     ).toThrow(LearningDatabaseConfigurationError);
   });
 
