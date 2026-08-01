@@ -2,7 +2,15 @@
 
 ## Status
 
-No production deployment or cloud provisioning has been completed from this repository yet. This guide documents the intended local and future deployment shape only.
+The web production image is now reproducibly built by the root `Dockerfile` and
+published to GitHub Container Registry by
+[`publish-container.yml`](../.github/workflows/publish-container.yml). This is
+an image/package release path, not a claim that a public runtime or Supabase
+production project has been provisioned.
+
+Package: `ghcr.io/jasontm17/ideogram-learning-app/web`
+
+Package page: [GitHub Container Registry](https://github.com/JasonTM17/Ideogram_LearningApp/pkgs/container/ideogram-learning-app%2Fweb)
 
 ## Local workflow
 
@@ -131,6 +139,31 @@ Supabase URL configuration and mail delivery are still unverified release gates.
 | Mobile     | Expo release pipeline | No `eas.json` or released binary               |
 | Worker     | Node runtime          | Readiness stub only                            |
 | Data plane | Supabase              | Local config/migrations; no production project |
+
+## GitHub Container Registry
+
+The workflow publishes `main`, semver tags (`v*.*.*`), an immutable commit
+SHA tag, and `latest` on the default branch. It uses the ephemeral
+`GITHUB_TOKEN`; no registry credential is stored in the repository.
+
+Pull the published image after authenticating to GHCR:
+
+```bash
+docker login ghcr.io
+docker pull ghcr.io/jasontm17/ideogram-learning-app/web:latest
+docker run --rm --env-file .env -p 3000:3000 \
+  ghcr.io/jasontm17/ideogram-learning-app/web:latest
+```
+
+The runtime must provide server-only values such as `DEEPSEEK_API_KEY` and
+`LEARNING_DATABASE_URL` through the host secret manager. The Docker build
+never copies dotenv files and the image contains only the Next.js standalone
+runtime. For a local build:
+
+```bash
+docker build -t ideogram-learning-web:local .
+docker run --rm --env-file .env -p 3000:3000 ideogram-learning-web:local
+```
 
 ## Secrets handling
 

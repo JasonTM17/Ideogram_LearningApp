@@ -115,6 +115,7 @@ pnpm supabase:stop
 - [External dependency matrix](docs/external-dependency-matrix.md)
 - [Execution capacity and load assumptions](docs/execution-capacity-and-load-assumptions.md)
 - [Deployment guide](docs/deployment-guide.md)
+- [GitHub Container Registry image](https://github.com/JasonTM17/Ideogram_LearningApp/pkgs/container/ideogram-learning-app%2Fweb)
 - [Project roadmap](docs/project-roadmap.md)
 - [Content governance](docs/content-governance.md)
 - [Learning engine contract](docs/learning-engine-contract.md)
