@@ -13,7 +13,6 @@ export class LearningDatabaseConfigurationError extends Error {
 type EnvironmentSource = Readonly<Record<string, string | undefined>>;
 
 const productionLoginName = 'ideogram_learning_web_login';
-const productionSslModes = new Set(['require', 'verify-ca', 'verify-full']);
 const supportedNodeEnvironments = new Set(['development', 'production', 'test']);
 
 const isDedicatedProductionLogin = (username: string): boolean =>
@@ -51,15 +50,21 @@ const parseConnectionString = (rawConnectionString: string, production: boolean)
   if (production) {
     const username = databaseUrl.username;
     const sslModes = databaseUrl.searchParams.getAll('sslmode');
+    const queryParameters = [...databaseUrl.searchParams.keys()];
 
     if (!isDedicatedProductionLogin(username) || !databaseUrl.password) {
       throw new LearningDatabaseConfigurationError(
         'Production LEARNING_DATABASE_URL must use the dedicated learning login and include its credential.',
       );
     }
-    if (sslModes.length !== 1 || !productionSslModes.has(sslModes[0] ?? '')) {
+    if (
+      queryParameters.length !== 1 ||
+      queryParameters[0] !== 'sslmode' ||
+      sslModes.length !== 1 ||
+      sslModes[0] !== 'verify-full'
+    ) {
       throw new LearningDatabaseConfigurationError(
-        'Production LEARNING_DATABASE_URL must require encrypted PostgreSQL transport.',
+        'Production LEARNING_DATABASE_URL must use only sslmode=verify-full; connection overrides are forbidden.',
       );
     }
   }

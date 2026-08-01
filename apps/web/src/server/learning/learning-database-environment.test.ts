@@ -8,7 +8,7 @@ import {
 describe('learning database environment', () => {
   it('accepts a dedicated PostgreSQL connection URL without rewriting credentials', () => {
     const connectionString =
-      'postgresql://ideogram_learning_web_login:secret@database.example.test:5432/learning?sslmode=require';
+      'postgresql://ideogram_learning_web_login:secret@database.example.test:5432/learning?sslmode=verify-full';
 
     expect(readLearningDatabaseConfiguration({ LEARNING_DATABASE_URL: connectionString })).toEqual({
       connectionString,
@@ -58,8 +58,11 @@ describe('learning database environment', () => {
     'postgresql://postgres:secret@database.example.test/learning?sslmode=require',
     'postgresql://ideogram_learning_web_login@database.example.test/learning?sslmode=require',
     'postgresql://ideogram_learning_web_login:secret@database.example.test/learning',
+    'postgresql://ideogram_learning_web_login:secret@database.example.test/learning?sslmode=require',
+    'postgresql://ideogram_learning_web_login:secret@database.example.test/learning?sslmode=verify-ca',
     'postgresql://ideogram_learning_web_login:secret@database.example.test/learning?sslmode=disable',
-    'postgresql://ideogram_learning_web_login:secret@database.example.test/learning?sslmode=require&sslmode=disable',
+    'postgresql://ideogram_learning_web_login:secret@database.example.test/learning?sslmode=verify-full&sslmode=disable',
+    'postgresql://ideogram_learning_web_login:placeholder@database.example.test/learning?sslmode=verify-full&user=postgres&password=override&host=evil.example&uselibpqcompat=true',
   ])(
     'rejects a production URL without the dedicated encrypted boundary: %s',
     (connectionString) => {
@@ -77,7 +80,7 @@ describe('learning database environment', () => {
       readLearningDatabaseConfiguration({
         LEARNING_DATABASE_POOL_MAX: maxConnections,
         LEARNING_DATABASE_URL:
-          'postgresql://ideogram_learning_web_login:secret@database.example.test/learning?sslmode=require',
+          'postgresql://ideogram_learning_web_login:secret@database.example.test/learning?sslmode=verify-full',
       }),
     ).toThrow(LearningDatabaseConfigurationError);
   });
