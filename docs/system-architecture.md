@@ -77,8 +77,8 @@ Identity and privacy are modeled as a database-first boundary:
   only a code plus exact PKCE flow ID, and gates learner navigation until the
   native session is hydrated. Its catalog read client uses a strict public API
   origin, bearer authentication with cookies omitted, response-contract parsing,
-  and a session-identity abort scope. Claimed HTTPS universal/app-link
-  association and real-device validation remain release work.
+  and a session-identity/view-lifecycle abort scope. Claimed HTTPS
+  universal/app-link association and real-device validation remain release work.
 - OTP throttling combines provider controls with a bounded in-process hashed
   limiter; proxy-IP buckets are opt-in behind trusted ingress, and production
   horizontal scale still requires a distributed limiter

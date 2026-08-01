@@ -69,8 +69,9 @@ The native foundation follows a separate runtime boundary:
    the learner shell, and the AppState refresh lifecycle is disposed on teardown.
 7. The mobile learner catalog client validates its public API origin, sends the
    current access token as a bearer header with cookies omitted, and aborts
-   in-flight reads when the session identity changes. The response is parsed by
-   the shared catalog contract before Today or Lesson renders it.
+   in-flight reads when the session identity changes or the requesting view is
+   superseded. The response is parsed by the shared catalog contract before
+   Today or Lesson renders it.
 
 ## Guardrails
 

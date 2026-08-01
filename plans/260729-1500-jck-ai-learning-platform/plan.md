@@ -109,6 +109,10 @@ gate riêng.
   views. Mobile tests pass 96/96 with typecheck and lint. Real-device smoke,
   claimed production links, activity/review writes, offline, and AI remain
   pending.
+- Session 7 (2026-08-01): Native catalog discovery and request-lifecycle hardening
+  shipped in `6445490` and `5d57ff0`: published tracks surface actual
+  language/level releases, and retry/unmount/account-switch all abort stale
+  catalog transport. Mobile tests pass 100/100 with typecheck and lint.
 - The approved plan is executing. Deploy, purchase, real secrets and store
   publication still require their named authority.
 
