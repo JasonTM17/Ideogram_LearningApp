@@ -35,6 +35,33 @@ const validActivityReceipt = {
   progressState: 'completed',
   totalActivityCount: 1,
 } as const;
+const validTutorRequest = {
+  conversationId: '123e4567-e89b-42d3-a456-426614174000',
+  learnerPreference: {
+    explanationDepth: 'standard',
+    preferredLanguageCode: 'ja',
+    preferredObjectiveKey: 'communication',
+    tone: 'encouraging',
+  },
+  message: 'Vì sao dùng は?',
+  targetLevelCode: 'N5',
+  turnId: '123e4567-e89b-42d3-a456-426614174001',
+} as const;
+const validTutorReceipt = {
+  conversationId: validTutorRequest.conversationId,
+  idempotentReplay: false,
+  response: {
+    assessmentVietnamese: 'Đúng hướng.',
+    example: 'これは本です。',
+    explanationVietnamese: 'は đánh dấu chủ đề.',
+    frequentVietnameseMistake: 'Không đồng nhất は với chủ ngữ.',
+    nextExerciseVietnamese: 'Đặt một câu với は.',
+    sourceBoundaryVietnamese: 'Chưa có nguồn bài học trong lượt này.',
+  },
+  state: 'completed',
+  turnId: validTutorRequest.turnId,
+  usage: { completionTokens: 2, promptTokens: 3, totalTokens: 5 },
+} as const;
 const stableSession = {
   accessToken: 'header-safe-token',
   sessionEpoch: 4,
@@ -112,6 +139,44 @@ describe('native learner catalog HTTP transport', () => {
       redirect: 'error',
     });
     expect(capturedInit?.signal).toBeInstanceOf(AbortSignal);
+  });
+
+  it('sends a validated tutor POST without exposing a provider-specific field', async () => {
+    let capturedUrl: string | undefined;
+    let capturedInit: NativeApiFetchRequestInit | undefined;
+    const fetchImplementation: NativeApiFetch = vi.fn(async (url, init) => {
+      capturedUrl = url;
+      capturedInit = init;
+      return createResponse(200, validTutorReceipt);
+    });
+
+    await expect(
+      createClient(fetchImplementation).submitTutorTurn(validTutorRequest),
+    ).resolves.toEqual(validTutorReceipt);
+    expect(capturedUrl).toBe('https://api.example.test/api/v1/ai/tutor/turn');
+    expect(capturedInit).toMatchObject({
+      credentials: 'omit',
+      headers: {
+        Accept: 'application/json',
+        Authorization: 'Bearer header-safe-token',
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      redirect: 'error',
+    });
+    expect(JSON.parse(capturedInit?.body as string)).toEqual(validTutorRequest);
+    expect(capturedInit?.signal).toBeInstanceOf(AbortSignal);
+    expect(capturedInit?.body).not.toContain('userId');
+  });
+
+  it('rejects invalid tutor input before a native request is made', async () => {
+    const fetchImplementation = vi.fn<NativeApiFetch>();
+    const client = createClient(fetchImplementation);
+
+    await expect(
+      client.submitTutorTurn({ ...validTutorRequest, message: '' }),
+    ).rejects.toBeInstanceOf(NativeApiInvalidRequestError);
+    expect(fetchImplementation).not.toHaveBeenCalled();
   });
 
   it('rejects malformed or non-serializable activity input as an opaque Promise error', async () => {

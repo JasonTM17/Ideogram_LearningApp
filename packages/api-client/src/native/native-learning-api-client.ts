@@ -4,11 +4,16 @@ import {
   parseActivityAttemptApiResponse,
   parseLearnerCatalogApiResponse,
 } from '../learning/learning-api-requests';
+import { createTutorTurnApiRequest, parseTutorTurnApiResponse } from '../ai/tutor-api-requests';
 import { NativeApiConfigurationError, NativeApiInvalidRequestError } from './native-api-errors';
 import { executeNativeJsonGet, executeNativeJsonPost } from './native-api-json-request';
 import { validateNativeApiOrigin } from './native-api-origin';
 
-import type { ActivityAttemptReceipt, LearnerCatalogResponse } from '@ideogram/contracts';
+import type {
+  ActivityAttemptReceipt,
+  LearnerCatalogResponse,
+  TutorTurnReceipt,
+} from '@ideogram/contracts';
 import type { NativeApiFetch, NativeApiRequestOptions } from './native-api-json-request';
 import type { NativeApiSessionProvider } from './native-api-session';
 
@@ -29,6 +34,7 @@ export interface NativeApiClient {
     input: unknown,
     options?: NativeApiRequestOptions,
   ) => Promise<ActivityAttemptReceipt>;
+  submitTutorTurn: (input: unknown, options?: NativeApiRequestOptions) => Promise<TutorTurnReceipt>;
 }
 
 const validateRequestTimeout = (value: number): number => {
@@ -88,6 +94,31 @@ export const createNativeApiClient = (options: CreateNativeApiClientOptions): Na
         sessionProvider: options.sessionProvider,
         timeoutMs: requestTimeoutMs,
         url: `${apiOrigin}${activityRequest.path}`,
+      });
+    },
+    submitTutorTurn: async (input: unknown, requestOptions: NativeApiRequestOptions = {}) => {
+      let tutorRequest: ReturnType<typeof createTutorTurnApiRequest>;
+      let body: string | undefined;
+
+      try {
+        tutorRequest = createTutorTurnApiRequest(input);
+        body = JSON.stringify(tutorRequest.body);
+      } catch {
+        throw new NativeApiInvalidRequestError();
+      }
+
+      if (typeof body !== 'string') {
+        throw new NativeApiInvalidRequestError();
+      }
+
+      return executeNativeJsonPost({
+        body,
+        callerSignal: requestOptions.signal,
+        fetchImplementation: options.fetch,
+        parse: parseTutorTurnApiResponse,
+        sessionProvider: options.sessionProvider,
+        timeoutMs: requestTimeoutMs,
+        url: `${apiOrigin}${tutorRequest.path}`,
       });
     },
   });
