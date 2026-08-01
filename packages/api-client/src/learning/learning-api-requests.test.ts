@@ -4,6 +4,7 @@ import {
   createActivityAttemptApiRequest,
   createLearnerCatalogApiRequest,
   createReviewSubmissionApiRequest,
+  parseActivityAttemptApiResponse,
   parseLearnerCatalogApiResponse,
   parseReviewSubmissionApiResponse,
   plannedLearningApiRoutes,
@@ -146,7 +147,7 @@ describe('learning API requests', () => {
       deviceId: '123e4567-e89b-42d3-a456-426614174001',
       deviceSequence: 8,
       idempotencyKey: '123e4567-e89b-42d3-a456-426614174004',
-      responsePayload: { answer: '私' },
+      responsePayload: { acknowledged: true },
       reviewedAtClient: '2026-07-29T00:00:00.000Z',
       timezone: 'Asia/Ho_Chi_Minh',
     };
@@ -156,5 +157,22 @@ describe('learning API requests', () => {
       method: 'POST',
       path: plannedLearningApiRoutes.activitySubmit,
     });
+  });
+
+  it('parses the activity receipt returned by the evaluated write boundary', () => {
+    const activityReceipt = {
+      attemptId: '123e4567-e89b-42d3-a456-426614174005',
+      completedActivityCount: 1,
+      completionState: 'completed' as const,
+      idempotentReplay: false,
+      lessonId: 'ja-n5-u1-l1',
+      progressState: 'completed' as const,
+      totalActivityCount: 1,
+    };
+
+    expect(parseActivityAttemptApiResponse(activityReceipt)).toEqual(activityReceipt);
+    expect(() =>
+      parseActivityAttemptApiResponse({ ...activityReceipt, completionState: 'forged' }),
+    ).toThrow();
   });
 });

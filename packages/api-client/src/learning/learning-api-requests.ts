@@ -1,5 +1,6 @@
 import {
   activityAttemptInputSchema,
+  activityAttemptReceiptSchema,
   learnerCatalogResponseSchema,
   reviewSubmissionInputSchema,
   reviewSubmissionReceiptSchema,
@@ -7,6 +8,7 @@ import {
 
 import type {
   ActivityAttemptInput,
+  ActivityAttemptReceipt,
   LearnerCatalogResponse,
   ReviewSubmissionInput,
   ReviewSubmissionReceipt,
@@ -64,6 +66,9 @@ export const createReviewSubmissionApiRequest = (input: unknown): ReviewSubmissi
 
 export const parseLearnerCatalogApiResponse = (input: unknown): LearnerCatalogResponse =>
   learnerCatalogResponseSchema.parse(input);
+
+export const parseActivityAttemptApiResponse = (input: unknown): ActivityAttemptReceipt =>
+  activityAttemptReceiptSchema.parse(input);
 
 export const parseReviewSubmissionApiResponse = (input: unknown): ReviewSubmissionReceipt =>
   reviewSubmissionReceiptSchema.parse(input);
