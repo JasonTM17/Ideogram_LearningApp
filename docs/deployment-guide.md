@@ -2,7 +2,8 @@
 
 ## Status
 
-The web production image is now reproducibly built by the root `Dockerfile` and
+The web production image is now reproducibly built by the root container
+definition and
 published to GitHub Container Registry by
 [`publish-container.yml`](../.github/workflows/publish-container.yml). This is
 an image/package release path, not a claim that a public runtime or Supabase
@@ -143,16 +144,24 @@ Supabase URL configuration and mail delivery are still unverified release gates.
 ## GitHub Container Registry
 
 The workflow publishes `main`, semver tags (`v*.*.*`), an immutable commit
-SHA tag, and `latest` on the default branch. It uses the ephemeral
-`GITHUB_TOKEN`; no registry credential is stored in the repository.
+SHA tag, and `latest` on the default branch. It uses the ephemeral workflow
+token; no registry credential is stored in the repository. The current
+package is public, so anonymous pulls work; authenticating to GHCR is still
+recommended for higher rate limits and private forks.
 
-Pull the published image after authenticating to GHCR:
+Pull the published image:
 
 ```bash
-docker login ghcr.io
 docker pull ghcr.io/jasontm17/ideogram-learning-app/web:latest
 docker run --rm --env-file .env -p 3000:3000 \
   ghcr.io/jasontm17/ideogram-learning-app/web:latest
+```
+
+If the package visibility changes, authenticate first with a token that has
+`read:packages`:
+
+```bash
+docker login ghcr.io
 ```
 
 The runtime must provide server-only values such as `DEEPSEEK_API_KEY` and
