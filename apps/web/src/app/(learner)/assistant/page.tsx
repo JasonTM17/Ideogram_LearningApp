@@ -2,6 +2,7 @@ import { Bot } from 'lucide-react';
 
 import { AppShell } from '@/components/app-shell/app-shell';
 import { DestinationStateView } from '@/features/learner/destination-state-view';
+import { TutorPreferenceDraft } from '@/features/ai/tutor-preference-draft';
 import { requireLearnerPageSession } from '@/lib/supabase/learner-session';
 
 export const dynamic = 'force-dynamic';
@@ -11,6 +12,7 @@ export default async function AssistantPage() {
 
   return (
     <AppShell activeKey="assistant">
+      <TutorPreferenceDraft />
       <DestinationStateView
         description="Trợ lý sẽ dùng cấu hình học riêng, ngữ cảnh bài và ranh giới dữ liệu dành cho người Việt."
         eyebrow="Trợ lý"
