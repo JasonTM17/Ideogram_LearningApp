@@ -18,21 +18,21 @@ Status: in progress
 | Phase | Done / Total | Status | Evidence |
 | --- | ---: | --- | --- |
 | 1 Foundation and Delivery | 4 / 6 | in progress | Workspace, docs baseline, lockfile pinning, secret isolation |
-| 2 Identity Data and Security | 0 / 6 | in progress | No Phase 2 schema/RLS/auth delivery yet |
+| 2 Identity Data and Security | 0 / 6 | in progress | Phase-wide checklist evidence was not re-audited in this sync; do not infer absent foundation code |
 | 3 Learning Domain and Content | 4 / 5 | in progress | Review submission contract is frozen and deterministic |
-| 4 Web Learning Experience | 7 / 10 | in progress | Review write route, auth/cookie tests, API matrix invariants, browser QA |
+| 4 Web Learning Experience | 5 / 10 | in progress | Review write route plus previously evidenced auth/read-side foundations; browser/API-matrix acceptance remains open |
 | 5 Mobile Learning Experience | 0 / 5 | in progress | Native auth foundation/UI only; real-device flows still pending |
 | 6 AI Tutor and Personalization | 0 / 5 | pending | Not started |
 | 7 Media Offline and Sync | 0 / 4 | pending | Not started |
 | 8 Admin Quality and Observability | 0 / 5 | pending | Not started |
 | 9 Release and Launch | 0 / 6 | pending | Not started |
 
-Overall: 15 / 52 checklist items = 28.8%
+Overall: 13 / 52 checklist items = 25.0%
 
 ## Evidence used
 
 - Git history: `e963fa5`, `ebf9235`, `4a67846`, `da59161`, `c5262c7`,
-  `c91bb61`, `a1fb8f4`, `da31848`, `70ba319`
+  `c91bb61`, `a1fb8f4`, `da31848`, `70ba319`, `ea02210`
 - Tester report: `plans/260729-1500-jck-ai-learning-platform/reports/tester-20260801-review-submission.md`
 - Reviewer report: `plans/260729-1500-jck-ai-learning-platform/reports/reviewer-20260730-web-auth-learner.md`
 - Security scan: `plans/260729-1500-jck-ai-learning-platform/reports/security-scan-20260730-web-auth.md`
@@ -42,10 +42,10 @@ Overall: 15 / 52 checklist items = 28.8%
 
 ## What changed in the plan
 
-- Phase 4 checklist backfilled:
-  - `API matrix and cookie/CSRF/CORS invariants pass positive and negative tests`
-  - `Focused commits and browser tests are green`
-- No other checklist item was marked complete without direct proof.
+- Phase 4 retained only the directly evidenced review write-route completion.
+- The composite API-matrix/CORS and browser-test acceptance items were restored
+  to open because this slice has route/contract/database evidence, not complete
+  matrix or browser coverage.
 
 ## Achievements
 
@@ -55,15 +55,18 @@ Overall: 15 / 52 checklist items = 28.8%
 
 ## Risks and blockers
 
-- Phase 2 still blocks the full identity/data/security foundation.
+- Phase 2 phase-wide acceptance evidence still needs an explicit audit; this
+  report does not claim its existing migration/auth foundation is absent.
 - Phase 5 still lacks real-device auth smoke, accessibility/device-scale proof, and full native flow coverage.
 - Phase 6+ remain untouched: AI launch contract, offline sync, admin observability, and release/prod delivery.
 - Production-only items remain external: named owners, secrets, legal sign-off, Docker Hub namespace/token, and hosted CI evidence.
 
 ## Next slice
 
-1. Finish Phase 2 identity/RLS/storage contracts and tests.
-2. Close the remaining Phase 4 core-route gaps without faking `/assistant`, progress, or other unfinished interactions.
+1. Add the next Phase 4 write boundary, activity submission, from its frozen
+   contract without faking `/assistant`, progress, or unfinished interactions.
+2. Audit and backfill Phase 2 acceptance only against direct schema/RLS/auth
+   evidence.
 3. Resume Phase 5 only after native device and accessibility evidence exists.
 
 ## Unresolved questions

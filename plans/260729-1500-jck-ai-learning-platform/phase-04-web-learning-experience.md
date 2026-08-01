@@ -146,7 +146,7 @@ Do not edit native screens or AI provider code.
       gates on 2026-08-01; see Session 10 in the plan log and the new tester
       report.
 - [ ] All core web routes use real typed APIs and recovery states.
-- [x] API matrix and cookie/CSRF/CORS invariants pass positive and negative tests.
+- [ ] API matrix and cookie/CSRF/CORS invariants pass positive and negative tests.
 - [ ] Stitch direction is reproduced without copying generated runtime code.
 - [ ] Responsive, keyboard, screen-reader and CJK checks pass.
-- [x] Focused commits and browser tests are green.
+- [ ] Focused commits and browser tests are green.
