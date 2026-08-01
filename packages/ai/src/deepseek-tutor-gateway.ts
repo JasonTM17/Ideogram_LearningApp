@@ -1,5 +1,7 @@
 import { tutorTurnInputSchema, tutorTurnResponseSchema } from '@ideogram/contracts';
 
+import { createDeepSeekRequestScope } from './deepseek-request-scope';
+
 import type { TutorTurnInput, TutorTurnResponse } from '@ideogram/contracts';
 import type { DeepSeekTutorConfiguration } from './deepseek-tutor-configuration';
 
@@ -18,6 +20,7 @@ export interface DeepSeekTutorGateway {
 }
 
 export type DeepSeekFetch = (input: string, init: RequestInit) => Promise<Response>;
+export const DEFAULT_DEEPSEEK_TUTOR_TIMEOUT_MS = 15_000;
 
 const buildSystemPrompt = (input: TutorTurnInput): string => {
   const { learnerPreference, targetLevelCode } = input;
@@ -64,12 +67,15 @@ const parseProviderResponse = async (response: Response): Promise<TutorTurnRespo
 export const createDeepSeekTutorGateway = ({
   configuration,
   fetch,
+  requestTimeoutMs = DEFAULT_DEEPSEEK_TUTOR_TIMEOUT_MS,
 }: {
   configuration: DeepSeekTutorConfiguration;
   fetch: DeepSeekFetch;
+  requestTimeoutMs?: number;
 }): DeepSeekTutorGateway => ({
   respond: async (untrustedInput, options = {}) => {
     const input = tutorTurnInputSchema.parse(untrustedInput);
+    const scope = createDeepSeekRequestScope(options.signal, requestTimeoutMs);
     const request: RequestInit = {
       body: JSON.stringify({
         max_tokens: 900,
@@ -88,10 +94,19 @@ export const createDeepSeekTutorGateway = ({
         'Content-Type': 'application/json',
       },
       method: 'POST',
-      ...(options.signal ? { signal: options.signal } : {}),
+      signal: scope.signal,
     };
-    const response = await fetch(`${configuration.baseUrl}/chat/completions`, request);
 
-    return parseProviderResponse(response);
+    try {
+      const response = await fetch(`${configuration.baseUrl}/chat/completions`, request);
+      scope.throwIfAborted();
+      return parseProviderResponse(response);
+    } catch (error) {
+      scope.throwIfAborted();
+      if (error instanceof DeepSeekTutorGatewayError) throw error;
+      throw new DeepSeekTutorGatewayError();
+    } finally {
+      scope.dispose();
+    }
   },
 });
