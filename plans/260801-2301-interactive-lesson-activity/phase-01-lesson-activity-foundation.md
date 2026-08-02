@@ -59,24 +59,16 @@ submission object from the reservation and retry that same object.
 
 ## Success Criteria
 
-- [ ] Shared operation identity has a single implementation and explicit public
+- [x] Shared operation identity has a single implementation and explicit public
       exports.
-- [ ] Native operation identity behavior and its existing persistence guarantees
+- [x] Native operation identity behavior and its existing persistence guarantees
       remain covered.
-- [ ] Browser adapter never replaces a pending operation silently after a
+- [x] Browser adapter never replaces a pending operation silently after a
       storage failure.
-- [ ] Package lint, typecheck, and focused tests pass.
+- [x] Package lint, typecheck, and focused tests pass.
 
 ## Risk Assessment
 
 Moving a generic class can break native imports or alter persistence keys.
 Mitigate by preserving the current serialized shape and testing every existing
 call path before adding web use.
-
-## Implementation Steps
-
-<!-- Detailed steps -->
-
-## Success Criteria
-
-- [ ] ...

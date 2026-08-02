@@ -63,23 +63,15 @@ look tappable without behavior.
 
 ## Success Criteria
 
-- [ ] Native learner can open and complete a vocabulary activity with a server
+- [x] Native learner can open and complete a vocabulary activity with a server
       receipt after a valid authenticated submission.
-- [ ] A network-uncertain retry reuses the same reserved identity and immutable
+- [x] A network-uncertain retry reuses the same reserved identity and immutable
       request body.
-- [ ] Session loss/change prevents stale completion UI or mutation continuation.
-- [ ] Mobile lint, typecheck, tests, and Expo export/build gate pass.
+- [x] Session loss/change prevents stale completion UI or mutation continuation.
+- [x] Mobile lint, typecheck, tests, and Expo export/build gate pass.
 
 ## Risk Assessment
 
 Native auth and route lifetimes can change while an async request runs. Bind the
 request signal to the current session and reject stale state updates by epoch or
 abort semantics already used in the app.
-
-## Implementation Steps
-
-<!-- Detailed steps -->
-
-## Success Criteria
-
-- [ ] ...

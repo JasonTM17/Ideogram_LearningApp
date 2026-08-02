@@ -65,24 +65,16 @@ overview remains a read-side list; it only links to supported activity types.
 
 ## Success Criteria
 
-- [ ] Web user can complete a rendered vocabulary activity and see the returned
+- [x] Web user can complete a rendered vocabulary activity and see the returned
       completed/total count.
-- [ ] Retry cannot generate a new operation identity before the old request is
+- [x] Retry cannot generate a new operation identity before the old request is
       resolved or deliberately cleared.
-- [ ] Keyboard, screen reader, mobile-width, loading, error, and receipt states
+- [x] Keyboard, screen reader, mobile-width, loading, error, and receipt states
       are represented in tests or deterministic component state coverage.
-- [ ] Web lint, typecheck, tests, and build pass.
+- [x] Web lint, typecheck, tests, and build pass.
 
 ## Risk Assessment
 
 Server and client component boundaries can accidentally leak a client-only
 storage dependency into SSR. Keep storage instantiation inside the client
 component and test route data resolution independently.
-
-## Implementation Steps
-
-<!-- Detailed steps -->
-
-## Success Criteria
-
-- [ ] ...

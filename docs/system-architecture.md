@@ -17,7 +17,7 @@ The implementation is still at the foundation stage for user-facing apps, but th
 ### Vocabulary acknowledgement slice
 
 - Web activity attempts create the exact public body `{ acknowledged: true }` through the shared activity attempt contract and treat the server receipt as the only completion signal.
-- The browser activity-operation identity adapter resolves `localStorage` lazily, fails closed when storage or UUID generation is unavailable, and does not promise cross-tab locking.
+- The browser activity-operation identity adapter resolves `localStorage` lazily, fails closed when storage or UUID generation is unavailable, and does not promise cross-tab locking. A successful local sign-out broadcasts an invalidation signal to same-origin tabs so their in-flight activity attempts stop without rendering a stale receipt.
 - The native activity screen binds request cancellation to the session lifecycle. A stopped, session-changed, or unmounted request must not update stale UI.
 - Operation identity is replay metadata only. Authorization, content release access, and evaluator decisions remain server-owned.
 

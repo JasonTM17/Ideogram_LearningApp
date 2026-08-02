@@ -52,20 +52,12 @@ commits.
 
 ## Success Criteria
 
-- [ ] Every acceptance criterion has code or test evidence.
-- [ ] No public API, schema, or environment contract breaks silently.
-- [ ] Documentation matches the implemented supported activity scope.
+- [x] Every acceptance criterion has code or test evidence.
+- [x] No public API, schema, or environment contract breaks silently.
+- [x] Documentation matches the implemented supported activity scope.
 - [ ] CI and package publication succeed for the final pushed commit.
 
 ## Risk Assessment
 
 Full workspace gates can reveal pre-existing failures. Record baseline evidence,
 isolate failures caused by this slice, and do not mask unrelated failures.
-
-## Implementation Steps
-
-<!-- Detailed steps -->
-
-## Success Criteria
-
-- [ ] ...
