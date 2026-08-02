@@ -15,7 +15,8 @@
 - `apps/mobile/app.json` is still a static Expo foundation app with no EAS config.
 - The current mobile app is still an internal beta, not a released learning flow.
   The assistant route now contains a real Vietnamese-first bounded tutor-turn
-  form, but the AI kill switch remains disabled by default and no durable history
+  form, and the learner path now includes the first vocabulary acknowledgement
+  activity screen. The AI kill switch remains disabled by default and no durable history
   or offline tutor queue is shipped.
 
 ## Native learning operation boundary
@@ -31,6 +32,13 @@
   authorization. Reservations are serialized within one JavaScript runtime;
   background/headless mutation workers need a transactional counter before they
   can reserve independently.
+- The implemented activity screen opens only a catalog-resolved vocabulary
+  activity and sends the exact `{ acknowledged: true }` payload. It keeps a
+  pending attempt in memory for a safe retry and shows completion only after a
+  server receipt.
+- Its request scope is bound to the authenticated session and screen lifetime;
+  a stopped, session-changed, or unmounted request cannot update stale learner
+  UI.
 - This slice does not provide an offline queue, retry scheduler, or conflict
   reconciliation. Those behaviors belong to the later mutation-queue phase and
   must keep the server evaluator as the source of truth.

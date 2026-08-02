@@ -4,9 +4,10 @@
 
 > Ranh giới trạng thái: các mục 2–9 mô tả target UX cho toàn bộ web/mobile.
 > Runtime web hiện có landing, invite-only auth, responsive learner shell,
-> catalog-backed Today/path/lesson overview, profile/sign-out, và bounded
-> Vietnamese-first tutor turn. Onboarding, placement, focused activity/review,
-> sync, grounded/SSE AI, progress và native navigation vẫn chưa đạt target này.
+> catalog-backed Today/path/lesson overview, profile/sign-out, bounded
+> Vietnamese-first tutor turn, và một vertical slice vocabulary acknowledgement
+> trên web + Expo. Onboarding, placement, focused activity/review, sync,
+> grounded/SSE AI, progress và native navigation vẫn chưa đạt target này.
 
 ## 1. Định hướng sản phẩm
 
@@ -137,6 +138,11 @@ Gói ngôn ngữ → mục tiêu (JLPT/giao tiếp) → cấp độ → lộ tr�
   (Hôm nay, Ôn tập, Trợ lý, Tiến độ, Bạn) và năm màn desktop (Hôm nay, Bài học,
   Hàng đợi ôn, Trợ lý, Tiến độ). Mỗi export có PNG, HTML và `DESIGN.md`; các ảnh
   `desktop-refined-*` là hướng desktop Việt hóa ưu tiên khi dựng Phase 4.
+- Vocabulary activity handoff đã được commit riêng cho slice hiện tại:
+  - [Desktop Stitch design](../plans/260801-2301-interactive-lesson-activity/design/stitch-desktop-lesson-activity/design.png)
+  - [Mobile Stitch design](../plans/260801-2301-interactive-lesson-activity/design/stitch-mobile-lesson-activity/design.png)
+  - Đây là design handoff/reference, không phải screenshot runtime và không
+    chứng minh parity hay certification.
 - Artifact
   [`plans/260729-1500-jck-ai-learning-platform/designs/dashboard-today/`](../plans/260729-1500-jck-ai-learning-platform/designs/dashboard-today/)
   là bản desktop Hôm nay cũ hơn, chỉ dùng để đối chiếu lịch sử hierarchy.

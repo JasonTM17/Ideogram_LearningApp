@@ -42,6 +42,14 @@
   hash, and write through the `app_learning_api_executor` role. Activity
   submission must call the database evaluator rather than the raw activity
   persistence helper, so scores and completion state remain server-owned.
+- The web vocabulary activity slice must build the exact public body
+  `{ acknowledged: true }`, keep its pending input in memory for safe retry,
+  and treat the server receipt as the only completion signal.
+- Browser activity-operation identity adapters resolve `localStorage` lazily,
+  fail closed when storage or UUID generation is unavailable, and do not claim
+  cross-tab locking.
+- Native activity screens must bind request cancellation to the session
+  lifecycle and unmount path so stale UI cannot commit after a session change.
 - Web SSR learner pages use the server-side learner-session gate and read the
   current profile plus learner role before reading the catalog directly on the
   server; the HTTP catalog route remains the external client surface.

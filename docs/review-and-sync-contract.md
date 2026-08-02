@@ -4,9 +4,10 @@
 
 This document explains how learner actions will synchronize across client,
 database, and worker boundaries. Auth/catalog reads and protected SSR learner
-pages exist; review submission and scoped server-evaluated activity submission
-are wired, but placement, interactive lesson/review flows, and client
-synchronization are still not wired.
+pages exist; review submission, scoped server-evaluated activity submission,
+and the first vocabulary acknowledgement activity slice are wired, but
+placement, broader interactive lesson/review flows, and client synchronization
+are still not wired.
 
 ## Runtime boundaries
 
@@ -16,6 +17,20 @@ synchronization are still not wired.
 | Next.js write routes        | Activity/review submission for verified bearer or cookie sessions          |
 | `app_learning_api_executor` | Learner-safe placement, activity, review, and enrollment writes            |
 | `service_role`              | Placement scoring and privacy purge only                                   |
+
+## Client retry behavior
+
+- The web vocabulary activity view keeps the exact pending input in memory for
+  retry until a receipt or terminal error clears it. It does not expose the
+  pending body in storage.
+- The browser activity-operation identity adapter resolves `localStorage`
+  lazily, fails closed when storage or UUID generation is unavailable, and does
+  not promise cross-tab locking.
+- The native vocabulary activity screen binds request cancellation to the
+  session lifecycle. A stopped, session-changed, or unmounted request does not
+  update stale UI.
+- Operation identity is replay metadata only. Authorization, release access,
+  and evaluator decisions remain server-owned.
 
 ## Learner-safe operations
 
@@ -79,9 +94,10 @@ review submission. The route hashes the canonical public input and calls only
 5. Unsupported activity types, including speaking and writing, return a safe
    conflict until an asynchronous grading lifecycle is implemented.
 
-## Native operation identity boundary
+## Shared activity operation identity boundary
 
-The native client now has a small identity primitive for activity operations:
+The shared learning client owns the generic identity primitive; native and web
+apps provide their platform storage adapters:
 
 - Expo SecureStore retains one device-only UUID and the next monotonic sequence;
   a document-directory installation sentinel clears retained iOS keychain state
@@ -94,7 +110,8 @@ The native client now has a small identity primitive for activity operations:
   learner authorization, release access, and evaluation remain server-owned.
 - No durable queue, retry scheduler, or reconciliation is included yet. An
   offline operation must not be considered complete until the server receipt is
-  accepted by the later queue phase.
+  accepted by the later queue phase. The current vocabulary slice keeps retry
+  state in memory only.
 
 ## Worker-only operations
 
