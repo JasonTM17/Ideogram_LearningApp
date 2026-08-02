@@ -3,7 +3,7 @@ title: Interactive Lesson Activity Completion
 description: >-
   Ship one honest, idempotent vocabulary-completion activity on the existing web
   and Expo lesson flows.
-status: in-progress
+status: completed
 priority: P2
 effort: 2d
 branch: main
@@ -73,7 +73,7 @@ components; do not import the generated HTML into production code.
 | 1 | [Lesson activity foundation](./phase-01-lesson-activity-foundation.md) | Completed |
 | 2 | [Web activity completion](./phase-02-web-activity-completion.md) | Completed |
 | 3 | [Mobile activity completion](./phase-03-mobile-activity-completion.md) | Completed |
-| 4 | [Validation and docs](./phase-04-validation-and-docs.md) | In Progress |
+| 4 | [Validation and docs](./phase-04-validation-and-docs.md) | Completed |
 
 ## Dependencies
 

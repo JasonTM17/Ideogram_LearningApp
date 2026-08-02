@@ -1,7 +1,7 @@
 ---
 phase: 4
 title: Validation and docs
-status: in-progress
+status: completed
 priority: P1
 effort: 2h
 dependencies:
@@ -55,7 +55,7 @@ commits.
 - [x] Every acceptance criterion has code or test evidence.
 - [x] No public API, schema, or environment contract breaks silently.
 - [x] Documentation matches the implemented supported activity scope.
-- [ ] CI and package publication succeed for the final pushed commit.
+- [x] CI and package publication succeed for the final pushed commit.
 
 ## Risk Assessment
 

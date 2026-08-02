@@ -47,12 +47,17 @@ calling the whole learning product finished now would be dishonest.
 
 ## Next Steps
 
-- Push the focused commits and verify Actions plus the GHCR tag for the pushed
-  SHA.
 - Continue the roadmap with review-session interactions, listening/audio
   evaluation, spaced repetition UI, and approved Chinese/Korean content.
 - Add real browser/device E2E and coverage thresholds when a non-production
   Supabase test environment is available.
+
+## Delivery Completion
+
+The focused lifecycle and validation commits were pushed to `main`. CI run
+`30743516006` and container publish run `30743515987` both succeeded for
+`242688346b18b97f8fe4bd18e43972d76e05853e`; the public `sha-2426883` image
+tag resolves to an AMD64 OCI image plus provenance.
 
 ## Unresolved Questions
 

@@ -7,7 +7,7 @@
 | 1. Lesson activity foundation | Completed | Shared identity store, browser adapter, native compatibility exports, persistence tests |
 | 2. Web activity completion | Completed | Protected nested route, exact acknowledgement client, receipt/error UI, web tests/build |
 | 3. Mobile activity completion | Completed | Protected Expo route, session-bound client, phone UI, native tests/export |
-| 4. Validation and docs | In progress | All local gates pass; final CI/package check waits for push |
+| 4. Validation and docs | Completed | Local gates, final CI, and GHCR publication verified |
 
 ### Completed this session
 
@@ -33,13 +33,15 @@
 - `node .claude/scripts/validate-docs.cjs docs/`: 20 files, 33 links, 25 env
   keys verified.
 
-### Remaining work
+### Delivery evidence
 
-1. Mark phase 4 complete after push verification.
-2. Commit the lifecycle hardening and the documentation/plan evidence in small
-   conventional commits.
-3. Push `main`, wait for GitHub Actions, and verify the GHCR tag points to the
-   pushed commit SHA.
+- `66513c9` — activity cancellation/session lifecycle hardening.
+- `2426883` — activity validation documentation and review evidence.
+- [CI run 30743516006](https://github.com/JasonTM17/Ideogram_LearningApp/actions/runs/30743516006)
+  succeeded for `242688346b18b97f8fe4bd18e43972d76e05853e`.
+- [Container publish 30743515987](https://github.com/JasonTM17/Ideogram_LearningApp/actions/runs/30743515987)
+  succeeded for the same SHA. `sha-2426883` resolves to a public OCI index with
+  the AMD64 image and provenance manifest.
 
 ### Unresolved questions
 
