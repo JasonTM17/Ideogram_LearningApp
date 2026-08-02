@@ -7,6 +7,7 @@ import {
   createBrowserActivityOperationIdentityStore,
   createBrowserUuid,
 } from '@/lib/learning/browser-activity-operation-identity';
+import { subscribeToWebSessionInvalidation } from '@/features/auth/web-session-invalidation';
 
 import {
   createVocabularyActivityAttemptInput,
@@ -40,6 +41,9 @@ const resolveClientTimeZone = (): string => {
 };
 
 const abortedFeedback = describeWebActivityAttemptError(new WebActivityAttemptError('ABORTED'));
+const unauthorizedFeedback = describeWebActivityAttemptError(
+  new WebActivityAttemptError('UNAUTHORIZED'),
+);
 
 const createBrowserActivityRequestScope = () => {
   const controller = new AbortController();
@@ -60,12 +64,28 @@ export function VocabularyActivityView({
       >
     >(null);
   const [state, setState] = useState<VocabularyActivityUiState>({ kind: 'idle' });
+  const sessionInvalidated = useRef(false);
   const lessonHref = `/lessons/${lesson.lessonId}`;
 
-  useEffect(() => () => activityLifecycle.current?.dispose(), []);
+  useEffect(() => {
+    const unsubscribe = subscribeToWebSessionInvalidation(() => {
+      sessionInvalidated.current = true;
+      activityLifecycle.current?.stop();
+      setState({ feedback: unauthorizedFeedback, kind: 'error' });
+    });
+
+    return () => {
+      unsubscribe();
+      activityLifecycle.current?.dispose();
+    };
+  }, []);
 
   const submit = useCallback(async () => {
-    if (activityLifecycle.current?.isSubmitting || state.kind === 'ready') {
+    if (
+      sessionInvalidated.current ||
+      activityLifecycle.current?.isSubmitting ||
+      state.kind === 'ready'
+    ) {
       return;
     }
 
@@ -98,13 +118,13 @@ export function VocabularyActivityView({
       setState({ kind: 'ready', receipt: result.receipt });
     } else if (result.kind === 'error') {
       setState({ feedback: result.feedback, kind: 'error' });
+    } else if (result.kind === 'aborted' && !sessionInvalidated.current) {
+      setState({ feedback: abortedFeedback, kind: 'error' });
     }
   }, [activity.activityId, contentReleaseId, state.kind]);
 
   const stop = useCallback(() => {
-    if (activityLifecycle.current?.stop()) {
-      setState({ feedback: abortedFeedback, kind: 'error' });
-    }
+    activityLifecycle.current?.stop();
   }, []);
 
   const isSubmitting = state.kind === 'submitting';

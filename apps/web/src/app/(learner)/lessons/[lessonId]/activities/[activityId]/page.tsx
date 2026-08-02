@@ -27,6 +27,7 @@ export default async function LessonActivityPage({
     <AppShell activeKey="today">
       <VocabularyActivityView
         activityContext={activityContext}
+        key={`${activityContext.contentReleaseId}:${activityContext.activity.activityId}`}
         signInHref={`/sign-in?returnTo=${encodeURIComponent(returnPath)}`}
       />
     </AppShell>

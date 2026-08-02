@@ -121,13 +121,13 @@ const VocabularyActivitySurface = ({ auth }: { auth: ReturnType<typeof useNative
       setState({ kind: 'ready', receipt: result.receipt });
     } else if (result.kind === 'error') {
       setState({ feedback: result.feedback, kind: 'error' });
+    } else if (result.kind === 'aborted') {
+      setState({ feedback: abortedFeedback, kind: 'error' });
     }
   }, [activityContext, getRequestSignal, hasSession, identityStore, sessionProvider, state.kind]);
 
   const stop = useCallback(() => {
-    if (activityLifecycle.current?.stop()) {
-      setState({ feedback: abortedFeedback, kind: 'error' });
-    }
+    activityLifecycle.current?.stop();
   }, []);
 
   const signIn = useCallback(() => router.replace('/sign-in'), [router]);

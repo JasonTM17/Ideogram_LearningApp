@@ -5,6 +5,8 @@ import { LogOut } from 'lucide-react';
 
 import { createSignOutApiRequest } from '@ideogram/api-client';
 
+import { broadcastWebSessionInvalidation } from './web-session-invalidation';
+
 export function SignOutButton() {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const shouldFocusAfterErrorRef = useRef(false);
@@ -34,6 +36,7 @@ export function SignOutButton() {
         throw new Error('SIGN_OUT_FAILED');
       }
 
+      broadcastWebSessionInvalidation();
       window.location.assign('/');
     } catch {
       shouldFocusAfterErrorRef.current = true;
