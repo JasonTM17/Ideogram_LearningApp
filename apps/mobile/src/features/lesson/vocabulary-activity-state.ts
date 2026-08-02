@@ -7,7 +7,8 @@ import { NativeApiError, type NativeApiErrorCode } from '@ideogram/api-client/na
 import type { ActivityAttemptInput } from '@ideogram/contracts';
 import type { ActivityOperationIdentity } from '@ideogram/api-client';
 
-export type NativeVocabularyActivityErrorCode = NativeApiErrorCode | 'STORAGE_ERROR';
+export type NativeVocabularyActivityErrorCode =
+  NativeApiErrorCode | 'IDENTITY_ERROR' | 'STORAGE_ERROR';
 
 export interface NativeVocabularyActivityAttemptOptions {
   activityId: string;
@@ -44,6 +45,7 @@ const errorMessages: Record<NativeVocabularyActivityErrorCode, string> = {
   CONFIGURATION_ERROR: 'Ứng dụng chưa được cấu hình để ghi tiến độ học.',
   FORBIDDEN: 'Tài khoản hiện không có quyền ghi tiến độ cho hoạt động này.',
   HTTP_ERROR: 'Hoạt động không còn khả dụng. Hãy quay lại bài học để cập nhật.',
+  IDENTITY_ERROR: 'Thiết bị chưa thể tạo mã xác nhận an toàn. Hãy tải lại rồi thử lại.',
   INVALID_REQUEST: 'Hoạt động không còn khả dụng. Hãy quay lại bài học để cập nhật.',
   INVALID_RESPONSE: 'Chưa xác nhận được kết quả. Bạn có thể gửi lại an toàn.',
   NETWORK_ERROR: 'Không thể kết nối máy chủ. Kiểm tra mạng rồi gửi lại an toàn.',
@@ -90,7 +92,9 @@ export const describeNativeVocabularyActivityError = (
 ): NativeVocabularyActivityErrorFeedback => {
   const code: NativeVocabularyActivityErrorCode =
     error instanceof ActivityOperationIdentityError
-      ? 'STORAGE_ERROR'
+      ? error.code === 'corrupt_state' || error.code === 'storage_failure'
+        ? 'STORAGE_ERROR'
+        : 'IDENTITY_ERROR'
       : error instanceof NativeApiError
         ? error.code
         : 'NETWORK_ERROR';

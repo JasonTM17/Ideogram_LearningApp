@@ -1,4 +1,7 @@
-import { ActivityOperationIdentityStore } from '@ideogram/api-client';
+import {
+  ActivityOperationIdentityError,
+  ActivityOperationIdentityStore,
+} from '@ideogram/api-client';
 
 import type { AsyncKeyValueStorage } from '@ideogram/api-client';
 
@@ -12,6 +15,8 @@ export interface BrowserActivityOperationIdentityStoreOptions {
   readonly createDeviceId?: () => string;
   readonly storage?: BrowserActivityOperationStorage;
 }
+
+const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/iu;
 
 const getBrowserStorage = (): BrowserActivityOperationStorage => {
   if (typeof window === 'undefined') {
@@ -38,11 +43,24 @@ const createStorageAdapter = (
 };
 
 export const createBrowserUuid = (): string => {
-  if (typeof globalThis.crypto?.randomUUID !== 'function') {
-    throw new Error('Browser UUID generation is unavailable.');
-  }
+  try {
+    if (typeof globalThis.crypto?.randomUUID !== 'function') {
+      throw new Error('Browser UUID generation is unavailable.');
+    }
 
-  return globalThis.crypto.randomUUID();
+    const uuid = globalThis.crypto.randomUUID();
+    if (!uuidPattern.test(uuid)) {
+      throw new Error('Browser UUID generation returned an invalid UUID.');
+    }
+
+    return uuid;
+  } catch (error) {
+    throw new ActivityOperationIdentityError(
+      'device_id_failure',
+      'Browser UUID generation is unavailable.',
+      error,
+    );
+  }
 };
 
 /**

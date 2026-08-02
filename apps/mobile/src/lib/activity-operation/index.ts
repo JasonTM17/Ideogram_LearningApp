@@ -8,4 +8,5 @@ export type {
   ActivityOperationIdentityErrorCode,
   ActivityOperationIdentityStoreOptions,
 } from './activity-operation-identity';
+export { createActivityOperationUuid } from './create-activity-operation-uuid';
 export { createExpoActivityOperationIdentityStore } from './expo-activity-operation-identity';

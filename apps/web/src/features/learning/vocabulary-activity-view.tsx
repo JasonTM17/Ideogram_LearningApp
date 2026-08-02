@@ -17,7 +17,7 @@ import {
 import { VocabularyActivityError, VocabularyActivityReceipt } from './vocabulary-activity-feedback';
 
 import type { ActivityAttemptInput, ActivityAttemptReceipt } from '@ideogram/contracts';
-import type { ActivityOperationIdentityStore } from '@ideogram/api-client';
+import { ActivityAttemptLifecycle } from '@ideogram/api-client';
 import type { CatalogVocabularyActivityContext } from './catalog-presentation';
 
 interface VocabularyActivityViewProps {
@@ -41,71 +41,70 @@ const resolveClientTimeZone = (): string => {
 
 const abortedFeedback = describeWebActivityAttemptError(new WebActivityAttemptError('ABORTED'));
 
+const createBrowserActivityRequestScope = () => {
+  const controller = new AbortController();
+  return { dispose: () => controller.abort(), signal: controller.signal };
+};
+
 export function VocabularyActivityView({
   activityContext,
   signInHref,
 }: VocabularyActivityViewProps) {
   const { activity, activitySequence, contentReleaseId, lesson } = activityContext;
-  const identityStore = useRef<ActivityOperationIdentityStore | null>(null);
-  const pendingInput = useRef<ActivityAttemptInput | null>(null);
-  const activeRequest = useRef<AbortController | null>(null);
+  const activityLifecycle =
+    useRef<
+      ActivityAttemptLifecycle<
+        ActivityAttemptInput,
+        ActivityAttemptReceipt,
+        ReturnType<typeof describeWebActivityAttemptError>
+      >
+    >(null);
   const [state, setState] = useState<VocabularyActivityUiState>({ kind: 'idle' });
   const lessonHref = `/lessons/${lesson.lessonId}`;
 
-  useEffect(() => () => activeRequest.current?.abort(), []);
+  useEffect(() => () => activityLifecycle.current?.dispose(), []);
 
   const submit = useCallback(async () => {
-    if (activeRequest.current !== null || state.kind === 'ready') {
+    if (activityLifecycle.current?.isSubmitting || state.kind === 'ready') {
       return;
     }
 
-    const controller = new AbortController();
-    activeRequest.current = controller;
+    let lifecycle = activityLifecycle.current;
+    if (lifecycle === null) {
+      const identityStore = createBrowserActivityOperationIdentityStore();
+      lifecycle = new ActivityAttemptLifecycle({
+        createInput: async () => {
+          const idempotencyKey = createBrowserUuid();
+          return createVocabularyActivityAttemptInput({
+            activityId: activity.activityId,
+            contentReleaseId,
+            createIdempotencyKey: () => idempotencyKey,
+            identity: await identityStore.reserve(),
+            now: new Date(),
+            timezone: resolveClientTimeZone(),
+          });
+        },
+        createRequestScope: createBrowserActivityRequestScope,
+        describeError: describeWebActivityAttemptError,
+        isRetryable: (feedback) => feedback.retryable,
+        submit: submitWebActivityAttempt,
+      });
+      activityLifecycle.current = lifecycle;
+    }
+
     setState({ kind: 'submitting' });
-    let requestInput = pendingInput.current;
-    try {
-      if (requestInput === null) {
-        identityStore.current ??= createBrowserActivityOperationIdentityStore();
-        requestInput = createVocabularyActivityAttemptInput({
-          activityId: activity.activityId,
-          contentReleaseId,
-          createIdempotencyKey: createBrowserUuid,
-          identity: await identityStore.current.reserve(),
-          now: new Date(),
-          timezone: resolveClientTimeZone(),
-        });
-        pendingInput.current = requestInput;
-      }
-
-      if (controller.signal.aborted) {
-        return;
-      }
-
-      const receipt = await submitWebActivityAttempt(requestInput, { signal: controller.signal });
-      if (!controller.signal.aborted) {
-        pendingInput.current = null;
-        setState({ kind: 'ready', receipt });
-      }
-    } catch (error) {
-      if (controller.signal.aborted) {
-        return;
-      }
-
-      const feedback = describeWebActivityAttemptError(error);
-      if (!feedback.retryable) {
-        pendingInput.current = null;
-      }
-      setState({ feedback, kind: 'error' });
-    } finally {
-      if (activeRequest.current === controller) {
-        activeRequest.current = null;
-      }
+    const result = await lifecycle.submit();
+    if (result.kind === 'receipt') {
+      setState({ kind: 'ready', receipt: result.receipt });
+    } else if (result.kind === 'error') {
+      setState({ feedback: result.feedback, kind: 'error' });
     }
   }, [activity.activityId, contentReleaseId, state.kind]);
 
   const stop = useCallback(() => {
-    activeRequest.current?.abort();
-    setState({ feedback: abortedFeedback, kind: 'error' });
+    if (activityLifecycle.current?.stop()) {
+      setState({ feedback: abortedFeedback, kind: 'error' });
+    }
   }, []);
 
   const isSubmitting = state.kind === 'submitting';

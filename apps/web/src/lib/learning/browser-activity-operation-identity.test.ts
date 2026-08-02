@@ -1,8 +1,11 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { ActivityOperationIdentityError } from '@ideogram/api-client';
 
-import { createBrowserActivityOperationIdentityStore } from './browser-activity-operation-identity';
+import {
+  createBrowserActivityOperationIdentityStore,
+  createBrowserUuid,
+} from './browser-activity-operation-identity';
 
 const deviceId = '123e4567-e89b-42d3-a456-426614174001';
 
@@ -23,6 +26,8 @@ const createStorage = () => {
 };
 
 describe('createBrowserActivityOperationIdentityStore', () => {
+  afterEach(() => vi.unstubAllGlobals());
+
   it('retains a browser device identity and increments its sequence', async () => {
     const { storage } = createStorage();
     const first = createBrowserActivityOperationIdentityStore({
@@ -56,5 +61,26 @@ describe('createBrowserActivityOperationIdentityStore', () => {
     const error = await store.reserve().catch((caught: unknown) => caught);
     expect(error).toBeInstanceOf(ActivityOperationIdentityError);
     expect((error as ActivityOperationIdentityError).code).toBe('storage_failure');
+  });
+
+  it('normalizes unavailable browser UUID generation as an identity failure', () => {
+    vi.stubGlobal('crypto', undefined);
+
+    const error = (() => {
+      try {
+        createBrowserUuid();
+      } catch (caught) {
+        return caught;
+      }
+      throw new Error('Expected browser UUID creation to fail.');
+    })();
+
+    expect(error).toMatchObject({ code: 'device_id_failure' });
+  });
+
+  it('rejects an invalid UUID before a browser activity identity can be reserved', () => {
+    vi.stubGlobal('crypto', { randomUUID: () => 'invalid-uuid' });
+
+    expect(() => createBrowserUuid()).toThrow(ActivityOperationIdentityError);
   });
 });

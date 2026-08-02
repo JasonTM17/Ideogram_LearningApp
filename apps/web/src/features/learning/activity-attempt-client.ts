@@ -10,6 +10,7 @@ import type { ActivityOperationIdentity } from '@ideogram/api-client';
 export type WebActivityAttemptErrorCode =
   | 'ABORTED'
   | 'FORBIDDEN'
+  | 'IDENTITY_ERROR'
   | 'INVALID_REQUEST'
   | 'INVALID_RESPONSE'
   | 'NETWORK_ERROR'
@@ -142,6 +143,11 @@ const errorFeedback: Record<WebActivityAttemptErrorCode, WebActivityAttemptFeedb
     message: 'Tài khoản hiện không có quyền ghi tiến độ cho hoạt động này.',
     retryable: false,
   },
+  IDENTITY_ERROR: {
+    code: 'IDENTITY_ERROR',
+    message: 'Trình duyệt chưa thể tạo mã xác nhận an toàn. Hãy tải lại rồi thử lại.',
+    retryable: false,
+  },
   INVALID_REQUEST: {
     code: 'INVALID_REQUEST',
     message: 'Hoạt động không còn khả dụng. Hãy quay lại bài học để cập nhật.',
@@ -183,7 +189,9 @@ const errorFeedback: Record<WebActivityAttemptErrorCode, WebActivityAttemptFeedb
 export const describeWebActivityAttemptError = (error: unknown): WebActivityAttemptFeedback => {
   const code =
     error instanceof ActivityOperationIdentityError
-      ? 'STORAGE_ERROR'
+      ? error.code === 'corrupt_state' || error.code === 'storage_failure'
+        ? 'STORAGE_ERROR'
+        : 'IDENTITY_ERROR'
       : error instanceof WebActivityAttemptError
         ? error.code
         : 'NETWORK_ERROR';

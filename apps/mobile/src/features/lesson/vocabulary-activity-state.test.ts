@@ -47,5 +47,13 @@ describe('native vocabulary activity state', () => {
         new ActivityOperationIdentityError('storage_failure', 'Secure storage unavailable.'),
       ),
     ).toMatchObject({ code: 'STORAGE_ERROR', retryable: false });
+    expect(
+      describeNativeVocabularyActivityError(
+        new ActivityOperationIdentityError(
+          'device_id_failure',
+          'Native UUID generation is unavailable.',
+        ),
+      ),
+    ).toMatchObject({ code: 'IDENTITY_ERROR', retryable: false });
   });
 });

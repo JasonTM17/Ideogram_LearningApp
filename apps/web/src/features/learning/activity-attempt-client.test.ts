@@ -95,6 +95,14 @@ describe('web activity attempt client', () => {
         new ActivityOperationIdentityError('storage_failure', 'Browser storage is unavailable.'),
       ),
     ).toMatchObject({ code: 'STORAGE_ERROR', retryable: false });
+    expect(
+      describeWebActivityAttemptError(
+        new ActivityOperationIdentityError(
+          'device_id_failure',
+          'Browser UUID generation is unavailable.',
+        ),
+      ),
+    ).toMatchObject({ code: 'IDENTITY_ERROR', retryable: false });
   });
 
   it('rejects malformed success responses without exposing their payload', async () => {
