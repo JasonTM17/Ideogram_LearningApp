@@ -51,6 +51,51 @@ The authenticated runtime screenshot is
 [`docs/media/browser-offline-runtime.png`](../media/browser-offline-runtime.png).
 This is local Chromium proof, not production-host or cross-browser certification.
 
+## 2026-08-03 native background executor proof
+
+The pure executor unit tests in
+[`apps/mobile/src/lib/offline-sync/native-offline-sync-background-executor.test.ts`](../../apps/mobile/src/lib/offline-sync/native-offline-sync-background-executor.test.ts)
+cover the native queue contract without claiming a real-device OS task run:
+
+- an empty queue returns OS `success` without transport;
+- cross-account or cross-session namespace mismatch clears the queue before
+  any transport call;
+- a raced account switch detected after session lookup clears the queue before
+  transport;
+- missing native session preserves queued work;
+- retryable drain returns `failed`;
+- a clean drain returns `success`;
+- a stable blocked mutation returns scheduler success but remains blocked for
+  user action and does not imply receipt completion; and
+- dependency errors return `failed`.
+
+The companion ownership tests in
+[`apps/mobile/src/lib/offline-sync/owned-sync-queue-cleanup.test.ts`](../../apps/mobile/src/lib/offline-sync/owned-sync-queue-cleanup.test.ts)
+add the compare-and-clear proof:
+
+- stale background A cannot clear newer background B queue;
+- a queue is cleared only when the stored namespace still matches the expected
+  owner; and
+- invalid storage values are left untouched when ownership cannot be proven.
+
+The session-signal and drain path also prove that AbortSignal is bound to the
+queued namespace, that the native abort path counts as retryable, and that auth
+or storage read failures surface as OS-visible `failed` outcomes rather than
+silent success.
+
+The live background provider re-reads the Supabase session on each invocation
+and refuses to transport if the persisted namespace has drifted while storage
+lagged behind, so a stale account switch cannot push mutations from the wrong
+user.
+
+These tests prove executor and storage ownership behavior, not Expo
+BackgroundTask scheduling on a real device.
+
+The final mobile Vitest run executed 34 files and 146 tests. A direct source
+scan finds 29 focused `it`/`test` declarations under the offline-sync module,
+including executor, migration, queue-reader, session-signal, live-session,
+blocked-mutation, and abort-retry proofs.
+
 ## 2026-08-03 local verification
 
 The following commands passed from this checkout after the placement, durable

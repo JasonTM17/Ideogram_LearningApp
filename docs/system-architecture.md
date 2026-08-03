@@ -135,10 +135,10 @@ The route never holds a database transaction across the provider network call. T
 
 ## Offline sync and media
 
-- Web uses IndexedDB plus service-worker Background Sync when supported
-- Expo uses SecureStore and an OS-scheduled BackgroundTask when available
+- Web uses IndexedDB plus service-worker Background Sync when supported; local authenticated Chromium proof exists for the receipt-gated drain path, but production-host and cross-browser certification remain open
+- Expo uses SecureStore and an OS-scheduled BackgroundTask when available; the queue storage is `shared: true`, keyed by `(userId, sessionEpoch)`, and migrated from v1 to v2 with legacy cleanup. Pure native executor tests and owned-storage cleanup tests now cover namespace clearing, race re-checks after session lookup, stale-A/correct-B compare-and-clear ownership, missing-session preservation, abort-retryability, and retry/failure mapping, but real-device scheduling remains unproven
 - Both queues are user/session namespaced, sequential, receipt-gated, and never score locally
-- Browser, real-device, and deployed-worker execution are not yet proven
+- Browser, real-device, and deployed-worker execution are not yet fully proven
 - Offline media cache/download, removal, and checksum handling are implemented in source, but release approval and runtime proof are still pending
 
 ## Learning content posture

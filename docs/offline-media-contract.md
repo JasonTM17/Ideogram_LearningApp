@@ -30,10 +30,6 @@ One authenticated manifest contains at most one release and 25 assets. Asset
 URLs are at most 2,000 characters. The declared total for a web account cache is
 bounded to 50 MiB before any download starts.
 
-One authenticated manifest contains at most one release and 25 assets. Asset
-URLs are at most 2,000 characters. The declared total for a web account cache is
-bounded to 50 MiB before any download starts.
-
 An authored listening activity remains unavailable for offline delivery until
 its content-governance record is `recorded`, has the matching checksum, and is
 reviewed/published. No placeholder audio may be registered to bypass that gate.
