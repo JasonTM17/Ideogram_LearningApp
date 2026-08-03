@@ -6,7 +6,7 @@
 | --------------------------------------------- | ------------------------------ | -------------------------------------------------- |
 | Source files and migrations in this workspace | Yes                            | Confirms the behavior exists in source             |
 | Local unit/integration tests                  | Yes                            | Confirms local behavior under the current checkout |
-| Docs validator output                         | Yes                            | Confirms the docs tree is internally consistent    |
+| Repo link/required-file validator output      | Yes                            | Confirms checked local links and required files    |
 | Local build and typecheck results             | Yes                            | Confirms the code compiles locally                 |
 | Hosted CI status without a fresh local rerun  | No                             | Not enough for a release claim here                |
 | Real-device mobile validation                 | No, unless explicitly captured | Must be proven separately                          |
@@ -115,7 +115,7 @@ pnpm audit --prod
 pnpm peers check
 pnpm --filter @ideogram/mobile exec expo install --check
 pnpm --filter @ideogram/worker test:integration:placement
-node .claude/scripts/validate-docs.cjs docs/
+pnpm docs:check
 pnpm exec supabase test db supabase/tests/placement_lifecycle_test.sql
 pnpm exec supabase test db supabase/tests/review_idempotency_test.sql
 pnpm test:db:review-lock-order
@@ -123,6 +123,31 @@ git diff --check
 ```
 
 `pnpm format:check` also passed after the documentation refresh.
+
+## 2026-08-03 container package proof
+
+The repository-package hardening run built both local images from the checked-in
+Dockerfiles:
+
+```text
+docker build --file Dockerfile --tag ideogram-learning-web:local .
+docker build --file Dockerfile.worker --tag ideogram-learning-worker:local .
+```
+
+The web image ran as `nextjs`, exposed a Docker healthcheck, and returned
+`status: ok` from `/api/v1/health`. The worker image ran as `worker`, exposed a
+process-liveness healthcheck, and contained production dependencies only. This
+local worker proof did not validate database readiness; CI now starts the exact
+candidate digest with placement scoring enabled and confirms polling
+initialization plus sustained process liveness. Both runtime stages use the same pinned Node 24
+Alpine digest and exclude npm, Corepack, and Yarn because package managers are
+not required after build.
+
+Trivy `0.73.0` scanned both final local images with vulnerability-only scanning,
+`HIGH,CRITICAL`, and `ignore-unfixed`. Both reports returned zero matching OS or
+Node-package vulnerabilities. This proves the local image contents only. Registry
+digests, SBOM/provenance, dual-registry alignment, and hosted CI remain unproven
+until the merge workflow completes.
 
 ## Do not overstate
 
@@ -141,5 +166,9 @@ pnpm lint
 pnpm typecheck
 pnpm test
 pnpm build
-node .claude/scripts/validate-docs.cjs docs/
+pnpm docs:check
+pnpm content:lint
+pnpm peers check
+pnpm --filter @ideogram/mobile exec expo install --check
+pnpm audit --prod --audit-level=high
 ```

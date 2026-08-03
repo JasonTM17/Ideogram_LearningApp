@@ -2,7 +2,21 @@
 
 ## Status
 
-The web production image is reproducibly built by the root container definition and published to GitHub Container Registry by [`publish-container.yml`](../.github/workflows/publish-container.yml). That is image/package release evidence, not proof that a public runtime or Supabase production project has been provisioned.
+The web and placement-worker images are built from `Dockerfile` and
+`Dockerfile.worker`. The container jobs in
+[`ci.yml`](../.github/workflows/ci.yml) run only after the quality and database
+jobs pass, then build/load one local artifact. Smoke tests and Trivy scan that
+artifact before registry login or publication. The workflow tags and pushes the
+same loaded image without rebuilding, checks that every registry tag resolves
+to one digest, pulls that digest back, and confirms its image identity matches
+the tested local image. It then attaches a CycloneDX SBOM and GitHub build
+provenance to that digest. Version-tag releases are mirrored to Docker Hub only when the protected
+namespace and credentials exist, keeping semantic and full-SHA digest evidence
+aligned across both registries. No unverified candidate tag is exposed in a
+public registry. This is image/package release evidence, not
+proof that a public runtime or Supabase production project has been
+provisioned. The worker check proves enabled startup and process liveness; it
+does not claim database readiness.
 
 Package: `ghcr.io/jasontm17/ideogram-learning-app/web`
 

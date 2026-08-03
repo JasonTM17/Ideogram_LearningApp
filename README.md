@@ -1,50 +1,99 @@
 # Ideogram Learning
 
-Ideogram Learning is a Vietnamese-first language learning platform for a Japanese-first launch, with later Chinese and Korean support gated separately. The repo contains a Next.js web shell, an Expo mobile shell, a Node worker, shared contracts, local Supabase migrations, and docs that distinguish source state from deployed proof.
+[![CI](https://github.com/JasonTM17/Ideogram_LearningApp/actions/workflows/ci.yml/badge.svg)](https://github.com/JasonTM17/Ideogram_LearningApp/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-22c55e.svg)](LICENSE)
+[![Node 24](https://img.shields.io/badge/Node-24.12%2B-339933?logo=node.js&logoColor=white)](package.json)
+[![pnpm 11](https://img.shields.io/badge/pnpm-11.0.9-f69220?logo=pnpm&logoColor=white)](package.json)
+[![GHCR web](https://img.shields.io/badge/GHCR-web%20image-2563eb?logo=github)](https://github.com/JasonTM17/Ideogram_LearningApp/pkgs/container/ideogram-learning-app%2Fweb)
+[![Status: internal beta](https://img.shields.io/badge/status-internal%20beta-f59e0b)](docs/release/known-limitations.md)
 
-## Current foundation
+![Ideogram Learning project preview](docs/media/ideogram-learning-social-preview.png)
 
-- Web: Next.js App Router shell with protected learner pages, invite-only auth, a `/showcase` tour, catalog/review/placement/offline-media routes, browser IndexedDB + Background Sync queue code, and a bounded AI tutor route
-- Mobile: Expo shell on Expo `~57.0.9` / React Native `0.86.2` with protected session hydration, catalog-backed learning, onboarding/placement, review flow, SecureStore-backed durable syncing, and optional Expo BackgroundTask registration
-- Worker: Node worker with readiness logging and optional placement-scoring job draining when `PLACEMENT_SCORING_WORKER_ENABLED=true`
-- Shared packages: `packages/contracts`, `packages/ai`, `packages/design-tokens`, `packages/config`, `packages/testing`, `packages/auth`, `packages/api-client`, `packages/learning-engine`, `packages/sync`
-- Implemented routes: `GET /api/v1/health`, `GET /api/v1/auth/session`, `POST /api/v1/auth/email-otp`, `GET /auth/callback`, `POST /api/v1/auth/sign-out`, `GET /api/v1/learning/catalog`, `GET /api/v1/learning/offline-media`, `GET /api/v1/learning/reviews`, `POST /api/v1/learning/placement/sessions`, `GET /api/v1/learning/placement/sessions/[sessionId]`, `POST /api/v1/learning/placement/sessions/[sessionId]/answers`, `POST /api/v1/learning/placement/sessions/[sessionId]/submit`, `POST /api/v1/learning/activities/submit`, `POST /api/v1/learning/reviews/submit`, and `POST /api/v1/ai/tutor/turn`
+Nền tảng học ngôn ngữ Vietnamese-first, ưu tiên tiếng Nhật khi ra mắt, với
+Next.js web, Expo mobile, Supabase/PostgreSQL, worker chấm placement, AI tutor
+có giới hạn và đồng bộ offline bền vững. Chinese và Korean đã có contract nhưng
+đang được khóa sau release gate riêng.
 
-The placement submit route now accepts an exact empty JSON object. The auth session route returns only `userId` and a derived `sessionEpoch`, and it is served with no-store headers. Browser offline-sync identity compares the local session namespace to that same server-derived epoch.
+> **Trạng thái:** source đủ cho internal beta và portfolio review; chưa phải
+> production deployment. Repo không giả lập bài học đã phát hành, audio đã được
+> cấp quyền, native background execution hay hosted runtime khi chưa có bằng
+> chứng thật.
 
-Placement routes expose only learner-safe prompts. The published Japanese N5 placement bank lives in `supabase/migrations/20260803002000_publish_japanese_n5_placement_and_scoring_jobs.sql`, while authored lesson/audio corpus content remains draft or review-only until content and media gates pass. Rubrics, answer keys, and internal scoring input stay private. The worker scoring path and authenticated browser IndexedDB + Background Sync flow have passed local runtime verification; neither has production-host proof yet. Native Expo BackgroundTask still needs real-device verification.
+[Xem project tour](docs/media/showcase-project-tour.png) ·
+[Đọc kiến trúc](docs/system-architecture.md) ·
+[Chạy local](#chạy-local) ·
+[Xem release checklist](docs/release/release-checklist.md) ·
+[Known limitations](docs/release/known-limitations.md)
 
-The bounded AI tutor route is authenticated, server-only, and deliberately disabled by default. It stores private turn and quota ledger rows, but it does not yet claim grounded lesson retrieval, SSE, durable history, or offline tutor queues.
+## Visual tour
 
-## Visual references
+Project tour dưới đây được chụp từ route `/showcase` chạy thật và không cần tài
+khoản. GIF trình bày tổng quan sản phẩm, bằng chứng kỹ thuật và roadmap còn mở.
 
-The credential-free project tour at local route `/showcase` explains what runs in the beta, what remains target state, and how to inspect the implementation.
+![Ideogram Learning project tour](docs/media/project-tour.gif)
 
-![System architecture](docs/media/system-architecture.png)
+<table>
+  <tr>
+    <td width="58%">
+      <img src="docs/media/browser-offline-runtime.png" alt="Authenticated web learner shell with honest content-review empty state" />
+      <br /><strong>Web learner runtime</strong><br />Authenticated local browser proof; content remains gated until review.
+    </td>
+    <td width="42%">
+      <img src="docs/media/mobile-learning-flow.gif" alt="Stitch-derived Expo design handoff across Today, Review, AI Tutor, Progress, and Profile" />
+      <br /><strong>Expo design handoff</strong><br />Stitch-derived design sequence, not device-runtime proof.
+    </td>
+  </tr>
+</table>
 
-![Mobile learning flow](docs/media/mobile-learning-flow.gif)
+### Kiến trúc hệ thống
 
-Design handoff and Stitch exports:
+![Ideogram Learning system architecture](docs/media/system-architecture.png)
 
-- [Stitch handoff](assets/designs/stitch/README.md)
-- [Design guidelines](docs/design-guidelines.md)
-- [System architecture](docs/system-architecture.md)
-- [Media sources and regeneration](docs/media/README.md)
-- [Docs index](docs/README.md)
-- [Operational runbooks](docs/operations/local-verification-runbook.md)
-- [Release docs](docs/release/README.md)
+### Luồng học và đồng bộ offline
 
-## Product status
+![Learning and offline sync flow](docs/media/learning-and-sync-flow.png)
 
-- Current product state: internal beta foundation only
-- Launch language priority: Japanese first
-- Supported exam contracts: JLPT N5-N1, HSK 1-6, TOPIK 1-6, including TOPIK I/II grouping
-- Active language-pack state: Japanese is active; Chinese and Korean are seeded as hidden packs until later release gates
-- No claim of official exam certification
-- Adult-only closed beta is fail-closed pending named product/legal sign-off
-- Minors require a separate approved plan before any launch consideration
+Các hình trên là bằng chứng ở phạm vi khác nhau. Xem
+[`docs/media/README.md`](docs/media/README.md) để biết nguồn, cách tái tạo và
+giới hạn của từng asset.
 
-## Quick start
+## Sản phẩm hiện có
+
+| Surface         | Đã triển khai                                                                                                | Giới hạn trung thực                                                       |
+| --------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| Web             | Protected learner shell, catalog, review, placement, offline media status, IndexedDB queue, project showcase | Chưa có hosted production/cross-browser certification                     |
+| Expo mobile     | Session hydration, onboarding/placement, catalog, review, SecureStore queue, optional BackgroundTask         | Cần proof trên thiết bị thật và native release pipeline                   |
+| Learning engine | Japanese-first contracts, activity submission, SRS/review receipts, placement scoring jobs                   | Nội dung authored vẫn review-only; speaking/writing evaluator chưa có     |
+| AI tutor        | Authenticated server-only bounded turn, consent/quota ledger, disabled by default                            | Chưa có grounded retrieval, SSE, durable history hay offline tutor queue  |
+| Worker          | Enabled-startup logging, optional placement-scoring drain và non-root worker image                           | Container health is process liveness, not database readiness; chưa deploy |
+| Offline media   | Manifest/checksum/cache contract và trạng thái unavailable đúng sự thật                                      | Chưa có audio được duyệt quyền hoặc playback proof                        |
+
+## Luồng kiến trúc
+
+```text
+Next.js web ─┐
+             ├─ canonical API/contracts ─ learning engine ─ Supabase/PostgreSQL
+Expo mobile ─┘              │                    │
+                            ├─ offline queues    ├─ placement jobs → worker
+                            └─ bounded AI route  └─ governed content/media
+```
+
+Workspace chính:
+
+```text
+apps/web/           Next.js App Router, API handlers, learner UI
+apps/mobile/        Expo/React Native learner application
+apps/worker/        Node placement-scoring worker
+packages/           Contracts, auth, API client, learning engine, sync, UI config
+supabase/           Migrations, RLS policies, pgTAP tests
+content/            Governed source, manifests, rights ledger, media registry
+docs/               Architecture, contracts, runbooks, release evidence
+plans/              CK implementation plans and phase reports
+```
+
+## Chạy local
+
+Yêu cầu Node `>=24.12.0 <25`, pnpm `>=11.0.9 <12` và Docker khi chạy Supabase.
 
 ```bash
 corepack enable
@@ -53,7 +102,23 @@ pnpm check:env
 pnpm dev
 ```
 
-## Validate and build
+Trước khi chạy tính năng cần secret, tạo file local bị ignore:
+
+```powershell
+Copy-Item .env.example .env.local
+```
+
+Trên macOS/Linux dùng `cp .env.example .env.local`. Không đưa output
+`pnpm supabase:status` vào log chia sẻ vì có thể chứa credential local.
+
+### Supabase local
+
+```bash
+pnpm supabase:start
+pnpm supabase:stop
+```
+
+## Kiểm tra chất lượng
 
 ```bash
 pnpm format:check
@@ -61,9 +126,33 @@ pnpm lint
 pnpm typecheck
 pnpm test
 pnpm build
+pnpm content:lint
 ```
 
-## Content and media generation
+CI kiểm tra workspace contracts, docs package, governed content, peer/Expo
+compatibility, lint, type safety, tests, production build và database
+regressions. Sau các gate đó, web/worker images mới được build, smoke-test,
+Trivy scan và publish kèm SBOM/provenance. Browser/device E2E, accessibility,
+load và coverage threshold vẫn là release gate chưa hoàn tất — xem
+[`release-checklist.md`](docs/release/release-checklist.md).
+
+## API surface đã triển khai
+
+- Health và auth session/email OTP/callback/sign-out.
+- Learning catalog, offline-media manifest và review queue.
+- Placement session create/read/answer/submit.
+- Activity và review submission.
+- Bounded AI tutor turn.
+
+Chi tiết method, validation và response contract nằm trong
+[`docs/api-contract.md`](docs/api-contract.md). Không có API nào ngoài tài liệu
+đó được tuyên bố là public contract.
+
+## Content và quyền sử dụng
+
+Japanese N5 pilot hiện có 2 units, 12 lessons, 156 vocabulary/review entries,
+40 listening scripts và 25 placement prompts. Nội dung vẫn ở trạng thái review;
+audio registry rỗng và quyền redistribution chưa được duyệt.
 
 ```bash
 pnpm generate:ja-n5-content
@@ -71,74 +160,55 @@ pnpm generate:offline-media-manifest
 pnpm content:lint
 ```
 
-## Supabase local workflow
+MIT áp dụng cho source code và documentation do dự án tạo. Nó không tự động
+cấp quyền cho audio, exam material, third-party assets hoặc review-only learning
+content. Xem [`NOTICE.md`](NOTICE.md) và
+[`content/licenses/manifest.md`](content/licenses/manifest.md).
 
-```bash
-pnpm supabase:start
-pnpm supabase:stop
-```
+## Package và release
 
-Do not copy `pnpm supabase:status` into shared logs because its output can contain local development credentials.
-
-## GitHub Actions and GHCR
-
-The repository publishes the web image from the `publish-container.yml` workflow. The workflow pushes branch and semver tags, an immutable `sha-<commit>` tag, and `latest` on the default branch.
+Web image hiện có trên GHCR:
 
 ```bash
 docker pull ghcr.io/jasontm17/ideogram-learning-app/web:latest
 docker pull ghcr.io/jasontm17/ideogram-learning-app/web:sha-<commit>
 ```
 
-- [GitHub About](https://github.com/JasonTM17/Ideogram_LearningApp)
-- [Public GHCR package](https://github.com/JasonTM17/Ideogram_LearningApp/pkgs/container/ideogram-learning-app%2Fweb)
+Workflow mới phát hành tag `sha-*` đầy đủ 40 ký tự; các tag ngắn cũ có thể vẫn
+tồn tại trên registry. Tag vẫn có thể được đổi trỏ, nên luôn ưu tiên digest
+`sha256:*` bất biến khi kiểm chứng/rollback. Worker image,
+Docker Hub mirror, native EAS builds và source GitHub Release chưa được publish.
+Không tạo release chỉ để lấp sidebar; release đầu tiên phải vượt đúng các gate
+trong [`artifact-matrix.md`](docs/release/artifact-matrix.md).
 
-`latest` is only updated by the default branch. Prefer the immutable `sha-*` tag for release evidence, rollback, and reproducible deployment checks.
+## Documentation map
 
-## Environment
+| Chủ đề     | Tài liệu                                                                                                                                              |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tổng quan  | [Project PDR](docs/project-overview-pdr.md) · [Roadmap](docs/project-roadmap.md) · [Codebase summary](docs/codebase-summary.md)                       |
+| Kiến trúc  | [System architecture](docs/system-architecture.md) · [ADRs](docs/architecture-decisions) · [Code standards](docs/code-standards.md)                   |
+| Learning   | [Learning engine](docs/learning-engine-contract.md) · [Review/sync](docs/review-and-sync-contract.md) · [Offline sync](docs/offline-sync-contract.md) |
+| Trust      | [Security/privacy](docs/security-and-privacy-baseline.md) · [Auth](docs/authentication-guide.md) · [Data lifecycle](docs/data-lifecycle-matrix.md)    |
+| Operations | [Deployment](docs/deployment-guide.md) · [Runbooks](docs/operations) · [Release evidence](docs/release/README.md)                                     |
+| AI/content | [AI safety](docs/ai-system-and-safety.md) · [Content governance](docs/content-governance.md) · [Offline media](docs/offline-media-contract.md)        |
 
-- Copy `.env.example` to a local ignored env file before running secret-backed features.
-- `DEEPSEEK_API_KEY` is server-only and must never be placed in `NEXT_PUBLIC_*` or `EXPO_PUBLIC_*`.
-- `AI_TUTOR_ENABLED` defaults to `false`. Enabling it requires owner approval, a replacement secret loaded from a deployment secret store, an accepted `AI_TUTOR_CONSENT_POLICY_KEY`, and configured integer micro-USD price inputs.
-- `EXPO_PUBLIC_AUTH_CALLBACK_URL` is optional only in native development, where `ideogram-learning://auth/callback` is the fallback. Production mobile builds must supply one exact claimed HTTPS Universal Link or App Link callback.
-- `EXPO_PUBLIC_API_ORIGIN` is public configuration for the mobile read client, not a credential. It must be an HTTPS origin in production; development can use loopback HTTP.
-- `APP_ORIGIN` must exactly match the origin opened in the browser; local Supabase and the example config use `http://127.0.0.1:3000`.
-- `LEARNING_DATABASE_URL` is server-only. Production must use the dedicated `ideogram_learning_web_login` login, or a pooler-style suffix for that login if the platform requires it, with `sslmode=verify-full` as the only query parameter.
-- `LEARNING_DATABASE_POOL_MAX` defaults to `2`, must stay between `1` and `5`, and should keep `replicas * pool max` at or below `16` under the login's `20`-connection limit.
-- Keep `TRUST_PROXY_IP_HEADERS=false` unless a trusted ingress overwrites `x-forwarded-for` and `x-real-ip`.
-- `pnpm check:env` scans framework dotenv files without printing their values and rejects accidental public AI-key exposure.
+## Roadmap còn mở
 
-## What is not implemented yet
+- Fix account-switch isolation khi browser offline queue đang drain.
+- Real-device BackgroundTask và native build/release pipeline.
+- Approved audio, checksum registry và browser/device playback proof.
+- Hosted web/worker/database, observability, restore và rollback drills.
+- Grounded/SSE tutor, durable history, broader evaluators và admin workflows.
 
-- Broader lesson onboarding preferences/enrollment writes, a reviewed recorded-media release, grounded/SSE AI chat, durable tutor history/offline tutor queues, progress writes, and admin workflows
-- Activity evaluators beyond vocabulary acknowledgement and objective listening, including speaking and writing assessment
-- Production web runtime deployment or cloud provisioning
-- Hosted production login credential setup for the learning write path; the provisioning SQL exists, but the secret credential and platform wiring remain external
-- No additional API surface is claimed beyond the implemented health, auth,
-  catalog, offline-media, review, placement, activity, and tutor routes
+## Cộng tác và chính sách
 
-## Docs
+[Contributing](.github/CONTRIBUTING.md) ·
+[Security](.github/SECURITY.md) ·
+[Code of Conduct](.github/CODE_OF_CONDUCT.md) ·
+[Changelog](CHANGELOG.md) ·
+[License](LICENSE) ·
+[Asset notice](NOTICE.md)
 
-- [Docs index](docs/README.md)
-- [Project overview and PDR](docs/project-overview-pdr.md)
-- [Code standards](docs/code-standards.md)
-- [Codebase summary](docs/codebase-summary.md)
-- [System architecture](docs/system-architecture.md)
-- [Security and privacy baseline](docs/security-and-privacy-baseline.md)
-- [Authentication guide](docs/authentication-guide.md)
-- [Privileged operation matrix](docs/privileged-operation-matrix.md)
-- [Data lifecycle matrix](docs/data-lifecycle-matrix.md)
-- [Account deletion and export saga](docs/account-deletion-and-export-saga.md)
-- [API contract](docs/api-contract.md)
-- [Mobile support policy](docs/mobile-support-policy.md)
-- [External dependency matrix](docs/external-dependency-matrix.md)
-- [Execution capacity and load assumptions](docs/execution-capacity-and-load-assumptions.md)
-- [Deployment guide](docs/deployment-guide.md)
-- [GitHub Container Registry image](https://github.com/JasonTM17/Ideogram_LearningApp/pkgs/container/ideogram-learning-app%2Fweb)
-- [Project roadmap](docs/project-roadmap.md)
-- [Content governance](docs/content-governance.md)
-- [Learning engine contract](docs/learning-engine-contract.md)
-- [AI system and safety](docs/ai-system-and-safety.md)
-- [Review and sync contract](docs/review-and-sync-contract.md)
-- [Offline sync contract](docs/offline-sync-contract.md)
-- [Offline media contract](docs/offline-media-contract.md)
-- [Foundation engineering journal](docs/journals/2026-07-29-foundation-safety-rails.md)
+Copyright © 2026 Nguyen Tien Son. Project-authored source and documentation are
+available under the MIT License, subject to the exclusions described in
+`NOTICE.md`.
