@@ -137,17 +137,35 @@ docker build --file Dockerfile.worker --tag ideogram-learning-worker:local .
 The web image ran as `nextjs`, exposed a Docker healthcheck, and returned
 `status: ok` from `/api/v1/health`. The worker image ran as `worker`, exposed a
 process-liveness healthcheck, and contained production dependencies only. This
-local worker proof did not validate database readiness; CI now starts the exact
-candidate digest with placement scoring enabled and confirms polling
-initialization plus sustained process liveness. Both runtime stages use the same pinned Node 24
-Alpine digest and exclude npm, Corepack, and Yarn because package managers are
-not required after build.
+local worker proof did not validate database readiness. Both runtime stages use
+the same pinned Node 24 Alpine digest and exclude npm, Corepack, and Yarn
+because package managers are not required after build.
 
 Trivy `0.73.0` scanned both final local images with vulnerability-only scanning,
 `HIGH,CRITICAL`, and `ignore-unfixed`. Both reports returned zero matching OS or
-Node-package vulnerabilities. This proves the local image contents only. Registry
-digests, SBOM/provenance, dual-registry alignment, and hosted CI remain unproven
-until the merge workflow completes.
+Node-package vulnerabilities. This proves the local image contents only.
+
+## 2026-08-03 hosted main package proof
+
+[GitHub Actions run 30830758867](https://github.com/JasonTM17/Ideogram_LearningApp/actions/runs/30830758867)
+passed quality/build, database regressions, and both container jobs for commit
+`7f237cc3bec504e6e7b1602e23424534d25f9401`.
+
+Each container job built and loaded one local artifact, ran its startup smoke,
+failed on any fixable HIGH/CRITICAL Trivy finding, and generated a CycloneDX
+SBOM before registry login. It then pushed that same image, compared every
+published tag digest, pulled the GHCR digest, and confirmed that its image ID
+matched the tested local artifact. GitHub build-provenance and SBOM attestations
+were attached to both subject digests:
+
+| Package | Verified GHCR digest                                                      |
+| ------- | ------------------------------------------------------------------------- |
+| Web     | `sha256:f2ba6e2107a6d01e52e595d888deb7a645c46eb787d98dd5c2b7a202092d8529` |
+| Worker  | `sha256:09472638a09bef3c0945a42fb111efb7fbc3df8320a6b30661b256718a1b4d50` |
+
+Docker Hub credentials were not available in this default-branch run, so no
+dual-registry publication or digest-alignment claim is made here. Worker
+database readiness and public runtime deployment also remain unproven.
 
 ## Do not overstate
 
