@@ -13,8 +13,6 @@ import {
 import { parseTrustedWebOrigin, readJsonMutationBody } from '@/server/http/mutation-policy';
 import { startPlacementSession } from '@/server/learning/placement-repository';
 
-export const runtime = 'nodejs';
-
 interface StartPlacementDependencies {
   authenticate: (request: Request) => Promise<AuthenticatedSupabaseRequest>;
   readBody: typeof readJsonMutationBody;

@@ -7,8 +7,6 @@ import { readOfflineMediaManifest } from '@/server/learning/offline-media-manife
 
 import type { OfflineMediaManifest } from '@ideogram/contracts';
 
-export const runtime = 'nodejs';
-
 interface OfflineMediaManifestRouteDependencies {
   authenticate: (request: Request) => Promise<AuthenticatedSupabaseRequest>;
   readManifest: () => OfflineMediaManifest;

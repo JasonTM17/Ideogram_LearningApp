@@ -7,8 +7,6 @@ import {
 } from '@/lib/supabase/request-auth';
 import { createApiErrorResponse, createRequestId, jsonNoStore } from '@/server/http/api-response';
 
-export const runtime = 'nodejs';
-
 const deriveSessionEpoch = (accessToken: string): number => {
   try {
     const payloadSegment = accessToken.split('.')[1];

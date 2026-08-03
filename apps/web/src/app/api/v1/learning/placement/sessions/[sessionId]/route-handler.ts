@@ -15,8 +15,6 @@ import { readPlacementSession } from '@/server/learning/placement-repository';
 import type { PlacementSessionReceipt } from '@ideogram/contracts';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-export const runtime = 'nodejs';
-
 interface RouteContext {
   params: Promise<{ sessionId: string }>;
 }

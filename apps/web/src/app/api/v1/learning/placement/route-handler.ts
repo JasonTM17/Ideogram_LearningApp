@@ -8,8 +8,6 @@ import { readPlacementCatalog } from '@/server/learning/placement-repository';
 import type { PlacementCatalogResponse } from '@ideogram/contracts';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-export const runtime = 'nodejs';
-
 interface PlacementCatalogDependencies {
   authenticate: (request: Request) => Promise<AuthenticatedSupabaseRequest>;
   readCatalog: (client: SupabaseClient) => Promise<PlacementCatalogResponse>;

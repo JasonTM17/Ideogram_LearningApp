@@ -8,8 +8,6 @@ import { readLearnerReviewQueue } from '@/server/learning/review-queue-repositor
 import type { ReviewQueueResponse } from '@ideogram/contracts';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-export const runtime = 'nodejs';
-
 interface LearnerReviewQueueRouteDependencies {
   authenticate: (request: Request) => Promise<AuthenticatedSupabaseRequest>;
   readReviewQueue: (client: SupabaseClient) => Promise<ReviewQueueResponse>;

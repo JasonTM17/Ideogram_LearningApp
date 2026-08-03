@@ -14,7 +14,6 @@ import {
 import { parseTrustedWebOrigin, readJsonMutationBody } from '@/server/http/mutation-policy';
 import { submitPlacementSession } from '@/server/learning/placement-repository';
 
-export const runtime = 'nodejs';
 const emptySubmitBodySchema = z.object({}).strict();
 
 interface RouteContext {

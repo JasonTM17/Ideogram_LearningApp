@@ -28,8 +28,6 @@ import {
   type TutorTurnReservation,
 } from '@/server/ai/tutor-turn-repository';
 
-export const runtime = 'nodejs';
-
 export interface TutorTurnRouteDependencies {
   authenticate: (request: Request) => Promise<AuthenticatedSupabaseRequest>;
   beginTurn: typeof beginTutorTurn;

@@ -13,8 +13,6 @@ import {
 import { parseTrustedWebOrigin, readJsonMutationBody } from '@/server/http/mutation-policy';
 import { submitReviewEvent } from '@/server/learning/review-submission-repository';
 
-export const runtime = 'nodejs';
-
 interface ReviewSubmissionRouteDependencies {
   authenticate: (request: Request) => Promise<AuthenticatedSupabaseRequest>;
   readBody: typeof readJsonMutationBody;

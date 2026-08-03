@@ -13,8 +13,6 @@ import {
 import { parseTrustedWebOrigin, readJsonMutationBody } from '@/server/http/mutation-policy';
 import { recordPlacementAnswer } from '@/server/learning/placement-repository';
 
-export const runtime = 'nodejs';
-
 interface RouteContext {
   params: Promise<{ sessionId: string }>;
 }

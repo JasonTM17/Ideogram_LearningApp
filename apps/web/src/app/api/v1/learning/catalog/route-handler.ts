@@ -8,8 +8,6 @@ import { readLearnerCatalog } from '@/server/learning/learner-catalog-repository
 import type { LearnerCatalogResponse } from '@ideogram/contracts';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-export const runtime = 'nodejs';
-
 interface LearnerCatalogRouteDependencies {
   authenticate: (request: Request) => Promise<AuthenticatedSupabaseRequest>;
   readCatalog: (client: SupabaseClient) => Promise<LearnerCatalogResponse>;

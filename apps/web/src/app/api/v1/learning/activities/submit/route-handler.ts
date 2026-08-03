@@ -13,8 +13,6 @@ import {
 import { parseTrustedWebOrigin, readJsonMutationBody } from '@/server/http/mutation-policy';
 import { submitActivityAttempt } from '@/server/learning/activity-submission-repository';
 
-export const runtime = 'nodejs';
-
 interface ActivitySubmissionRouteDependencies {
   authenticate: (request: Request) => Promise<AuthenticatedSupabaseRequest>;
   readBody: typeof readJsonMutationBody;
