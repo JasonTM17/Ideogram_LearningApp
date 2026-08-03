@@ -1,6 +1,6 @@
 begin;
 
-select plan(49);
+select plan(52);
 
 select ok(
   position(
@@ -485,6 +485,28 @@ select throws_ok(
   'Device sequence was already used for another review event.',
   'a device sequence cannot create two distinct review events'
 );
+select throws_ok(
+  $$
+    select *
+    from private.submit_review_event(
+      '11000000-0000-0000-0000-000000000001',
+      '41000000-0000-0000-0000-000000000001',
+      '51000000-0000-0000-0000-000000000003',
+      '61000000-0000-0000-0000-000000000001',
+      2,
+      repeat('d', 64),
+      'hard',
+      '2000-01-01T00:00:00.000Z'::timestamptz,
+      'Asia/Ho_Chi_Minh'
+    )
+  $$,
+  '23514',
+  'Review item is not due yet.',
+  'a fresh review submission cannot advance an item rescheduled by another tab'
+);
+update public.review_items
+set due_at = clock_timestamp()
+where item_id = '41000000-0000-0000-0000-000000000001';
 select lives_ok(
   $$
     select *
@@ -546,7 +568,10 @@ select ok(
   'the server clock, not the future client clock, sets the next due time'
 );
 update public.review_items
-set interval_minutes = 5256000, ease_factor = 3.50
+set
+  due_at = clock_timestamp(),
+  interval_minutes = 5256000,
+  ease_factor = 3.50
 where item_id = '41000000-0000-0000-0000-000000000002';
 select is(
   (
@@ -673,6 +698,12 @@ begin
       clock_timestamp(),
       'Asia/Ho_Chi_Minh'
     );
+
+    -- Each deterministic lapse schedules the next real review in the future.
+    -- Advance the test clock surrogate before simulating the next due event.
+    update public.review_items
+    set due_at = clock_timestamp()
+    where item_id = '41000000-0000-0000-0000-000000000004';
   end loop;
 
   perform private.submit_review_event(
@@ -765,6 +796,18 @@ select is(
   '1/2',
   'one completed activity yields partial progress for the two-activity lesson'
 );
+select is(
+  (
+    select count(*)
+    from public.review_items
+    where user_id = '11000000-0000-0000-0000-000000000001'
+      and content_release_id = 'ja-n5-review-test-v1'
+      and activity_id = 'ja-n5-review-u1-l1-vocab'
+      and source_item_key = 'vocabulary-1'
+  ),
+  1::bigint,
+  'a completed vocabulary activity creates one immutable review item per entry'
+);
 select ok(
   (
     select idempotent_replay
@@ -782,6 +825,18 @@ select ok(
     )
   ),
   'an activity retry returns the existing result without double-counting progress'
+);
+select is(
+  (
+    select count(*)
+    from public.review_items
+    where user_id = '11000000-0000-0000-0000-000000000001'
+      and content_release_id = 'ja-n5-review-test-v1'
+      and activity_id = 'ja-n5-review-u1-l1-vocab'
+      and source_item_key = 'vocabulary-1'
+  ),
+  1::bigint,
+  'an identical activity retry does not create a second vocabulary review item'
 );
 select throws_ok(
   $$
@@ -1064,7 +1119,7 @@ select is(
     where content_release_id = 'ja-n5-review-test-v1'
       and state = 'suspended'
   ),
-  4::bigint,
+  5::bigint,
   'archiving a release atomically suspends every outstanding review item'
 );
 select is(

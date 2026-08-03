@@ -32,6 +32,28 @@ const validateRecordedAsset = ({ activity, asset, audioRoot, errors, workspaceRo
     addError(errors, location, 'registry entry requires a localFilePath');
     return;
   }
+  if (typeof asset.publicUrl !== 'string') {
+    addError(errors, location, 'registry entry requires a publicUrl');
+  } else {
+    try {
+      const publicUrl = new URL(asset.publicUrl);
+      if (
+        publicUrl.protocol !== 'https:' ||
+        publicUrl.username ||
+        publicUrl.password ||
+        publicUrl.search ||
+        publicUrl.hash
+      ) {
+        addError(
+          errors,
+          location,
+          'registry publicUrl must be stable HTTPS without credentials or query',
+        );
+      }
+    } catch {
+      addError(errors, location, 'registry publicUrl must be a valid HTTPS URL');
+    }
+  }
 
   const localAssetPath = path.resolve(workspaceRoot, asset.localFilePath);
   if (!isInsideDirectory(localAssetPath, audioRoot)) {

@@ -15,10 +15,8 @@ const secureStoreOptions: SecureStore.SecureStoreOptions = {
   requireAuthentication: false,
 };
 
-const activityOperationInstallationSentinel = new File(
-  Paths.document,
-  '.ideogram-activity-operation-installation-v1',
-);
+const activityOperationInstallationSentinelFileName =
+  '.ideogram-activity-operation-installation-v1';
 
 const createAvailabilityGuard = () => {
   let availability: Promise<boolean> | undefined;
@@ -33,6 +31,13 @@ const createAvailabilityGuard = () => {
 
 export const createExpoActivityOperationIdentityStore = (): ActivityOperationIdentityStore => {
   const assertAvailable = createAvailabilityGuard();
+  // Keep the native File constructor out of module evaluation. Expo web can
+  // bundle this module for protected routes, but expo-file-system's File API
+  // is native-only and throws when constructed on web.
+  const activityOperationInstallationSentinel = new File(
+    Paths.document,
+    activityOperationInstallationSentinelFileName,
+  );
   let installationCheck: Promise<void> | undefined;
 
   const ensureInstallation = async (): Promise<void> => {

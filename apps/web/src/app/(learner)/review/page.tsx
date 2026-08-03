@@ -1,26 +1,24 @@
-import { RotateCcw } from 'lucide-react';
-
 import { AppShell } from '@/components/app-shell/app-shell';
-import { DestinationStateView } from '@/features/learner/destination-state-view';
+import { ReviewQueueView } from '@/features/review/review-queue-view';
+import { createReviewQueuePresentation } from '@/features/review/review-queue-presentation';
 import { requireLearnerPageSession } from '@/lib/supabase/learner-session';
+import { readLearnerCatalog } from '@/server/learning/learner-catalog-repository';
+import { readLearnerReviewQueue } from '@/server/learning/review-queue-repository';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ReviewPage() {
-  await requireLearnerPageSession('/review');
+  const { client } = await requireLearnerPageSession('/review');
+  const [catalog, queue] = await Promise.all([
+    readLearnerCatalog(client),
+    readLearnerReviewQueue(client),
+  ]);
 
   return (
     <AppShell activeKey="review">
-      <DestinationStateView
-        actionHref="/learn"
-        actionLabel="Mở lộ trình"
-        description="Mỗi mục ôn phải đến từ một lần học đã ghi nhận và một lịch SRS có thể giải thích."
-        eyebrow="Ôn tập"
-        icon={RotateCcw}
-        panelDescription="Hàng đợi chỉ mở sau khi API nộp bài và review transaction được nối trọn vẹn. Không có thẻ minh họa được tính như lịch sử thật."
-        panelLabel="Tính năng đang hoàn thiện"
-        panelTitle="Hàng đợi chưa được kết nối"
-        title="Gợi nhớ đúng lúc, không lặp vô nghĩa"
+      <ReviewQueueView
+        presentation={createReviewQueuePresentation(queue, catalog)}
+        signInHref="/sign-in?returnTo=%2Freview"
       />
     </AppShell>
   );

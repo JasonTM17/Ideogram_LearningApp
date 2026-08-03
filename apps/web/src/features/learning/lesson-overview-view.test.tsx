@@ -32,6 +32,30 @@ const lessonContext: CatalogLessonContext = {
         titleVietnamese: 'Từ vựng: giáo viên',
       },
       {
+        activityId: 'greeting-listening',
+        activityType: 'listening',
+        estimatedMinutes: 3,
+        instructionsVietnamese: 'Nghe hội thoại ngắn.',
+        payload: {
+          audioAssetPath: 'media/ja/n5/greeting-listening.mp3',
+          audioProductionStatus: 'planned',
+          questions: [
+            {
+              options: [
+                { optionId: 'yes', text: 'はい' },
+                { optionId: 'no', text: 'いいえ' },
+              ],
+              prompt: 'Người nói đồng ý?',
+              questionId: 'greeting-listening-q1',
+            },
+          ],
+          transcript: 'はい。',
+        },
+        rubyAnnotationState: 'planned',
+        targetScript: 'kana_kanji',
+        titleVietnamese: 'Nghe lời chào',
+      },
+      {
         activityId: 'greeting-retrieval',
         activityType: 'retrieval',
         estimatedMinutes: 5,
@@ -60,6 +84,8 @@ describe('LessonOverviewView', () => {
     expect(markup).toContain('href="/lessons/greetings-01/activities/greeting-vocabulary"');
     expect(markup).toContain('Học từ vựng');
     expect(markup).toContain('Chưa hỗ trợ trong lượt này');
+    expect(markup).toContain('Bản nghe chưa được phát hành');
+    expect(markup).toContain('Bạn vẫn có thể học các phần khác trong bài.');
     expect(markup).not.toContain('href="/lessons/greetings-01/activities/greeting-retrieval"');
   });
 });

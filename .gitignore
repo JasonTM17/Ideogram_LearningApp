@@ -9,6 +9,7 @@ node_modules/
 .next/
 .expo/
 apps/mobile/.expo-export-*/
+apps/mobile/expo-env.d.ts
 dist/
 coverage/
 *.tsbuildinfo

@@ -88,6 +88,7 @@ describe('content security gates', () => {
           {
             audioAssetPath: listeningActivity.payload.audioAssetPath,
             localFilePath,
+            publicUrl: 'https://media.example.test/ja-n5/listen-1.mp3',
             sha256: checksum,
           },
         ],

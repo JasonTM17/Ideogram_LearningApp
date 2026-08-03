@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import { VocabularyActivityView } from './vocabulary-activity-view';
+import { BrowserOfflineSyncProvider } from '@/features/offline-sync/browser-offline-sync-provider';
 
 import type { CatalogVocabularyActivityContext } from './catalog-presentation';
 
@@ -46,13 +47,17 @@ const activityContext: CatalogVocabularyActivityContext = {
 describe('VocabularyActivityView', () => {
   it('renders public vocabulary content and an honest acknowledgement action', () => {
     const markup = renderToStaticMarkup(
-      createElement(VocabularyActivityView, {
-        activityContext: {
-          ...activityContext,
-          lesson: { ...activityContext.lesson, activities: [activityContext.activity] },
-        },
-        signInHref: '/sign-in?returnTo=%2Flessons%2Fgreetings-01',
-      }),
+      createElement(
+        BrowserOfflineSyncProvider,
+        null,
+        createElement(VocabularyActivityView, {
+          activityContext: {
+            ...activityContext,
+            lesson: { ...activityContext.lesson, activities: [activityContext.activity] },
+          },
+          signInHref: '/sign-in?returnTo=%2Flessons%2Fgreetings-01',
+        }),
+      ),
     );
 
     expect(markup).toContain('lang="ja"');

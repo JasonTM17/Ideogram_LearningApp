@@ -8,6 +8,7 @@ import {
   createBrowserUuid,
 } from '@/lib/learning/browser-activity-operation-identity';
 import { subscribeToWebSessionInvalidation } from '@/features/auth/web-session-invalidation';
+import { useBrowserOfflineSync } from '@/features/offline-sync/browser-offline-sync-provider';
 
 import {
   createVocabularyActivityAttemptInput,
@@ -30,6 +31,7 @@ type VocabularyActivityUiState =
   | { kind: 'idle' }
   | { kind: 'submitting' }
   | { kind: 'ready'; receipt: ActivityAttemptReceipt }
+  | { kind: 'queued' }
   | { feedback: ReturnType<typeof describeWebActivityAttemptError>; kind: 'error' };
 
 const resolveClientTimeZone = (): string => {
@@ -54,6 +56,7 @@ export function VocabularyActivityView({
   activityContext,
   signInHref,
 }: VocabularyActivityViewProps) {
+  const offlineSync = useBrowserOfflineSync();
   const { activity, activitySequence, contentReleaseId, lesson } = activityContext;
   const activityLifecycle =
     useRef<
@@ -84,7 +87,8 @@ export function VocabularyActivityView({
     if (
       sessionInvalidated.current ||
       activityLifecycle.current?.isSubmitting ||
-      state.kind === 'ready'
+      state.kind === 'ready' ||
+      state.kind === 'queued'
     ) {
       return;
     }
@@ -117,11 +121,21 @@ export function VocabularyActivityView({
     if (result.kind === 'receipt') {
       setState({ kind: 'ready', receipt: result.receipt });
     } else if (result.kind === 'error') {
-      setState({ feedback: result.feedback, kind: 'error' });
+      const input = lifecycle.getPendingInput();
+      const queued =
+        result.feedback.retryable &&
+        input !== null &&
+        (await offlineSync.enqueue('activity', input.idempotencyKey, { ...input }));
+      if (queued) {
+        lifecycle.discardPendingInput();
+        setState({ kind: 'queued' });
+      } else {
+        setState({ feedback: result.feedback, kind: 'error' });
+      }
     } else if (result.kind === 'aborted' && !sessionInvalidated.current) {
       setState({ feedback: abortedFeedback, kind: 'error' });
     }
-  }, [activity.activityId, contentReleaseId, state.kind]);
+  }, [activity.activityId, contentReleaseId, offlineSync, state.kind]);
 
   const stop = useCallback(() => {
     activityLifecycle.current?.stop();
@@ -188,7 +202,7 @@ export function VocabularyActivityView({
           <button
             aria-busy={isSubmitting}
             className="vocabulary-activity__primary-action"
-            disabled={isSubmitting || state.kind === 'ready'}
+            disabled={isSubmitting || state.kind === 'ready' || state.kind === 'queued'}
             onClick={() => void submit()}
             type="button"
           >
@@ -204,6 +218,12 @@ export function VocabularyActivityView({
         </div>
       </section>
 
+      {state.kind === 'queued' ? (
+        <p className="vocabulary-activity__notice" role="status">
+          Xác nhận đã được lưu trên thiết bị và sẽ được đồng bộ khi kết nối trở lại. Tiến độ chỉ
+          hoàn tất sau khi máy chủ trả biên nhận.
+        </p>
+      ) : null}
       {state.kind === 'error' ? (
         <VocabularyActivityError
           feedback={state.feedback}

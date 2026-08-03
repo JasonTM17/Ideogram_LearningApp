@@ -14,6 +14,7 @@ import {
   createExpoActivityOperationIdentityStore,
 } from '../../lib/activity-operation';
 import { useNativeAuthSession } from '../auth/native-auth-session-provider';
+import { useNativeOfflineSync } from '../offline-sync/native-offline-sync-provider';
 import { findCatalogVocabularyActivity } from '../today/catalog-lesson-context';
 import { useNativeLearnerCatalog } from '../today/native-learner-catalog-provider';
 import { VocabularyActivityCard } from './vocabulary-activity-card';
@@ -50,6 +51,7 @@ const VocabularyActivitySurface = ({ auth }: { auth: ReturnType<typeof useNative
   const router = useRouter();
   const { reload, state: catalogState } = useNativeLearnerCatalog();
   const { getRequestSignal, hasSession, isHydrating, sessionProvider } = auth;
+  const offlineSync = useNativeOfflineSync();
   const [identityStore] = useState(createExpoActivityOperationIdentityStore);
   const [state, setState] = useState<VocabularyActivityScreenState>({ kind: 'idle' });
   const activityLifecycle =
@@ -120,11 +122,33 @@ const VocabularyActivitySurface = ({ auth }: { auth: ReturnType<typeof useNative
     if (result.kind === 'receipt') {
       setState({ kind: 'ready', receipt: result.receipt });
     } else if (result.kind === 'error') {
-      setState({ feedback: result.feedback, kind: 'error' });
+      const pendingInput = lifecycle.getPendingInput();
+      const queued =
+        result.feedback.retryable && pendingInput
+          ? await offlineSync.enqueue('activity', pendingInput.idempotencyKey, pendingInput)
+          : false;
+      if (queued) lifecycle.discardPendingInput();
+      setState({
+        feedback: queued
+          ? {
+              ...result.feedback,
+              message: 'Đã lưu tiến độ trên thiết bị và sẽ đồng bộ khi có mạng.',
+            }
+          : result.feedback,
+        kind: 'error',
+      });
     } else if (result.kind === 'aborted') {
       setState({ feedback: abortedFeedback, kind: 'error' });
     }
-  }, [activityContext, getRequestSignal, hasSession, identityStore, sessionProvider, state.kind]);
+  }, [
+    activityContext,
+    getRequestSignal,
+    hasSession,
+    identityStore,
+    offlineSync,
+    sessionProvider,
+    state.kind,
+  ]);
 
   const stop = useCallback(() => {
     activityLifecycle.current?.stop();

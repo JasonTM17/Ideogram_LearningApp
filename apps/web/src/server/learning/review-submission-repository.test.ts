@@ -107,6 +107,7 @@ describe('review submission repository', () => {
     ['P0002', 'Review item is not available to this learner.', 404, 'NOT_FOUND'],
     ['42501', 'Only active learner accounts may mutate learning state.', 403, 'FORBIDDEN'],
     ['23514', 'Suspended review items cannot receive review events.', 409, 'INVALID_REQUEST'],
+    ['23514', 'Review item is not due yet.', 409, 'INVALID_REQUEST'],
     [
       '22023',
       'Review idempotency key was reused with a different payload.',

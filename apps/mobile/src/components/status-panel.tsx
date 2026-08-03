@@ -12,6 +12,9 @@ interface StatusPanelProps {
   actionLabel?: string;
   description: string;
   onAction?: () => void;
+  onSecondaryAction?: () => void;
+  secondaryActionHint?: string;
+  secondaryActionLabel?: string;
   title: string;
   variant: StatusPanelVariant;
 }
@@ -21,6 +24,9 @@ export function StatusPanel({
   actionLabel,
   description,
   onAction,
+  onSecondaryAction,
+  secondaryActionHint,
+  secondaryActionLabel,
   title,
   variant,
 }: StatusPanelProps) {
@@ -70,6 +76,14 @@ export function StatusPanel({
       </View>
       {actionLabel && actionHint && onAction ? (
         <PrimaryAction accessibilityHint={actionHint} label={actionLabel} onPress={onAction} />
+      ) : null}
+      {secondaryActionLabel && secondaryActionHint && onSecondaryAction ? (
+        <PrimaryAction
+          accessibilityHint={secondaryActionHint}
+          label={secondaryActionLabel}
+          onPress={onSecondaryAction}
+          variant="secondary"
+        />
       ) : null}
     </View>
   );

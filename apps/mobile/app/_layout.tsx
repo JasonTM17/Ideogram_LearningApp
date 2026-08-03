@@ -3,6 +3,8 @@ import { StatusBar } from 'expo-status-bar';
 import { Platform } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import '../src/lib/offline-sync/native-offline-sync-background-task';
+
 import { useMobileTheme } from '../src/components/use-mobile-theme';
 import { getNativeAuthRoutePolicy } from '../src/features/auth/native-auth-route-policy';
 import {
@@ -10,6 +12,7 @@ import {
   useNativeAuthSession,
 } from '../src/features/auth/native-auth-session-provider';
 import { NativeLearnerCatalogProvider } from '../src/features/today/native-learner-catalog-provider';
+import { NativeOfflineSyncProvider } from '../src/features/offline-sync/native-offline-sync-provider';
 
 export const unstable_settings = {
   initialRouteName: 'auth/initializing',
@@ -23,9 +26,11 @@ export default function RootLayout() {
       <ThemeProvider value={createNavigationTheme(isDark, theme)}>
         <StatusBar style={isDark ? 'light' : 'dark'} />
         <NativeAuthSessionProvider>
-          <NativeLearnerCatalogProvider>
-            <RootNavigator canvasColor={theme.color.canvas} />
-          </NativeLearnerCatalogProvider>
+          <NativeOfflineSyncProvider>
+            <NativeLearnerCatalogProvider>
+              <RootNavigator canvasColor={theme.color.canvas} />
+            </NativeLearnerCatalogProvider>
+          </NativeOfflineSyncProvider>
         </NativeAuthSessionProvider>
       </ThemeProvider>
     </SafeAreaProvider>
@@ -67,6 +72,7 @@ const RootNavigator = ({ canvasColor }: { canvasColor: string }) => {
           name="review/session"
           options={{ gestureEnabled: true, presentation: 'card' }}
         />
+        <Stack.Screen name="onboarding" options={{ gestureEnabled: true, presentation: 'card' }} />
       </Stack.Protected>
       <Stack.Screen name="auth/callback" options={{ animation: 'fade', presentation: 'card' }} />
     </Stack>

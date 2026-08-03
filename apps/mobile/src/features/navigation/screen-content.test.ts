@@ -4,7 +4,7 @@ import { assistantContent } from '../assistant/assistant-content';
 import { lessonContent } from '../lesson/lesson-content';
 import { profileContent } from '../profile/profile-content';
 import { progressContent } from '../progress/progress-content';
-import { reviewContent, reviewSessionContent } from '../review/review-content';
+import { reviewContent } from '../review/review-content';
 import { todayContent } from '../today/today-content';
 
 const screenContent = [
@@ -14,7 +14,6 @@ const screenContent = [
   progressContent,
   profileContent,
   lessonContent,
-  reviewSessionContent,
 ] as const;
 
 describe('mobile shell copy', () => {

@@ -28,13 +28,15 @@
     "plugins": [
       "expo-router",
       "expo-font",
+      "expo-background-task",
       [
         "expo-secure-store",
         {
           "configureAndroidBackup": true,
           "faceIDPermission": false
         }
-      ]
+      ],
+      "expo-audio"
     ],
     "experiments": {
       "typedRoutes": true

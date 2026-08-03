@@ -1,0 +1,105 @@
+.offline-media-settings {
+  display: grid;
+  width: min(100%, var(--content-measure));
+  gap: var(--space-5);
+  margin-inline: auto;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-surface);
+  background: var(--color-surface);
+  padding: var(--space-6);
+}
+
+.offline-media-settings > header {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.offline-media-settings > header > p {
+  color: var(--color-action-secondary);
+  font-size: var(--type-caption-size);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.offline-media-settings > header > span,
+.offline-media-settings p {
+  color: var(--color-text-secondary);
+}
+
+.offline-media-settings button {
+  display: inline-flex;
+  width: fit-content;
+  min-height: var(--touch-target);
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--color-action-primary);
+  padding: var(--space-2) var(--space-4);
+  color: var(--color-on-action-primary);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
+.offline-media-settings__empty,
+.offline-media-asset__heading {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.offline-media-settings__empty {
+  border-left: 3px solid var(--color-action-secondary);
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--color-action-secondary) 7%, var(--color-surface));
+  padding: var(--space-4);
+  color: var(--color-action-secondary);
+}
+
+.offline-media-settings__empty > div,
+.offline-media-settings__assets,
+.offline-media-asset,
+.offline-media-asset > div {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.offline-media-settings__empty h3,
+.offline-media-asset h3 {
+  color: var(--color-text-primary);
+}
+
+.offline-media-asset {
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: var(--space-5);
+}
+
+.offline-media-asset audio,
+.offline-media-asset progress {
+  width: min(100%, 34rem);
+}
+
+.offline-media-settings .offline-media-asset__remove {
+  border: 1px solid var(--color-border-subtle);
+  background: transparent;
+  color: var(--color-text-primary);
+}
+
+.offline-media-asset__spinner {
+  animation: offline-media-spin 0.8s linear infinite;
+}
+
+@keyframes offline-media-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .offline-media-asset__spinner {
+    animation: none;
+  }
+}

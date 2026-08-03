@@ -14,12 +14,12 @@ export function ReviewScreen() {
       title={reviewContent.title}
     >
       <StatusPanel
-        actionHint={reviewContent.stateActionHint}
-        actionLabel={reviewContent.stateAction}
-        description={reviewContent.stateDescription}
+        actionHint="Mở hàng đợi ôn tập được đồng bộ với tài khoản"
+        actionLabel="Bắt đầu ôn tập"
+        description={reviewContent.description}
         onAction={() => router.push('/review/session')}
-        title={reviewContent.stateTitle}
-        variant="planned"
+        title="Mở phiên ôn tập"
+        variant="empty"
       />
     </ScreenScaffold>
   );
