@@ -363,7 +363,7 @@ jobs:
           echo "ghcr_ref=$verified_ref" >> "$GITHUB_OUTPUT"
 
       - name: Attest build provenance in GHCR
-        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
+        uses: actions/attest-build-provenance@0f67c3f4856b2e3261c31976d6725780e5e4c373 # v4.1.1
         with:
           subject-name: ${{ matrix.ghcr_image }}
           subject-digest: ${{ steps.publish.outputs.digest }}
@@ -379,7 +379,7 @@ jobs:
 
       - name: Attest Docker Hub build provenance
         if: env.DOCKERHUB_ENABLED == 'true'
-        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
+        uses: actions/attest-build-provenance@0f67c3f4856b2e3261c31976d6725780e5e4c373 # v4.1.1
         with:
           subject-name: ${{ env.DOCKERHUB_IMAGE }}
           subject-digest: ${{ steps.publish.outputs.digest }}
