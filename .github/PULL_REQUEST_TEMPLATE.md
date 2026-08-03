@@ -29,3 +29,8 @@
 ## Evidence
 
 <!-- Add real screenshots/GIFs for UI changes and clearly label local vs hosted proof. -->
+
+## Merge readiness
+
+- [ ] PR title follows Conventional Commits.
+- [ ] Squash-merge subject and every body line stay within 100 characters.

@@ -50,6 +50,8 @@ check pass.
 - List verification commands and their actual results.
 - Update docs when behavior, setup, architecture, security, or a public
   contract changes.
+- Keep the Conventional Commit squash subject and every merge-message body line
+  within 100 characters so the protected `main` push gate can validate it.
 - Never include secrets, personal data, generated dependency folders, or local
   agent configuration.
 
