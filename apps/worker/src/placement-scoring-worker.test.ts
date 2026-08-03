@@ -51,4 +51,28 @@ describe('placement scoring worker', () => {
     ).resolves.toBe(0);
     expect(rpc).toHaveBeenCalledTimes(1);
   });
+
+  it('quarantines a claimed job when published scoring input is unsupported', async () => {
+    const rpc = vi.fn(async (functionName: string) => {
+      if (functionName === 'claim_placement_scoring_job') {
+        return { data: [{ placement_session_id: sessionId }], error: null };
+      }
+      if (functionName === 'get_placement_scoring_input') {
+        return {
+          data: [{ answer_payload: {}, question_type: 'vocabulary', scoring_rubric: {} }],
+          error: null,
+        };
+      }
+      return { data: null, error: null };
+    });
+
+    await expect(
+      runOnePlacementScoringJob({ rpc } as PlacementScoringRpcClient, workerId),
+    ).resolves.toEqual({ kind: 'failed', placementSessionId: sessionId });
+    expect(rpc).toHaveBeenLastCalledWith('fail_placement_scoring_job', {
+      p_failure_code: 'unsupported_scoring_input',
+      p_placement_session_id: sessionId,
+      p_worker_id: workerId,
+    });
+  });
 });

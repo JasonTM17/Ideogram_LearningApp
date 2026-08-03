@@ -1,6 +1,6 @@
 begin;
 
-select plan(37);
+select plan(38);
 
 select ok(
   (
@@ -283,6 +283,18 @@ select throws_ok(
   '42501',
   null,
   'an active learner cannot complete through the PostgREST worker RPC'
+);
+select throws_ok(
+  $$
+    select public.fail_placement_scoring_job(
+      '82000000-0000-0000-0000-000000000001',
+      '00000000-0000-0000-0000-000000000000',
+      'unsupported_scoring_input'
+    )
+  $$,
+  '42501',
+  null,
+  'an active learner cannot quarantine through the PostgREST worker RPC'
 );
 
 reset role;
