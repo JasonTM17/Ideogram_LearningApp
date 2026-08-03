@@ -5,7 +5,7 @@ import {
   type AuthenticatedSupabaseRequest,
 } from '@/lib/supabase/request-auth';
 
-import { createGetSessionIdentityRoute } from './route';
+import { createGetSessionIdentityRoute } from './route-handler';
 
 import type { SupabaseClient, User } from '@supabase/supabase-js';
 

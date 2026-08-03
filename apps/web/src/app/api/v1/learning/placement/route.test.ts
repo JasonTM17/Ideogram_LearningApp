@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { RequestAuthenticationError } from '@/lib/supabase/request-auth';
 
-import { createGetPlacementCatalogRoute } from './route';
+import { createGetPlacementCatalogRoute } from './route-handler';
 
 import type { AuthenticatedSupabaseRequest } from '@/lib/supabase/request-auth';
 import type { PlacementCatalogResponse } from '@ideogram/contracts';

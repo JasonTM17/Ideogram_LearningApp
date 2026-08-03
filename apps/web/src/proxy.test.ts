@@ -8,6 +8,7 @@ describe('Supabase session Proxy policy', () => {
     '/showcase',
     '/sign-in',
     '/auth/callback',
+    '/offline-sync-service-worker.js',
     '/api/v1/auth/email-otp',
     '/api/v1/health',
   ])('keeps session-independent route %s available without an Auth refresh', (pathname) => {

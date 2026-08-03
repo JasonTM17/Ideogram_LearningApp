@@ -1,7 +1,7 @@
 ---
 phase: 2
 title: "Web durable sync"
-status: in-progress
+status: completed
 priority: P1
 effort: "1.5d"
 dependencies: [1]
@@ -28,5 +28,5 @@ and receipt-only removal.
 
 ## Success Criteria
 
-- [ ] Browser retry survives reload and cannot replay into another account.
-- [ ] Learners see pending versus server-confirmed state honestly.
+- [x] Browser retry survives reload and cannot replay into another account.
+- [x] Learners see pending versus server-confirmed state honestly.

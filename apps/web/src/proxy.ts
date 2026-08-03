@@ -9,6 +9,7 @@ const sessionIndependentPaths = new Set([
   '/api/v1/auth/email-otp',
   '/api/v1/health',
   '/auth/callback',
+  '/offline-sync-service-worker.js',
   '/showcase',
   '/sign-in',
 ]);

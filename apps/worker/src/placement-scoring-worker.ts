@@ -28,7 +28,9 @@ interface PlacementScoringInputRow {
 }
 
 export type PlacementScoringRunResult =
-  { kind: 'idle' } | { kind: 'scored'; placementSessionId: string };
+  | { kind: 'failed'; placementSessionId: string }
+  | { kind: 'idle' }
+  | { kind: 'scored'; placementSessionId: string };
 
 const requireRows = <T>(response: RpcResponse<T[]>, operation: string): T[] => {
   if (response.error) throw new Error(`${operation} failed.`);
@@ -61,7 +63,18 @@ export const runOnePlacementScoringJob = async (
     }),
     'Placement scoring input read',
   );
-  const score = scoreJapanesePlacement(toScoringInputs(inputRows));
+  let score: ReturnType<typeof scoreJapanesePlacement>;
+  try {
+    score = scoreJapanesePlacement(toScoringInputs(inputRows));
+  } catch {
+    const failed = await client.rpc('fail_placement_scoring_job', {
+      p_failure_code: 'unsupported_scoring_input',
+      p_placement_session_id: claimedJob.placement_session_id,
+      p_worker_id: workerId,
+    });
+    if (failed.error) throw new Error('Placement job failure recording failed.');
+    return { kind: 'failed', placementSessionId: claimedJob.placement_session_id };
+  }
   const completed = await client.rpc('complete_placement_scoring_job', {
     p_confidence: score.confidence,
     p_placement_session_id: claimedJob.placement_session_id,
@@ -98,7 +111,6 @@ export const createPlacementScoringWorkerFromEnvironment = (
   }
   const client = createClient(supabaseUrl, serviceRoleKey, {
     auth: { autoRefreshToken: false, persistSession: false },
-    db: { schema: 'private' },
   });
   const placementClient: PlacementScoringRpcClient = {
     rpc: async <T>(functionName: string, parameters: Record<string, unknown>) => {
