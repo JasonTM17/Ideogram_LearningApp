@@ -16,6 +16,22 @@ import type {
 import type { NativeApiSessionProvider } from './native-api-session';
 
 const validCatalog = { languagePacks: [] };
+const validOfflineMediaManifest = {
+  availability: 'unavailable',
+  releases: [{ assets: [], contentReleaseId: 'ja-n5-pilot-v1', version: 'v1.0.0' }],
+} as const;
+const validReviewQueue = {
+  items: [
+    {
+      activityId: 'ja-n5-l01-vocabulary',
+      contentReleaseId: 'ja-n5-pilot-v1',
+      dueAt: '2026-08-03T00:00:00.000Z',
+      itemId: '123e4567-e89b-42d3-a456-426614174003',
+      sourceItemKey: 'vocabulary-1',
+      state: 'learning',
+    },
+  ],
+} as const;
 const validActivityInput = {
   activityId: 'ja-n5-l01-vocabulary',
   contentReleaseId: 'ja-n5-pilot-v1',
@@ -34,6 +50,29 @@ const validActivityReceipt = {
   lessonId: 'ja-n5-l01',
   progressState: 'completed',
   totalActivityCount: 1,
+} as const;
+const validReviewInput = {
+  deviceId: '123e4567-e89b-42d3-a456-426614174001',
+  deviceSequence: 8,
+  grade: 'good',
+  idempotencyKey: '123e4567-e89b-42d3-a456-426614174002',
+  itemId: '123e4567-e89b-42d3-a456-426614174003',
+  reviewedAtClient: '2026-08-03T00:00:00.000Z',
+  timezone: 'Asia/Ho_Chi_Minh',
+} as const;
+const validReviewReceipt = {
+  eventId: '123e4567-e89b-42d3-a456-426614174004',
+  idempotentReplay: false,
+  schedule: {
+    algorithmVersion: 'srs-v1',
+    dueAt: '2026-08-04T00:00:00.000Z',
+    easeFactor: 2.35,
+    intervalMinutes: 1440,
+    lapseCount: 0,
+    repetitionCount: 1,
+    state: 'review',
+  },
+  serverReceiptSequence: 1,
 } as const;
 const validTutorRequest = {
   conversationId: '123e4567-e89b-42d3-a456-426614174000',
@@ -91,6 +130,18 @@ const createClient = (
   });
 
 describe('native learner catalog HTTP transport', () => {
+  it('reads the authenticated offline media manifest', async () => {
+    const fetchImplementation = vi.fn(async () => createResponse(200, validOfflineMediaManifest));
+
+    await expect(createClient(fetchImplementation).getOfflineMediaManifest()).resolves.toEqual(
+      validOfflineMediaManifest,
+    );
+    expect(fetchImplementation).toHaveBeenCalledWith(
+      'https://api.example.test/api/v1/learning/offline-media',
+      expect.objectContaining({ method: 'GET' }),
+    );
+  });
+
   it('sends a bearer GET with JSON accept and redirect rejection', async () => {
     let capturedInit: NativeApiFetchRequestInit | undefined;
     const fetchImplementation: NativeApiFetch = vi.fn(async (url, init) => {
@@ -112,6 +163,53 @@ describe('native learner catalog HTTP transport', () => {
       redirect: 'error',
     });
     expect(capturedInit?.signal).toBeInstanceOf(AbortSignal);
+  });
+
+  it('reads the review queue through the same bearer GET transport', async () => {
+    let capturedInit: NativeApiFetchRequestInit | undefined;
+    const fetchImplementation: NativeApiFetch = vi.fn(async (url, init) => {
+      expect(url).toBe('https://api.example.test/api/v1/learning/reviews');
+      capturedInit = init;
+      return createResponse(200, validReviewQueue);
+    });
+
+    await expect(createClient(fetchImplementation).getLearnerReviewQueue()).resolves.toEqual(
+      validReviewQueue,
+    );
+    expect(capturedInit).toMatchObject({
+      headers: { Accept: 'application/json', Authorization: 'Bearer header-safe-token' },
+      credentials: 'omit',
+      method: 'GET',
+      redirect: 'error',
+    });
+  });
+
+  it('reads a placement result through the same bearer GET transport', async () => {
+    let capturedInit: NativeApiFetchRequestInit | undefined;
+    const placementReceipt = {
+      completedAt: null,
+      confidence: null,
+      placementSessionId: '123e4567-e89b-42d3-a456-426614174001',
+      recommendedLevelCode: null,
+      scoredAt: null,
+      sessionStatus: 'submitted',
+      submittedAt: '2026-08-03T00:00:00.000Z',
+    } as const;
+    const fetchImplementation: NativeApiFetch = vi.fn(async (url, init) => {
+      expect(url).toBe(
+        `https://api.example.test/api/v1/learning/placement/sessions/${placementReceipt.placementSessionId}`,
+      );
+      capturedInit = init;
+      return createResponse(200, placementReceipt);
+    });
+
+    await expect(
+      createClient(fetchImplementation).getPlacementSession(placementReceipt.placementSessionId),
+    ).resolves.toEqual(placementReceipt);
+    expect(capturedInit).toMatchObject({
+      headers: { Accept: 'application/json', Authorization: 'Bearer header-safe-token' },
+      method: 'GET',
+    });
   });
 
   it('sends a validated activity POST with the exact public body and JSON headers', async () => {
@@ -139,6 +237,30 @@ describe('native learner catalog HTTP transport', () => {
       redirect: 'error',
     });
     expect(capturedInit?.signal).toBeInstanceOf(AbortSignal);
+  });
+
+  it('sends the validated native review decision to the shared endpoint', async () => {
+    let capturedInit: NativeApiFetchRequestInit | undefined;
+    const fetchImplementation: NativeApiFetch = vi.fn(async (url, init) => {
+      expect(url).toBe('https://api.example.test/api/v1/learning/reviews/submit');
+      capturedInit = init;
+      return createResponse(200, validReviewReceipt);
+    });
+
+    await expect(createClient(fetchImplementation).submitReview(validReviewInput)).resolves.toEqual(
+      validReviewReceipt,
+    );
+    expect(capturedInit).toMatchObject({
+      body: JSON.stringify(validReviewInput),
+      credentials: 'omit',
+      headers: {
+        Accept: 'application/json',
+        Authorization: 'Bearer header-safe-token',
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      redirect: 'error',
+    });
   });
 
   it('sends a validated tutor POST without exposing a provider-specific field', async () => {

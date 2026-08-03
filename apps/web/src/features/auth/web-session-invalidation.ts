@@ -1,4 +1,5 @@
 const webSessionInvalidationStorageKey = 'ideogram-learning:web-session-invalidated:v1';
+const browserSyncSessionEpochKeyPrefix = 'ideogram-learning:browser-sync-session-epoch:v1:';
 
 type StorageInvalidationListener = () => void;
 
@@ -15,6 +16,18 @@ export const broadcastWebSessionInvalidation = (): void => {
     );
   } catch {
     // A completed sign-out must not be reported as failed because storage is blocked.
+  }
+};
+
+/** Removes client-side queue epochs after sign-out so a future login cannot replay an old session. */
+export const clearWebSyncSessionEpochs = (): void => {
+  try {
+    for (let index = window.localStorage.length - 1; index >= 0; index -= 1) {
+      const key = window.localStorage.key(index);
+      if (key?.startsWith(browserSyncSessionEpochKeyPrefix)) window.localStorage.removeItem(key);
+    }
+  } catch {
+    // The queue itself still validates the authenticated identity when storage is unavailable.
   }
 };
 

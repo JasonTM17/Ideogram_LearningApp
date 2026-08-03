@@ -4,11 +4,11 @@ import * as SecureStore from 'expo-secure-store';
 import { ChunkedSecureSessionStorage } from './chunked-secure-session-storage';
 import { SecureSessionStorageError, type SecureStorePort } from './secure-session-storage-types';
 
-const secureStoreOptions: SecureStore.SecureStoreOptions = {
+const createSecureStoreOptions = (keychainService: string): SecureStore.SecureStoreOptions => ({
   keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY,
-  keychainService: 'ideogram-learning.session',
+  keychainService,
   requireAuthentication: false,
-};
+});
 
 const createAvailabilityGuard = () => {
   let availability: Promise<boolean> | undefined;
@@ -25,8 +25,11 @@ const createAvailabilityGuard = () => {
   };
 };
 
-export const createExpoSecureSessionStorage = (): ChunkedSecureSessionStorage => {
+export const createExpoSecureSessionStorage = (
+  keychainService = 'ideogram-learning.session',
+): ChunkedSecureSessionStorage => {
   const assertAvailable = createAvailabilityGuard();
+  const secureStoreOptions = createSecureStoreOptions(keychainService);
   const secureStorePort: SecureStorePort = {
     getItem: async (key) => {
       await assertAvailable();

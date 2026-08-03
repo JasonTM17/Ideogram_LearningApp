@@ -19,6 +19,7 @@ COPY packages/config/package.json packages/config/package.json
 COPY packages/contracts/package.json packages/contracts/package.json
 COPY packages/design-tokens/package.json packages/design-tokens/package.json
 COPY packages/learning-engine/package.json packages/learning-engine/package.json
+COPY packages/sync/package.json packages/sync/package.json
 COPY packages/testing/package.json packages/testing/package.json
 
 RUN pnpm install --frozen-lockfile

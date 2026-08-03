@@ -9,10 +9,18 @@ interface PrimaryActionProps {
   accessibilityHint: string;
   label: string;
   onPress: () => void;
+  variant?: 'primary' | 'secondary';
 }
 
-export function PrimaryAction({ accessibilityHint, label, onPress }: PrimaryActionProps) {
+export function PrimaryAction({
+  accessibilityHint,
+  label,
+  onPress,
+  variant = 'primary',
+}: PrimaryActionProps) {
   const { theme } = useMobileTheme();
+  const isSecondary = variant === 'secondary';
+  const foregroundColor = isSecondary ? theme.color.actionSecondary : theme.color.onActionPrimary;
 
   return (
     <Pressable
@@ -22,14 +30,19 @@ export function PrimaryAction({ accessibilityHint, label, onPress }: PrimaryActi
       onPress={onPress}
       style={({ pressed }) => [
         styles.button,
-        { backgroundColor: theme.color.actionPrimary, opacity: pressed ? 0.78 : 1 },
+        {
+          backgroundColor: isSecondary ? theme.color.surface : theme.color.actionPrimary,
+          borderColor: isSecondary ? theme.color.actionSecondary : 'transparent',
+          borderWidth: 1,
+          opacity: pressed ? 0.78 : 1,
+        },
       ]}
     >
-      <AppText style={{ color: theme.color.onActionPrimary }} variant="label">
+      <AppText style={{ color: foregroundColor }} variant="label">
         {label}
       </AppText>
       <View importantForAccessibility="no-hide-descendants">
-        <Ionicons color={theme.color.onActionPrimary} name="arrow-forward" size={20} />
+        <Ionicons color={foregroundColor} name="arrow-forward" size={20} />
       </View>
     </Pressable>
   );

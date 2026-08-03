@@ -11,13 +11,13 @@
 
 ## Current evidence in repo
 
-- `apps/mobile/package.json` pins Expo `~57.0.8`, React Native `0.86.0`, and app version `0.1.0`.
+- `apps/mobile/package.json` pins Expo `~57.0.9`, React Native `0.86.2`, and app version `0.1.0`.
 - `apps/mobile/app.json` is still a static Expo foundation app with no EAS config.
 - The current mobile app is still an internal beta, not a released learning flow.
   The assistant route now contains a real Vietnamese-first bounded tutor-turn
-  form, and the learner path now includes the first vocabulary acknowledgement
-  activity screen. The AI kill switch remains disabled by default and no durable history
-  or offline tutor queue is shipped.
+  form, and the learner path now includes vocabulary acknowledgement plus an
+  online vocabulary review session. The AI kill switch remains disabled by
+  default and no durable history or offline tutor queue is shipped.
 
 ## Native learning operation boundary
 
@@ -39,9 +39,17 @@
 - Its request scope is bound to the authenticated session and screen lifetime;
   a stopped, session-changed, or unmounted request cannot update stale learner
   UI.
-- This slice does not provide an offline queue, retry scheduler, or conflict
-  reconciliation. Those behaviors belong to the later mutation-queue phase and
-  must keep the server evaluator as the source of truth.
+- The review session reads the authenticated due queue, resolves each item only
+  against the answer-free catalog, reveals answers on demand, and submits one
+  explicit self-assessment at a time. It advances only after the shared server
+  receipt and uses the same SecureStore-backed identity and retained in-memory
+  retry boundary as activity attempts.
+- Expo provides a SecureStore-backed queue for retryable activity, review, and
+  placement-answer writes. It is session-namespaced, receipt-gated, and
+  sequential. When the OS reports `expo-background-task` availability, the app
+  registers a bounded task that drains at most five mutations; operating-system
+  scheduling is best-effort, not a completion guarantee, and it is never a
+  local evaluator.
 - A fresh installation is treated as a new operation stream. Android and iOS
   uninstall/reinstall checks remain a release validation gate for the native
   binary and its document storage behavior.

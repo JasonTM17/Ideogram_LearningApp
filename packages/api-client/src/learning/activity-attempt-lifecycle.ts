@@ -38,6 +38,15 @@ export class ActivityAttemptLifecycle<TInput, TReceipt, TFeedback> {
     return this.activeScope !== null;
   }
 
+  /** The exact idempotent input retained after a retryable outcome. */
+  getPendingInput(): TInput | null {
+    return this.pendingInput;
+  }
+
+  discardPendingInput(): void {
+    this.pendingInput = null;
+  }
+
   stop(): boolean {
     if (this.activeScope === null) {
       return false;

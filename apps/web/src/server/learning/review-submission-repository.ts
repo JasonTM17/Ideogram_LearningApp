@@ -134,10 +134,14 @@ const mapDatabaseError = (error: unknown): never => {
       status: 403,
     });
   }
-  if (code === '23514' && message === 'Suspended review items cannot receive review events.') {
+  if (
+    code === '23514' &&
+    (message === 'Suspended review items cannot receive review events.' ||
+      message === 'Review item is not due yet.')
+  ) {
     throw new ApiHttpError({
       code: 'INVALID_REQUEST',
-      message: 'Mục ôn tập đang ở trạng thái không thể cập nhật.',
+      message: 'Mục ôn tập đã có lịch mới. Hãy tải lại hàng đợi.',
       status: 409,
     });
   }

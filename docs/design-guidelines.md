@@ -122,7 +122,7 @@ Gói ngôn ngữ → mục tiêu (JLPT/giao tiếp) → cấp độ → lộ tr�
 
 ### Native auth handoff
 
-- Stitch screen `999b28cb9c894ea38b83a8780405e1a7` was generated for the Phase 5
+- Stitch screen `999b28cb9c894ea38b83a8780405e1a7` was generated for the
   native sign-in slice. Its HTML is reference-only; Expo rebuilds the hierarchy
   with semantic React Native controls, current tokens, safe areas, dynamic
   text, and explicit disabled/sending/error states.
@@ -137,7 +137,7 @@ Gói ngôn ngữ → mục tiêu (JLPT/giao tiếp) → cấp độ → lộ tr�
   [`assets/designs/stitch/`](../assets/designs/stitch/): năm màn mobile
   (Hôm nay, Ôn tập, Trợ lý, Tiến độ, Bạn) và năm màn desktop (Hôm nay, Bài học,
   Hàng đợi ôn, Trợ lý, Tiến độ). Mỗi export có PNG, HTML và `DESIGN.md`; các ảnh
-  `desktop-refined-*` là hướng desktop Việt hóa ưu tiên khi dựng Phase 4.
+  `desktop-refined-*` là hướng desktop Việt hóa ưu tiên cho runtime web.
 - Vocabulary activity handoff đã được commit riêng cho slice hiện tại:
   - [Desktop Stitch design](../plans/260801-2301-interactive-lesson-activity/design/stitch-desktop-lesson-activity/design.png)
   - [Mobile Stitch design](../plans/260801-2301-interactive-lesson-activity/design/stitch-mobile-lesson-activity/design.png)
@@ -148,9 +148,9 @@ Gói ngôn ngữ → mục tiêu (JLPT/giao tiếp) → cấp độ → lộ tr�
   là bản desktop Hôm nay cũ hơn, chỉ dùng để đối chiếu lịch sử hierarchy.
 - Các export là visual handoff đã có, không phải bằng chứng rằng đầy đủ state
   loading/empty/error/offline, responsive, dark mode hay accessibility đã được
-  phê duyệt. Phase 4 đã tái dựng và kiểm chứng lát cắt public/auth/read-side nêu
-  ở đầu tài liệu; các luồng tương tác còn lại và toàn bộ Phase 5 native vẫn phải
-  được dựng/kiểm chứng trong runtime.
+  phê duyệt. Runtime đã tái dựng public/auth, onboarding/placement, review và
+  offline state cốt lõi; real-device native, browser background wake, dark mode
+  toàn diện và accessibility certification vẫn cần bằng chứng phát hành.
 - HTML từ Stitch chỉ là tài liệu tham chiếu về hierarchy/spacing; không được
   đưa trực tiếp vào Next.js hay Expo. Rebuild theo token, semantic state và
   ranh giới nền tảng ở tài liệu này và

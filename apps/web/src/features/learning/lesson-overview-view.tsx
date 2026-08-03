@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, Clock3, LockKeyhole, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Clock3, LockKeyhole, ShieldCheck, VolumeX } from 'lucide-react';
 
 import { ActionLink } from '@/components/ui/action-link';
 
@@ -74,6 +74,14 @@ export function LessonOverviewView({ lessonContext }: LessonOverviewViewProps) {
                     Học từ vựng
                     <ArrowRight aria-hidden="true" size={17} />
                   </ActionLink>
+                ) : activity.activityType === 'listening' ? (
+                  <div className="lesson-overview__media-status" role="status">
+                    <VolumeX aria-hidden="true" size={17} />
+                    <div>
+                      <strong>Bản nghe chưa được phát hành</strong>
+                      <span>Bạn vẫn có thể học các phần khác trong bài.</span>
+                    </div>
+                  </div>
                 ) : (
                   <span className="lesson-overview__activity-unavailable">
                     <LockKeyhole aria-hidden="true" size={15} />
@@ -91,8 +99,9 @@ export function LessonOverviewView({ lessonContext }: LessonOverviewViewProps) {
         <div>
           <h2>Chỉ hiện kết quả đã được máy chủ xác nhận</h2>
           <p>
-            Hoạt động từ vựng đã có thể hoàn thành. Các loại còn lại vẫn hiện rõ là chưa hỗ trợ; đáp
-            án, rubric nội bộ và khóa chấm không bao giờ được gửi xuống trình duyệt.
+            Hoạt động từ vựng đã có thể hoàn thành. Bản nghe chưa phát hành được ghi rõ, các loại
+            còn lại vẫn hiện là chưa hỗ trợ; đáp án, rubric nội bộ và khóa chấm không bao giờ được
+            gửi xuống trình duyệt.
           </p>
         </div>
       </section>

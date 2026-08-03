@@ -41,7 +41,9 @@ legal compliance or launch readiness.
 - `app_security_definer` cannot log in and does not bypass RLS.
 - Helper functions use a fixed `search_path`.
 - Service-role access is worker-only in the current design.
-- The worker runtime in this slice is readiness-only; the service-role helpers remain reserved, not exercised by the current worker stub.
+- The worker can be explicitly enabled for leased placement scoring. Its
+  service-role key remains server-only; local source/tests do not prove worker
+  deployment or runtime secret provisioning.
 - Worker claim, completion, failure, and expired-lease reclaim helpers issue a
   transaction-bound one-use guard that the request trigger consumes. A helper
   call therefore does not leave a reusable direct-write permission behind.

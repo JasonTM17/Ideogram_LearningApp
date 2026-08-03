@@ -2,17 +2,17 @@
 
 ## Phase status
 
-| Phase | Name                            | Status                                                                                                     |
-| ----- | ------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| 1     | Foundation and Delivery         | In progress; hosted CI and business sign-offs remain release dependencies                                  |
-| 2     | Identity Data and Security      | In progress                                                                                                |
-| 3     | Learning Domain and Content     | In progress; catalog/content path is built, but rights/editorial/audio gates remain                        |
-| 4     | Web Learning Experience         | In progress; auth/read-side learner slice plus vocabulary acknowledgement activity slice are built         |
-| 5     | Mobile Learning Experience      | In progress; catalog/read shell, vocabulary activity screen, and bounded tutor surface exist               |
-| 6     | AI Tutor and Personalization    | In progress; bounded authenticated turn + ledger + web/Expo UI shipped, retrieval/SSE/history/evals remain |
-| 7     | Media Offline and Sync          | Pending                                                                                                    |
-| 8     | Admin Quality and Observability | Pending                                                                                                    |
-| 9     | Release and Launch              | Pending                                                                                                    |
+| Phase | Name                            | Status                                                                                                                                                                                                     |
+| ----- | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1     | Foundation and Delivery         | In progress; hosted CI and business sign-offs remain release dependencies                                                                                                                                  |
+| 2     | Identity Data and Security      | In progress                                                                                                                                                                                                |
+| 3     | Learning Domain and Content     | In progress; catalog/content path is built, but rights/editorial/audio gates remain                                                                                                                        |
+| 4     | Web Learning Experience         | In progress; auth/read-side learner slice plus vocabulary acknowledgement activity slice are built                                                                                                         |
+| 5     | Mobile Learning Experience      | In progress; catalog/read shell, vocabulary activity + review sessions, and bounded tutor surface exist                                                                                                    |
+| 6     | AI Tutor and Personalization    | In progress; bounded authenticated turn + ledger + web/Expo UI shipped, retrieval/SSE/history/evals remain                                                                                                 |
+| 7     | Media Offline and Sync          | Web/Expo mutation queues, optional background wake paths, governed manifest, download/playback/remove UI, and cache isolation are implemented; approved audio and real-device/browser proof remain pending |
+| 8     | Admin Quality and Observability | Pending                                                                                                                                                                                                    |
+| 9     | Release and Launch              | Pending                                                                                                                                                                                                    |
 
 ## Roadmap shape
 
@@ -29,7 +29,7 @@
 - The launch plan remains internal beta first.
 - Adult-only eligibility must remain fail-closed until the decision record is approved.
 - Foundation workspace and app-shell code are present, but hosted CI and business approvals remain release dependencies.
-- Identity/security work remains active, and the learning persistence layer plus protected catalog read route are implemented. The auth lifecycle and read-side learner pages now exist, activity submission (vocabulary acknowledgement and objective listening only), the first web/Expo vocabulary acknowledgement activity slice, review submission, and the fail-closed bounded AI tutor turn route with web/Expo clients are live. Grounded tutor context, direct SSE, durable history, broader interactive lesson/review UI, offline sync, and other pending mobile/web experiences are still pending.
+- Identity/security work remains active. The learning persistence layer, protected catalog/review/media reads, web/Expo onboarding-placement flow, activity/review writes, browser/native durable mutation queues, offline-media controls, and optional placement-scoring worker path are implemented in source. Grounded tutor context, direct SSE, durable history, an approved audio release, deployed-worker proof, real-device/browser sync validation, and broader lesson UI remain pending.
 
 ## Open questions
 

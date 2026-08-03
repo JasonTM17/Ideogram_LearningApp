@@ -2,6 +2,7 @@ import { Settings } from 'lucide-react';
 
 import { AppShell } from '@/components/app-shell/app-shell';
 import { DestinationStateView } from '@/features/learner/destination-state-view';
+import { OfflineMediaSettings } from '@/features/offline-media/offline-media-settings';
 import { requireLearnerPageSession } from '@/lib/supabase/learner-session';
 
 export const dynamic = 'force-dynamic';
@@ -23,6 +24,7 @@ export default async function SettingsPage() {
         title="Cấu hình rõ tác động, có thể hoàn tác"
         tone="warm"
       />
+      <OfflineMediaSettings />
     </AppShell>
   );
 }

@@ -1,6 +1,6 @@
 begin;
 
-select plan(31);
+select plan(33);
 
 select ok(
   (
@@ -190,14 +190,22 @@ select set_config('request.jwt.claim.sub', '12000000-0000-0000-0000-000000000001
 set local role authenticated;
 
 select is(
-  (select count(*) from public.placement_question_sets),
+  (
+    select count(*)
+    from public.placement_question_sets
+    where placement_question_set_id = '32000000-0000-0000-0000-000000000001'
+  ),
   1::bigint,
-  'an active learner sees the published Japanese placement set'
+  'an active learner sees the published Japanese test placement set'
 );
 select is(
-  (select count(*) from public.placement_questions),
+  (
+    select count(*)
+    from public.placement_questions
+    where placement_question_set_id = '32000000-0000-0000-0000-000000000001'
+  ),
   1::bigint,
-  'an active learner sees only questions from a published visible set'
+  'an active learner sees the test question from its published visible set'
 );
 select lives_ok(
   $$
@@ -439,9 +447,35 @@ select is(
   '0',
   'only the trusted worker can read a submitted answer key for scoring'
 );
+select set_config(
+  'test.placement_worker_id',
+  '82000000-0000-0000-0000-000000000001',
+  true
+);
+select is(
+  (
+    select placement_session_id::text
+    from private.claim_placement_scoring_job(
+      current_setting('test.placement_worker_id')::uuid
+    )
+  ),
+  current_setting('test.placement_session_id'),
+  'the trusted worker claims the submitted placement job'
+);
+select is(
+  (
+    select count(*)
+    from private.claim_placement_scoring_job(
+      current_setting('test.placement_worker_id')::uuid
+    )
+  ),
+  0::bigint,
+  'a claimed placement job remains unavailable until its lease completes'
+);
 do $block$
 begin
-  perform private.score_placement_session(
+  perform private.complete_placement_scoring_job(
+    current_setting('test.placement_worker_id')::uuid,
     current_setting('test.placement_session_id')::uuid,
     'N5',
     0.875,
@@ -568,9 +602,13 @@ select set_config('request.jwt.claim.sub', '12000000-0000-0000-0000-000000000001
 set local role authenticated;
 
 select is(
-  (select count(*) from public.placement_question_sets),
+  (
+    select count(*)
+    from public.placement_question_sets
+    where placement_question_set_id = '32000000-0000-0000-0000-000000000001'
+  ),
   0::bigint,
-  'an archived placement bank disappears from the learner catalog'
+  'an archived placement test bank disappears from the learner catalog'
 );
 select is(
   (select count(*) from public.placement_sessions where session_status = 'scored'),

@@ -15,6 +15,7 @@ export default function HomePage() {
         <nav aria-label="Điều hướng trang giới thiệu">
           <Link href="#approach">Cách học</Link>
           <Link href="#trust">An toàn</Link>
+          <Link href="/showcase">Project tour</Link>
           <Link className="public-header__sign-in" href="/sign-in?returnTo=%2Ftoday">
             Đăng nhập
           </Link>
@@ -38,6 +39,9 @@ export default function HomePage() {
               <a className="public-text-link" href="#approach">
                 Xem cách nền tảng hoạt động
               </a>
+              <Link className="public-text-link" href="/showcase">
+                Xem project tour
+              </Link>
             </div>
             <p className="public-hero__note">
               Closed beta cho người lớn · Không tự tạo tài khoản ngoài danh sách mời
@@ -110,7 +114,10 @@ export default function HomePage() {
 
       <footer className="public-footer">
         <p>Ideogram Learning · tên làm việc trong giai đoạn closed beta</p>
-        <Link href="/sign-in?returnTo=%2Ftoday">Đăng nhập an toàn</Link>
+        <span>
+          <Link href="/showcase">Project tour</Link>
+          <Link href="/sign-in?returnTo=%2Ftoday">Đăng nhập an toàn</Link>
+        </span>
       </footer>
     </div>
   );

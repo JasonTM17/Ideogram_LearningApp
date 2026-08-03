@@ -15,6 +15,8 @@ Postgres, and the server helpers write deterministic events into that state.
   activity evaluator; `private.submit_activity_attempt()` is its internal
   persistence helper.
 - `packages/learning-engine` holds the pure scheduling helpers and tests.
+- Placement start, answer, submit, read, lease-claim, and fenced completion
+  boundaries are implemented; only the service-role worker writes scores.
 
 ## Scheduling rules
 
@@ -63,7 +65,6 @@ event history is the source of truth, not a recalculated guess.
 
 - Adaptive/FSRS tuning beyond the current deterministic baseline
 - AI tutor personalization logic
-- Placement and other remaining `/api/v1/learning/*` mutation handlers
 - Activity evaluators for speaking, writing, and other non-objective activity types
 - Offline conflict resolution outside the current idempotency rules
 

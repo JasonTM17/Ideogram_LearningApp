@@ -342,6 +342,12 @@
   font-weight: 650;
 }
 
+.public-footer span {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
 @media (min-width: 640px) {
   .public-header nav > a {
     display: flex;

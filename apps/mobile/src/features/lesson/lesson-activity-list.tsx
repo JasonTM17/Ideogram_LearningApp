@@ -34,6 +34,9 @@ export function LessonActivityList({
       <AppText variant="headingMd">Hoạt động trong bài</AppText>
       {activities.map((activity, index) => {
         const isSupported = activity.activityType === 'vocabulary';
+        const isPlannedListening =
+          activity.activityType === 'listening' &&
+          activity.payload.audioProductionStatus === 'planned';
         const content = (
           <>
             <View style={[styles.number, { backgroundColor: theme.color.surfaceSubtle }]}>
@@ -47,14 +50,27 @@ export function LessonActivityList({
               <AppText tone="tertiary" variant="caption">
                 {`${activityLabels[activity.activityType]} · ${activity.estimatedMinutes} phút`}
               </AppText>
-              <AppText tone={isSupported ? 'success' : 'tertiary'} variant="caption">
-                {isSupported ? 'Có thể mở để học' : 'Chưa hỗ trợ trong lượt này'}
+              <AppText
+                tone={isSupported ? 'success' : isPlannedListening ? 'action' : 'tertiary'}
+                variant="caption"
+              >
+                {isSupported
+                  ? 'Có thể mở để học'
+                  : isPlannedListening
+                    ? 'Bản nghe chưa được phát hành · Bạn vẫn có thể học các phần khác.'
+                    : 'Chưa hỗ trợ trong lượt này'}
               </AppText>
             </View>
             <Ionicons
               color={isSupported ? theme.color.actionPrimary : theme.color.textTertiary}
               importantForAccessibility="no-hide-descendants"
-              name={isSupported ? 'chevron-forward' : 'lock-closed-outline'}
+              name={
+                isSupported
+                  ? 'chevron-forward'
+                  : isPlannedListening
+                    ? 'volume-mute-outline'
+                    : 'lock-closed-outline'
+              }
               size={20}
             />
           </>
@@ -79,7 +95,7 @@ export function LessonActivityList({
         ) : (
           <View
             key={activity.activityId}
-            accessibilityLabel={`Hoạt động ${index + 1}: ${activity.titleVietnamese}. Chưa hỗ trợ trong lượt này.`}
+            accessibilityLabel={`Hoạt động ${index + 1}: ${activity.titleVietnamese}. ${isPlannedListening ? 'Bản nghe chưa được phát hành. Bạn vẫn có thể học các phần khác.' : 'Chưa hỗ trợ trong lượt này.'}`}
             accessibilityState={{ disabled: true }}
             style={cardStyle}
           >

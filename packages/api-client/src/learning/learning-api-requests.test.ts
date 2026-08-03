@@ -3,9 +3,19 @@ import { describe, expect, it } from 'vitest';
 import {
   createActivityAttemptApiRequest,
   createLearnerCatalogApiRequest,
+  createLearnerReviewQueueApiRequest,
+  createOfflineMediaManifestApiRequest,
+  createPlacementAnswerApiRequest,
+  createPlacementCatalogApiRequest,
+  createPlacementSessionReadApiRequest,
+  createPlacementSessionStartApiRequest,
+  createPlacementSessionSubmitApiRequest,
   createReviewSubmissionApiRequest,
   parseActivityAttemptApiResponse,
   parseLearnerCatalogApiResponse,
+  parseLearnerReviewQueueApiResponse,
+  parseOfflineMediaManifestApiResponse,
+  parsePlacementCatalogApiResponse,
   parseReviewSubmissionApiResponse,
   plannedLearningApiRoutes,
 } from './learning-api-requests';
@@ -76,6 +86,86 @@ describe('learning API requests', () => {
       method: 'GET',
       path: plannedLearningApiRoutes.catalog,
     });
+  });
+
+  it('creates and validates the governed offline media manifest read', () => {
+    const manifest = {
+      availability: 'unavailable' as const,
+      releases: [{ assets: [], contentReleaseId: 'ja-n5-pilot-v1', version: 'v1.0.0' }],
+    };
+    expect(createOfflineMediaManifestApiRequest()).toEqual({
+      method: 'GET',
+      path: plannedLearningApiRoutes.offlineMedia,
+    });
+    expect(parseOfflineMediaManifestApiResponse(manifest)).toEqual(manifest);
+    expect(() =>
+      parseOfflineMediaManifestApiResponse({ ...manifest, availability: 'available' }),
+    ).toThrow();
+  });
+
+  it('creates and validates the learner-owned review queue GET descriptor', () => {
+    const queueResponse = {
+      items: [
+        {
+          activityId: 'ja-n5-u1-l1-vocabulary',
+          contentReleaseId: 'ja-n5-pilot-v1',
+          dueAt: '2026-08-03T00:00:00.000Z',
+          itemId: '123e4567-e89b-42d3-a456-426614174003',
+          sourceItemKey: 'vocabulary-1',
+          state: 'learning' as const,
+        },
+      ],
+    };
+
+    expect(createLearnerReviewQueueApiRequest()).toEqual({
+      method: 'GET',
+      path: plannedLearningApiRoutes.reviewQueue,
+    });
+    expect(parseLearnerReviewQueueApiResponse(queueResponse)).toEqual(queueResponse);
+    expect(() =>
+      parseLearnerReviewQueueApiResponse({
+        items: [{ ...queueResponse.items[0], state: 'forged' }],
+      }),
+    ).toThrow();
+  });
+
+  it('builds answer-safe placement routes without scoring data', () => {
+    const sessionId = '123e4567-e89b-42d3-a456-426614174001';
+    const questionId = '123e4567-e89b-42d3-a456-426614174002';
+    const idempotencyKey = '123e4567-e89b-42d3-a456-426614174003';
+    expect(createPlacementCatalogApiRequest()).toEqual({
+      method: 'GET',
+      path: plannedLearningApiRoutes.placementCatalog,
+    });
+    expect(
+      createPlacementSessionStartApiRequest({ idempotencyKey, placementQuestionSetId: sessionId })
+        .body,
+    ).toMatchObject({ placementQuestionSetId: sessionId });
+    expect(
+      createPlacementAnswerApiRequest({
+        sessionId,
+        input: {
+          answerPayload: { selectedChoice: 'A' },
+          attemptNumber: 1,
+          clientRecordedAt: null,
+          deviceId: '123e4567-e89b-42d3-a456-426614174004',
+          deviceSequence: 1,
+          idempotencyKey,
+          placementQuestionId: questionId,
+          responseTimeMs: 0,
+        },
+      }).path,
+    ).toBe(`/api/v1/learning/placement/sessions/${sessionId}/answers`);
+    expect(createPlacementSessionSubmitApiRequest({ placementSessionId: sessionId })).toEqual({
+      body: {},
+      method: 'POST',
+      path: `/api/v1/learning/placement/sessions/${sessionId}/submit`,
+    });
+    expect(createPlacementSessionReadApiRequest(sessionId)).toEqual({
+      method: 'GET',
+      path: `/api/v1/learning/placement/sessions/${sessionId}`,
+    });
+    expect(parsePlacementCatalogApiResponse({ questionSets: [] })).toEqual({ questionSets: [] });
   });
 
   it('parses only the learner-safe catalog response shape', () => {

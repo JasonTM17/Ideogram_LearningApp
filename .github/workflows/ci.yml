@@ -124,6 +124,12 @@ jobs:
       - name: Run pgTAP learner write tests
         run: pnpm exec supabase test db supabase/tests/review_idempotency_test.sql
 
+      - name: Run pgTAP placement lifecycle tests
+        run: pnpm exec supabase test db supabase/tests/placement_lifecycle_test.sql
+
+      - name: Run pgTAP tutor ledger tests
+        run: pnpm exec supabase test db supabase/tests/ai_tutor_turn_ledger_test.sql
+
       - name: Run review authorization lock-order regression
         run: pnpm test:db:review-lock-order
 
