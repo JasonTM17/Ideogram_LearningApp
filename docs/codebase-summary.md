@@ -17,7 +17,7 @@ The repository is a modular learning-platform workspace with three runnable app 
 | `packages/ai`              | Server-only DeepSeek gateway, timeout/abort handling, structured tutor output, token usage, and configurable cost estimate                                     |
 | `packages/design-tokens`   | Editorial palette, spacing, motion, typography, and radius tokens                                                                                              |
 | `packages/config`          | Shared runtime/platform guard helpers                                                                                                                          |
-| `packages/testing`         | Shared testing support placeholder                                                                                                                             |
+| `packages/testing`         | Small shared deterministic-test helper package; currently exposes fixed-date creation                                                                          |
 | `packages/auth`            | PKCE, callback, nonce, and session lifecycle helper contracts                                                                                                  |
 | `packages/api-client`      | Shared request descriptors and response parsers plus bounded tutor request/receipt parsing and native transport                                                |
 | `packages/learning-engine` | Deterministic review scheduler, idempotency, and event ordering helpers                                                                                        |

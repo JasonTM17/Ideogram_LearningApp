@@ -1,0 +1,8 @@
+# Default maintainer review
+* @JasonTM17
+
+# Sensitive boundaries
+/.github/ @JasonTM17
+/content/licenses/ @JasonTM17
+/supabase/ @JasonTM17
+/apps/web/src/server/ @JasonTM17

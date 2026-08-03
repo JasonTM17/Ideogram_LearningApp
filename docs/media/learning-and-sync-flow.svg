@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" width="1200" height="680" role="img" aria-labelledby="title description">
+  <title id="title">Ideogram Learning learner and offline synchronization flow</title>
+  <desc id="description">Web and mobile learners authenticate, complete placement, read governed lessons, submit activities through durable offline queues, and synchronize receipts to PostgreSQL and the review scheduler.</desc>
+  <style>
+    text { font-family: "Helvetica Neue", Helvetica, Arial, "Segoe UI", sans-serif; }
+    .title { font-size: 28px; font-weight: 700; fill: #111827; }
+    .subtitle { font-size: 14px; fill: #6b7280; }
+    .group { font-size: 13px; font-weight: 700; fill: #374151; letter-spacing: .08em; }
+    .node-title { font-size: 16px; font-weight: 700; fill: #111827; }
+    .node-copy { font-size: 12px; fill: #4b5563; }
+    .label { font-size: 12px; font-weight: 600; fill: #374151; }
+  </style>
+  <defs>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/></marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#16a34a"/></marker>
+    <marker id="arrow-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#9333ea"/></marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity=".08"/></filter>
+  </defs>
+  <rect width="1200" height="680" fill="#f8fafc"/>
+  <text x="56" y="58" class="title">Learner journey + durable offline sync</text>
+  <text x="56" y="84" class="subtitle">Implemented source boundaries in the internal beta; dashed paths require later connectivity or review gates.</text>
+
+  <rect x="40" y="112" width="1120" height="146" rx="16" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="64" y="140" class="group">LEARNER SURFACES</text>
+  <g filter="url(#shadow)">
+    <rect x="72" y="164" width="210" height="68" rx="10" fill="#fff" stroke="#93c5fd"/>
+    <text x="96" y="191" class="node-title">Next.js web</text><text x="96" y="212" class="node-copy">Browser session + IndexedDB</text>
+    <rect x="918" y="164" width="210" height="68" rx="10" fill="#fff" stroke="#93c5fd"/>
+    <text x="942" y="191" class="node-title">Expo mobile</text><text x="942" y="212" class="node-copy">SecureStore + native queue</text>
+  </g>
+  <path d="M282 198 H438" stroke="#2563eb" stroke-width="2" fill="none" marker-end="url(#arrow-blue)"/>
+  <path d="M918 198 H762" stroke="#2563eb" stroke-width="2" fill="none" marker-end="url(#arrow-blue)"/>
+  <rect x="438" y="154" width="324" height="88" rx="12" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.5"/>
+  <text x="462" y="184" class="node-title">Auth → onboarding → placement</text>
+  <text x="462" y="207" class="node-copy">Server identity, learner-safe prompts, scoring receipt</text>
+  <text x="462" y="226" class="node-copy">Account/session boundary is rechecked before writes</text>
+
+  <rect x="40" y="282" width="1120" height="154" rx="16" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="64" y="310" class="group">LEARNING LOOP</text>
+  <rect x="72" y="334" width="218" height="74" rx="10" fill="#fff" stroke="#86efac"/>
+  <text x="96" y="361" class="node-title">Governed catalog</text><text x="96" y="384" class="node-copy">Published content only</text>
+  <rect x="366" y="334" width="218" height="74" rx="10" fill="#fff" stroke="#86efac"/>
+  <text x="390" y="361" class="node-title">Lesson activity</text><text x="390" y="384" class="node-copy">Typed learner payload</text>
+  <rect x="660" y="334" width="218" height="74" rx="10" fill="#fff" stroke="#86efac"/>
+  <text x="684" y="361" class="node-title">Server evaluation</text><text x="684" y="384" class="node-copy">Idempotent mutation receipt</text>
+  <rect x="954" y="334" width="174" height="74" rx="10" fill="#fff" stroke="#86efac"/>
+  <text x="978" y="361" class="node-title">SRS review</text><text x="978" y="384" class="node-copy">Next due item</text>
+  <path d="M290 371 H366" stroke="#16a34a" stroke-width="2" fill="none" marker-end="url(#arrow-green)"/>
+  <path d="M584 371 H660" stroke="#16a34a" stroke-width="2" fill="none" marker-end="url(#arrow-green)"/>
+  <path d="M878 371 H954" stroke="#16a34a" stroke-width="2" fill="none" marker-end="url(#arrow-green)"/>
+  <path d="M1041 408 V424 H181 V408" stroke="#16a34a" stroke-width="1.5" fill="none" stroke-dasharray="5 4" marker-end="url(#arrow-green)"/>
+
+  <rect x="40" y="460" width="1120" height="156" rx="16" fill="#faf5ff" stroke="#e9d5ff"/>
+  <text x="64" y="488" class="group">OFFLINE RELIABILITY + DATA PLANE</text>
+  <rect x="72" y="512" width="236" height="76" rx="10" fill="#fff" stroke="#c4b5fd"/>
+  <text x="96" y="539" class="node-title">Durable user queue</text><text x="96" y="562" class="node-copy">Namespace + session epoch</text>
+  <rect x="388" y="512" width="236" height="76" rx="10" fill="#fff" stroke="#c4b5fd"/>
+  <text x="412" y="539" class="node-title">Replay coordinator</text><text x="412" y="562" class="node-copy">Retry, block, idempotency</text>
+  <rect x="704" y="512" width="196" height="76" rx="10" fill="#fff" stroke="#c4b5fd"/>
+  <text x="728" y="539" class="node-title">Canonical API</text><text x="728" y="562" class="node-copy">Auth + validation</text>
+  <rect x="980" y="512" width="148" height="76" rx="10" fill="#fff" stroke="#c4b5fd"/>
+  <text x="1004" y="539" class="node-title">PostgreSQL</text><text x="1004" y="562" class="node-copy">RLS + receipts</text>
+  <path d="M308 550 H388" stroke="#9333ea" stroke-width="2" fill="none" marker-end="url(#arrow-purple)"/>
+  <path d="M624 550 H704" stroke="#9333ea" stroke-width="2" fill="none" stroke-dasharray="6 4" marker-end="url(#arrow-purple)"/>
+  <path d="M900 550 H980" stroke="#9333ea" stroke-width="2" fill="none" marker-end="url(#arrow-purple)"/>
+
+  <path d="M600 242 V282" stroke="#2563eb" stroke-width="2" fill="none" marker-end="url(#arrow-blue)"/>
+  <path d="M475 408 V466 H190 V512" stroke="#9333ea" stroke-width="2" fill="none" marker-end="url(#arrow-purple)"/>
+  <rect x="496" y="448" width="188" height="26" rx="6" fill="#f8fafc" opacity=".96"/>
+  <text x="510" y="466" class="label">when connectivity fails</text>
+
+  <g transform="translate(64 646)">
+    <line x1="0" y1="0" x2="34" y2="0" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)"/><text x="44" y="4" class="subtitle">learner/request flow</text>
+    <line x1="220" y1="0" x2="254" y2="0" stroke="#16a34a" stroke-width="2" marker-end="url(#arrow-green)"/><text x="264" y="4" class="subtitle">learning loop</text>
+    <line x1="420" y1="0" x2="454" y2="0" stroke="#9333ea" stroke-width="2" marker-end="url(#arrow-purple)"/><text x="464" y="4" class="subtitle">durable replay/write</text>
+    <line x1="650" y1="0" x2="684" y2="0" stroke="#6b7280" stroke-width="2" stroke-dasharray="6 4"/><text x="694" y="4" class="subtitle">deferred until online/gated</text>
+  </g>
+</svg>
