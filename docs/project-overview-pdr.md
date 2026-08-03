@@ -4,7 +4,7 @@
 
 Ideogram Learning is a Vietnamese-first AI learning platform for a Japanese-first launch, with later support planned for Chinese and Korean. The current source tree contains the foundation slice: workspace shells, shared contracts, Supabase migrations/RLS, public landing and `/showcase`, invite-only auth, learner catalog reads, onboarding and placement, vocabulary review, activity and review submission, offline sync, offline media gating, and a bounded tutor turn.
 
-The key boundary is source state versus deployed proof. Several flows are implemented in code and tests, but hosted production runtime, real-device browser proof, released audio assets, and deployed-worker proof are still pending.
+The key boundary is source state versus deployed proof. Several flows are implemented in code and tests, but hosted production runtime, real-device native proof, released audio assets, and deployed-worker proof are still pending. Browser Background Sync now has local authenticated Chromium proof only; production-host and cross-browser certification remain open.
 
 ## Product requirements
 
@@ -24,6 +24,7 @@ The key boundary is source state versus deployed proof. Several flows are implem
 
 - Web: public landing page, `/showcase`, protected learner shell, catalog/review/offline-media routes, placement flow, browser IndexedDB + Background Sync queue, and bounded AI tutor UI
 - Mobile: Expo shell, protected session hydration, catalog-backed learning, onboarding/placement, review flow, SecureStore-backed durable sync, and optional BackgroundTask registration
+- Offline sync verification: local authenticated Chromium proof for browser Background Sync, plus pure native executor and owned-storage tests for the v2 `(userId, sessionEpoch)` key, shared storage locking, legacy v1 migration, race re-checks, stale-A/correct-B ownership, abort-retryability, and retry/failure mapping
 - Worker: readiness logging and optional placement-scoring job drain loop
 - Shared packages: contracts, auth helpers, API client, learning engine, durable sync, design tokens, config, and AI gateway
 - Supabase: auth baseline, learner privacy tables, learner catalog, review items, placement sessions, AI ledger, and worker-only helpers

@@ -5,7 +5,12 @@
 - No hosted production runtime is provisioned in this repo.
 - No deployed production worker proof exists for placement scoring; local
   service-role PostgREST integration now passes.
-- No real-device proof exists for native background sync.
+- Native background executor and storage ownership tests now cover queue-empty,
+  namespace isolation, the v2 `(userId, sessionEpoch)` key, shared locking,
+  legacy v1 migration, race re-checks after session lookup, missing-session
+  preservation, compare-and-clear ownership, abort-retryability, and
+  retry/failure mapping, but no real-device OS-scheduled BackgroundTask proof
+  exists yet.
 - Local authenticated Chromium proof exists for IndexedDB plus Background Sync;
   production-host and cross-browser certification remain open.
 - Japanese N5 placement content is published, but the authored lesson/audio corpus remains draft or review-only.

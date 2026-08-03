@@ -41,7 +41,7 @@ seeded through migration, not invented at runtime.
 |-------|------|--------|
 | 1 | [Published placement and scoring](./phase-01-published-placement-and-scoring.md) | Complete locally |
 | 2 | [Web durable sync](./phase-02-web-durable-sync.md) | Complete in a local authenticated browser |
-| 3 | [Native background sync](./phase-03-native-background-sync.md) | Implemented locally; real-device proof pending |
+| 3 | [Native background sync](./phase-03-native-background-sync.md) | Implemented locally; pure executor tests added; real-device proof pending |
 | 4 | [Offline media delivery](./phase-04-offline-media-delivery.md) | Implemented locally; approved asset and runtime proof pending |
 | 5 | [Verification and documentation](./phase-05-verification-and-documentation.md) | In Progress |
 

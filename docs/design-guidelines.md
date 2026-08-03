@@ -149,8 +149,9 @@ Gói ngôn ngữ → mục tiêu (JLPT/giao tiếp) → cấp độ → lộ tr�
 - Các export là visual handoff đã có, không phải bằng chứng rằng đầy đủ state
   loading/empty/error/offline, responsive, dark mode hay accessibility đã được
   phê duyệt. Runtime đã tái dựng public/auth, onboarding/placement, review và
-  offline state cốt lõi; real-device native, browser background wake, dark mode
-  toàn diện và accessibility certification vẫn cần bằng chứng phát hành.
+  offline state cốt lõi; browser background wake đã có local authenticated
+  Chromium proof, nhưng real-device native, cross-browser, dark mode toàn diện
+  và accessibility certification vẫn cần bằng chứng phát hành.
 - HTML từ Stitch chỉ là tài liệu tham chiếu về hierarchy/spacing; không được
   đưa trực tiếp vào Next.js hay Expo. Rebuild theo token, semantic state và
   ranh giới nền tảng ở tài liệu này và

@@ -21,8 +21,11 @@ rendered documentation, and offline failure modes; update every status claim.
 targeted browser/native cache/sync tests.
 3. Regenerate and inspect architecture/media diagrams, update README, API,
 architecture, media/offline, roadmap, and package inventory.
-4. Write an evidence report that names platform-dependent background behavior
-   and no-longer-implemented limits exactly.
+4. Write an evidence report that names platform-dependent background behavior,
+   the pure native executor and owned-storage compare-and-clear proofs, and
+   no-longer-implemented limits exactly.
+5. Record the verified mobile offline-sync test count from the current source
+   scan, without widening any real-device claim.
 
 ## Success Criteria
 
