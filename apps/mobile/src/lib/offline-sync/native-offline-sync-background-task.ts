@@ -2,12 +2,14 @@ import * as BackgroundTask from 'expo-background-task';
 import * as TaskManager from 'expo-task-manager';
 import { Platform } from 'react-native';
 
-import { syncQueueSnapshotSchema } from '@ideogram/contracts';
-import { DurableSyncQueue } from '@ideogram/sync';
-
 import { getNativeSupabaseClient } from '../supabase/native-supabase-client';
 import { drainNativeOfflineSyncQueue } from './native-offline-sync-drain';
+import { executeNativeOfflineSyncBackgroundTask } from './native-offline-sync-background-executor';
+import { createLiveNativeBackgroundSessionProvider } from './live-native-background-session-provider';
+import { readNativeOfflineSyncQueue } from './native-offline-sync-queue-reader';
+import { updateNativeOfflineSyncRequestNamespace } from './native-offline-sync-session-signal';
 import {
+  clearNativeOfflineSyncQueueIfOwnedBy,
   createExpoSecureSyncStorage,
   readNativeOfflineSyncSessionNamespace,
 } from './expo-secure-sync-storage';
@@ -18,74 +20,51 @@ export const NATIVE_OFFLINE_SYNC_BACKGROUND_TASK = 'ideogram-learning.native-off
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/iu;
 
 const readBackgroundQueue = async () => {
-  const storage = createExpoSecureSyncStorage();
-  const raw = await storage.read();
-  if (!raw) return null;
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(raw);
-  } catch {
-    await storage.clear();
-    return null;
-  }
-  const snapshot = syncQueueSnapshotSchema.safeParse(parsed);
-  if (!snapshot.success) {
-    await storage.clear();
-    return null;
-  }
-  if (snapshot.data.mutations.length === 0) return null;
-  return {
-    queue: new DurableSyncQueue(storage, snapshot.data.namespace),
-    namespace: snapshot.data.namespace,
-  };
+  const namespace = await readNativeOfflineSyncSessionNamespace();
+  if (!namespace) return null;
+  return readNativeOfflineSyncQueue(createExpoSecureSyncStorage(namespace), namespace);
 };
 
 const createBackgroundSessionProvider = async (
   userId: string,
   sessionEpoch: number,
-): Promise<NativeApiSessionProvider> => {
-  const { data, error } = await getNativeSupabaseClient().auth.getSession();
-  const accessToken = data.session?.access_token;
-  const sessionUserId = data.session?.user.id?.toLowerCase();
-  if (
-    error ||
-    typeof accessToken !== 'string' ||
-    accessToken.length === 0 ||
-    typeof sessionUserId !== 'string' ||
-    !uuidPattern.test(sessionUserId) ||
-    sessionUserId !== userId
-  ) {
-    return async () => null;
-  }
-  return async () => ({ accessToken, sessionEpoch, userId });
-};
+): Promise<NativeApiSessionProvider> =>
+  createLiveNativeBackgroundSessionProvider(
+    async () => {
+      const { data, error } = await getNativeSupabaseClient().auth.getSession();
+      if (error) throw error;
+      const accessToken = data.session?.access_token;
+      const sessionUserId = data.session?.user.id?.toLowerCase();
+      if (
+        typeof accessToken !== 'string' ||
+        accessToken.length === 0 ||
+        typeof sessionUserId !== 'string' ||
+        !uuidPattern.test(sessionUserId)
+      ) {
+        return null;
+      }
+      return { accessToken, userId: sessionUserId };
+    },
+    { sessionEpoch, userId },
+  );
 
 export const runNativeOfflineSyncBackgroundTask =
   async (): Promise<BackgroundTask.BackgroundTaskResult> => {
-    try {
-      const queued = await readBackgroundQueue();
-      if (!queued) return BackgroundTask.BackgroundTaskResult.Success;
-      const currentNamespace = await readNativeOfflineSyncSessionNamespace();
-      if (
-        !currentNamespace ||
-        currentNamespace.userId !== queued.namespace.userId ||
-        currentNamespace.sessionEpoch !== queued.namespace.sessionEpoch
-      ) {
-        await createExpoSecureSyncStorage().clear();
-        return BackgroundTask.BackgroundTaskResult.Success;
-      }
-      const sessionProvider = await createBackgroundSessionProvider(
-        queued.namespace.userId,
-        queued.namespace.sessionEpoch,
-      );
-      if (!(await sessionProvider())) return BackgroundTask.BackgroundTaskResult.Success;
-      const result = await drainNativeOfflineSyncQueue(queued.queue, sessionProvider, 5);
-      return result.retried > 0
-        ? BackgroundTask.BackgroundTaskResult.Failed
-        : BackgroundTask.BackgroundTaskResult.Success;
-    } catch {
-      return BackgroundTask.BackgroundTaskResult.Failed;
-    }
+    return (await executeNativeOfflineSyncBackgroundTask({
+      clearQueue: clearNativeOfflineSyncQueueIfOwnedBy,
+      createSessionProvider: createBackgroundSessionProvider,
+      drainQueue: (queue, sessionProvider, namespace) =>
+        drainNativeOfflineSyncQueue(
+          queue,
+          sessionProvider,
+          5,
+          updateNativeOfflineSyncRequestNamespace(namespace),
+        ),
+      readCurrentNamespace: readNativeOfflineSyncSessionNamespace,
+      readQueuedSync: readBackgroundQueue,
+    })) === 'success'
+      ? BackgroundTask.BackgroundTaskResult.Success
+      : BackgroundTask.BackgroundTaskResult.Failed;
   };
 
 if (!TaskManager.isTaskDefined(NATIVE_OFFLINE_SYNC_BACKGROUND_TASK)) {
