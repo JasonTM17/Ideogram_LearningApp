@@ -3,6 +3,7 @@ name: CI
 on:
   push:
     branches: [main]
+    tags: ['v*.*.*']
   pull_request:
 
 permissions:
@@ -47,7 +48,7 @@ jobs:
         run: pnpm exec commitlint --from "$BASE_SHA" --to "$HEAD_SHA" --verbose
 
       - name: Validate pushed commit messages
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')
         env:
           BEFORE_SHA: ${{ github.event.before }}
           HEAD_SHA: ${{ github.sha }}
@@ -75,6 +76,18 @@ jobs:
       - name: Run unit and contract tests
         run: pnpm test
 
+      - name: Validate documentation and repository package
+        run: pnpm docs:check
+
+      - name: Validate governed content
+        run: pnpm content:lint
+
+      - name: Check workspace peer dependencies
+        run: pnpm peers check
+
+      - name: Check Expo dependency compatibility
+        run: pnpm --filter @ideogram/mobile exec expo install --check
+
       - name: Build web, mobile export and worker
         run: pnpm build
 
@@ -89,6 +102,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Install pnpm
@@ -118,9 +132,11 @@ jobs:
           service_role_key="$(node -e "const value = JSON.parse(require('node:fs').readFileSync('supabase-status.json', 'utf8')).SERVICE_ROLE_KEY; if (!value) throw new Error('Supabase status did not return SERVICE_ROLE_KEY.'); process.stdout.write(value);")"
           echo "::add-mask::$database_url"
           echo "::add-mask::$service_role_key"
-          echo "SUPABASE_DB_URL=$database_url" >> "$GITHUB_ENV"
-          echo "SUPABASE_URL=$api_url" >> "$GITHUB_ENV"
-          echo "SUPABASE_SERVICE_ROLE_KEY=$service_role_key" >> "$GITHUB_ENV"
+          {
+            echo "SUPABASE_DB_URL=$database_url"
+            echo "SUPABASE_URL=$api_url"
+            echo "SUPABASE_SERVICE_ROLE_KEY=$service_role_key"
+          } >> "$GITHUB_ENV"
           rm supabase-status.json
 
       - name: Run pgTAP learning access-boundary tests
@@ -144,3 +160,246 @@ jobs:
       - name: Stop local Supabase
         if: always()
         run: pnpm supabase:stop
+
+  containers:
+    name: Verify and publish ${{ matrix.name }} image
+    if: github.event_name == 'push'
+    needs: [quality, database]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    environment:
+      name: ${{ startsWith(github.ref, 'refs/tags/') && 'container-release' || 'container-snapshot' }}
+    permissions:
+      attestations: write
+      contents: read
+      id-token: write
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: web
+            dockerfile: Dockerfile
+            ghcr_image: ghcr.io/jasontm17/ideogram-learning-app/web
+          - name: worker
+            dockerfile: Dockerfile.worker
+            ghcr_image: ghcr.io/jasontm17/ideogram-learning-app/worker
+    env:
+      LOCAL_IMAGE: local/ideogram-learning-${{ matrix.name }}:${{ github.sha }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
+
+      - name: Validate semantic release tag
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          if [[ ! "$RELEASE_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z]+([.-][0-9A-Za-z]+)*)?$ ]]; then
+            echo "Release tag must use strict SemVer, for example v1.2.3 or v1.2.3-rc.1." >&2
+            exit 1
+          fi
+          if [[ "$RELEASE_TAG" == *-* ]]; then
+            prerelease="${RELEASE_TAG#*-}"
+            IFS='.' read -ra identifiers <<< "$prerelease"
+            for identifier in "${identifiers[@]}"; do
+              if [[ "$identifier" =~ ^[0-9]+$ && "$identifier" =~ ^0[0-9]+$ ]]; then
+                echo "Numeric prerelease identifiers must not contain leading zeroes." >&2
+                exit 1
+              fi
+            done
+          fi
+          git fetch --no-tags origin main
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "Release tags must point to a commit already present on protected main." >&2
+            exit 1
+          fi
+
+      - name: Detect protected Docker Hub credentials
+        shell: bash
+        env:
+          DOCKERHUB_NAMESPACE: ${{ vars.DOCKERHUB_NAMESPACE }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+          RELEASE_REF: ${{ startsWith(github.ref, 'refs/tags/v') && 'true' || 'false' }}
+        run: |
+          if [ "$RELEASE_REF" = 'true' ] && [ -n "$DOCKERHUB_NAMESPACE" ] && [ -n "$DOCKERHUB_USERNAME" ] && [ -n "$DOCKERHUB_TOKEN" ]; then
+            echo "DOCKERHUB_ENABLED=true" >> "$GITHUB_ENV"
+            echo "DOCKERHUB_IMAGE=docker.io/$DOCKERHUB_NAMESPACE/ideogram-learning-app-${{ matrix.name }}" >> "$GITHUB_ENV"
+          else
+            echo "DOCKERHUB_ENABLED=false" >> "$GITHUB_ENV"
+          fi
+
+      - name: Build local verification image once
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
+        with:
+          context: .
+          file: ./${{ matrix.dockerfile }}
+          load: true
+          push: false
+          tags: ${{ env.LOCAL_IMAGE }}
+          provenance: false
+          cache-from: type=gha,scope=${{ matrix.name }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.name }}
+
+      - name: Smoke-test local web artifact
+        if: matrix.name == 'web'
+        shell: bash
+        run: |
+          container_id="$(docker run --detach --publish 3000:3000 "$LOCAL_IMAGE")"
+          trap 'docker logs "$container_id"; docker rm --force "$container_id" >/dev/null' EXIT
+          for _ in {1..30}; do
+            if curl --fail --silent --show-error http://127.0.0.1:3000/api/v1/health > /tmp/health.json; then
+              node -e "const value = JSON.parse(require('node:fs').readFileSync('/tmp/health.json', 'utf8')); if (value.status !== 'ok') process.exit(1);"
+              exit 0
+            fi
+            sleep 1
+          done
+          exit 1
+
+      - name: Smoke-test local worker artifact
+        if: matrix.name == 'worker'
+        shell: bash
+        run: |
+          container_id="$(docker run --detach \
+            --env PLACEMENT_SCORING_WORKER_ENABLED=true \
+            --env PLACEMENT_SCORING_POLL_INTERVAL_MS=1000 \
+            --env SUPABASE_URL=http://127.0.0.1:54321 \
+            --env SUPABASE_SERVICE_ROLE_KEY=container-startup-smoke-key \
+            "$LOCAL_IMAGE")"
+          trap 'docker logs "$container_id"; docker rm --force "$container_id" >/dev/null' EXIT
+          for _ in {1..15}; do
+            if docker logs "$container_id" 2>&1 | grep --fixed-strings --quiet 'placement scoring polling started.'; then
+              sleep 2
+              test "$(docker inspect --format '{{.State.Running}}' "$container_id")" = 'true'
+              exit 0
+            fi
+            test "$(docker inspect --format '{{.State.Running}}' "$container_id")" = 'true'
+            sleep 1
+          done
+          exit 1
+
+      - name: Scan local artifact for high and critical vulnerabilities
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: ${{ env.LOCAL_IMAGE }}
+          scanners: vuln
+          format: table
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
+
+      - name: Generate CycloneDX SBOM for verified artifact
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: ${{ env.LOCAL_IMAGE }}
+          scanners: vuln
+          format: cyclonedx
+          output: trivy-${{ matrix.name }}-sbom.cdx.json
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log in to Docker Hub
+        if: env.DOCKERHUB_ENABLED == 'true'
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Publish the verified local artifact
+        id: publish
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          digest_of() {
+            docker buildx imagetools inspect "$1" --raw | sha256sum | awk '{print "sha256:" $1}'
+          }
+          publish() {
+            local target="$1"
+            docker tag "$LOCAL_IMAGE" "$target"
+            docker push "$target"
+
+            local target_digest
+            target_digest="$(digest_of "$target")"
+            if [ -z "${published_digest:-}" ]; then
+              published_digest="$target_digest"
+            else
+              test "$target_digest" = "$published_digest"
+            fi
+          }
+
+          publish "${{ matrix.ghcr_image }}:sha-${GITHUB_SHA}"
+          if [[ "$GITHUB_REF" == refs/heads/main ]]; then
+            publish "${{ matrix.ghcr_image }}:main"
+            publish "${{ matrix.ghcr_image }}:latest"
+          else
+            publish "${{ matrix.ghcr_image }}:$RELEASE_TAG"
+          fi
+
+          if [ "$DOCKERHUB_ENABLED" = 'true' ]; then
+            publish "$DOCKERHUB_IMAGE:sha-${GITHUB_SHA}"
+            publish "$DOCKERHUB_IMAGE:$RELEASE_TAG"
+          fi
+
+          local_image_id="$(docker image inspect --format '{{.Id}}' "$LOCAL_IMAGE")"
+          verified_ref="${{ matrix.ghcr_image }}@$published_digest"
+          docker pull "$verified_ref"
+          test "$(docker image inspect --format '{{.Id}}' "$verified_ref")" = "$local_image_id"
+
+          echo "digest=$published_digest" >> "$GITHUB_OUTPUT"
+          echo "ghcr_ref=$verified_ref" >> "$GITHUB_OUTPUT"
+
+      - name: Attest build provenance in GHCR
+        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
+        with:
+          subject-name: ${{ matrix.ghcr_image }}
+          subject-digest: ${{ steps.publish.outputs.digest }}
+          push-to-registry: true
+
+      - name: Attest SBOM in GHCR
+        uses: actions/attest-sbom@4651f806c01d8637787e274ac3bdf724ef169f34 # v3
+        with:
+          subject-name: ${{ matrix.ghcr_image }}
+          subject-digest: ${{ steps.publish.outputs.digest }}
+          sbom-path: trivy-${{ matrix.name }}-sbom.cdx.json
+          push-to-registry: true
+
+      - name: Attest Docker Hub build provenance
+        if: env.DOCKERHUB_ENABLED == 'true'
+        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
+        with:
+          subject-name: ${{ env.DOCKERHUB_IMAGE }}
+          subject-digest: ${{ steps.publish.outputs.digest }}
+          push-to-registry: true
+
+      - name: Attest Docker Hub SBOM
+        if: env.DOCKERHUB_ENABLED == 'true'
+        uses: actions/attest-sbom@4651f806c01d8637787e274ac3bdf724ef169f34 # v3
+        with:
+          subject-name: ${{ env.DOCKERHUB_IMAGE }}
+          subject-digest: ${{ steps.publish.outputs.digest }}
+          sbom-path: trivy-${{ matrix.name }}-sbom.cdx.json
+          push-to-registry: true
+
+      - name: Record immutable digest
+        shell: bash
+        env:
+          IMAGE_DIGEST: ${{ steps.publish.outputs.digest }}
+        run: |
+          test -n "$IMAGE_DIGEST"
+          echo "### ${{ matrix.name }} image" >> "$GITHUB_STEP_SUMMARY"
+          echo "Digest: \`$IMAGE_DIGEST\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "The smoke-tested and scanned local artifact was pushed once, then registry digest and image identity were verified." >> "$GITHUB_STEP_SUMMARY"

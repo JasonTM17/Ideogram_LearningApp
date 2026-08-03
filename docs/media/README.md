@@ -11,6 +11,15 @@ third-party stock artwork is required.
 - Reviewed vector: `docs/media/system-architecture.svg`
 - README raster: `docs/media/system-architecture.png`
 
+The learner/offline-sync explainer is a publish-grade SVG with a checked-in
+PNG fallback:
+
+- Reviewed vector: `docs/media/learning-and-sync-flow.svg`
+- README raster: `docs/media/learning-and-sync-flow.png`
+
+It summarizes implemented source boundaries. It does not claim that native
+background execution or production-host replay has been certified.
+
 Regenerate a Mermaid export with the current Mermaid CLI, then review labels and
 connector routing before replacing the checked-in SVG:
 
@@ -69,6 +78,26 @@ Copy-Item docs/media/project-tour.gif apps/web/public/showcase/project-tour.gif
 
 ![Project tour GIF](./project-tour.gif)
 
+## GitHub social preview
+
+`ideogram-learning-social-preview.png` is a 1280 x 640 crop derived from the
+real `/showcase` hero capture. It contains no synthetic product UI or private
+learner data.
+
+Regenerate it with ImageMagick:
+
+```bash
+magick docs/media/project-tour-hero.png \
+  -resize "1280x640^" -gravity center -extent 1280x640 -strip \
+  docs/media/ideogram-learning-social-preview.png
+```
+
+GitHub requires a repository administrator to upload this file once under
+**Settings → General → Social preview**; committing the source alone does not
+change the repository card.
+
+![GitHub social preview source](./ideogram-learning-social-preview.png)
+
 ## Authenticated browser runtime
 
 `browser-offline-runtime.png` is a credential-free capture from the local
@@ -106,5 +135,17 @@ Verify the result:
 ```bash
 magick identify docs/media/system-architecture.png \
   docs/media/system-architecture.svg \
+  docs/media/learning-and-sync-flow.png \
+  docs/media/learning-and-sync-flow.svg \
+  docs/media/ideogram-learning-social-preview.png \
   docs/media/mobile-learning-flow.gif
 ```
+
+## Evidence rules
+
+- Use real running-product captures for runtime claims.
+- Label local, hosted-browser, native-device, and design-handoff evidence
+  separately.
+- Do not publish connection-error pages, credentials, personal data, mock
+  progress, or placeholder content as product evidence.
+- Keep alt text useful and describe the proof boundary next to each visual.

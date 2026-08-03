@@ -1,7 +1,18 @@
 {
   "name": "ideogram-learning-app",
   "version": "0.1.0",
+  "description": "Vietnamese-first language learning platform with Next.js, Expo, Supabase, governed content, and durable offline sync.",
+  "license": "MIT",
   "private": true,
+  "author": "Nguyen Tien Son",
+  "homepage": "https://github.com/JasonTM17/Ideogram_LearningApp#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JasonTM17/Ideogram_LearningApp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JasonTM17/Ideogram_LearningApp/issues"
+  },
   "packageManager": "pnpm@11.0.9",
   "engines": {
     "node": ">=24.12.0 <25",
@@ -14,6 +25,7 @@
     "commitlint": "commitlint --from=HEAD~1 --to=HEAD",
     "content:lint": "node scripts/content-lint.mjs",
     "dev": "turbo run dev --parallel",
+    "docs:check": "node scripts/check-docs.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "generate:ja-n5-content": "node scripts/generate-japanese-n5-pilot-content.mjs",

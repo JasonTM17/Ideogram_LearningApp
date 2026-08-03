@@ -23,6 +23,9 @@ Use this page as the first stop when you need the current repo shape, operationa
 - [Mobile policy](./mobile-support-policy.md)
 - [Deployment guide](./deployment-guide.md)
 - [Release docs](./release/README.md)
+- [Artifact and package matrix](./release/artifact-matrix.md)
+- [Release checklist](./release/release-checklist.md)
+- [Media sources and regeneration](./media/README.md)
 
 ## Operational Notes
 

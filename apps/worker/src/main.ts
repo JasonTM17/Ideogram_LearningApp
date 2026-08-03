@@ -1,13 +1,8 @@
-import { createWorkerHealthReport } from './worker-health';
 import {
   createPlacementScoringWorkerFromEnvironment,
   drainPlacementScoringJobs,
 } from './placement-scoring-worker';
 import { createSingleFlightRunner } from './single-flight-runner';
-
-const health = createWorkerHealthReport();
-
-console.log(`${health.service} is ${health.status}.`);
 
 if (process.env.PLACEMENT_SCORING_WORKER_ENABLED === 'true') {
   try {
@@ -24,16 +19,19 @@ if (process.env.PLACEMENT_SCORING_WORKER_ENABLED === 'true') {
       const completed = await drainPlacementScoringJobs(client, workerId);
       if (completed > 0) console.log(`placement scoring completed ${completed} job(s).`);
     });
-    void run().catch(() => {
-      console.error('placement scoring cycle failed.');
-    });
     setInterval(() => {
       void run().catch(() => {
         console.error('placement scoring cycle failed.');
       });
     }, pollIntervalMs);
+    console.log('placement scoring polling started.');
+    void run().catch(() => {
+      console.error('placement scoring cycle failed.');
+    });
   } catch {
     console.error('placement scoring worker could not start.');
     process.exitCode = 1;
   }
+} else {
+  console.log('placement scoring worker is disabled.');
 }
