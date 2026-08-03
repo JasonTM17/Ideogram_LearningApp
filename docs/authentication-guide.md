@@ -3,9 +3,9 @@
 ## Current state
 
 Sign-in, callback, and sign-out are implemented in the web app as an invite-only
-email OTP flow plus Supabase SSR PKCE. Protected server API verification is now
-route-led for `GET /api/v1/learning/catalog`, and protected learner pages use
-the same server-side session gate. The generic `packages/auth` contracts still
+email OTP flow plus Supabase SSR PKCE. Protected server APIs use the same
+verified bearer-or-cookie boundary, and protected learner pages use the
+server-side session gate. The generic `packages/auth` contracts still
 exist, but they are not the wired web implementation.
 
 ## Verified contracts
@@ -19,6 +19,7 @@ exist, but they are not the wired web implementation.
 | Callback route             | `apps/web/src/server/auth/callback-route.ts`                                                              | Browser `GET /auth/callback` PKCE exchange and safe redirect                                                                                                                                                        |
 | Sign-out route             | `apps/web/src/server/auth/sign-out-route.ts`                                                              | Cookie-session-only local sign-out with empty JSON body                                                                                                                                                             |
 | Catalog route              | `apps/web/src/app/api/v1/learning/catalog/route.ts`                                                       | Protected learner-catalog read path                                                                                                                                                                                 |
+| Session identity route     | `apps/web/src/app/api/v1/auth/session/route.ts`                                                           | Returns only verified `userId` and server-derived `sessionEpoch` for browser offline replay                                                                                                                         |
 | Session cookies            | `packages/contracts/src/auth/auth-session.ts`                                                             | Hardened web cookie attributes used by the auth/session helpers                                                                                                                                                     |
 | Generic auth contracts     | `packages/auth/src/*`                                                                                     | Provider-agnostic PKCE, callback, nonce, and session helpers; contract-level only here                                                                                                                              |
 | Auth API request envelopes | `packages/api-client/src/auth/auth-api-requests.ts`                                                       | Email OTP and sign-out request builders only; no callback builder exists                                                                                                                                            |
@@ -39,8 +40,11 @@ exist, but they are not the wired web implementation.
    `auth.getUser()`; frozen, pending-deletion, or role-revoked accounts fail
    closed. The catalog route uses the request-auth helper for bearer or cookie
    sessions and its RPC independently rechecks active account state.
-7. `POST /api/v1/auth/sign-out` accepts only a verified cookie session and an
-   empty JSON body, then calls `signOut({ scope: 'local' })`.
+7. `GET /api/v1/auth/session` exposes a private, no-store replay identity; it
+   never exposes access-token or raw session-ID material.
+8. `POST /api/v1/auth/sign-out` accepts only a verified cookie session and an
+   empty JSON body, clears local sync/media state, then calls
+   `signOut({ scope: 'local' })`.
 
 The native foundation follows a separate runtime boundary:
 
@@ -98,6 +102,9 @@ The native foundation follows a separate runtime boundary:
 - Web session cookies are server-only, `httpOnly`, `SameSite=lax`, and `secure`
   in production.
 - Local sign-out is not global revocation and does not delete user data.
+- Browser queued mutations drain only after the session identity endpoint
+  confirms both stored user and epoch. An unavailable endpoint is not treated
+  as signed-out and cannot silently replay retained writes.
 - OTP requests have a bounded in-process, hashed defense-in-depth limiter:
   5 attempts per normalized email and, only when a trusted ingress is explicitly
   enabled, 30 attempts per verified proxy IP per 15 minutes. Supabase/provider

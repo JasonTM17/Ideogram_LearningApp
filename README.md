@@ -1,22 +1,24 @@
 # Ideogram Learning
 
-Ideogram Learning is a Vietnamese-first language learning platform for Japanese-first launch, with planned expansion to Chinese and Korean under separate quality gates. This repository is still at the foundation stage: the web shell, mobile shell, worker stub, shared contracts, public landing page, auth slice, protected learner catalog read route, protected learner shell pages, two guarded learner write routes, and one interactive vocabulary acknowledgement slice exist today; the broader interactive learning product flows are not implemented yet.
+Ideogram Learning is a Vietnamese-first language learning platform for a Japanese-first launch, with later Chinese and Korean support gated separately. The repo contains a Next.js web shell, an Expo mobile shell, a Node worker, shared contracts, local Supabase migrations, and docs that distinguish source state from deployed proof.
 
 ## Current foundation
 
-- Web: Next.js App Router shell in `apps/web` with public landing, sign-in, callback, protected learner pages, and a Vietnamese-first bounded tutor-turn surface
-- Mobile: Expo shell in `apps/mobile` with protected session hydration, native email-link sign-in/callback screens, catalog-backed Today and Lesson read views, an internal learner shell, a durable device-scoped activity operation identity foundation, a session-bound bounded tutor-turn surface, and the first vocabulary acknowledgement activity screen
-- Worker: Node worker stub in `apps/worker`
-- Shared packages: `packages/contracts`, `packages/ai`, `packages/design-tokens`, `packages/config`, `packages/testing`, `packages/auth`, `packages/api-client`, `packages/learning-engine`
-- Implemented API routes: `GET /api/v1/health`, `GET /api/v1/learning/catalog`, `POST /api/v1/learning/activities/submit`, `POST /api/v1/learning/reviews/submit`, bounded `POST /api/v1/ai/tutor/turn`, `POST /api/v1/auth/email-otp`, `GET /auth/callback`, `POST /api/v1/auth/sign-out`
-- Web SSR learner pages read the catalog directly; the catalog HTTP route remains the external/mobile surface
-- Phase 3 learning persistence: Supabase migrations and private helpers now implement the learning content catalog, placement flow, activity attempts, review engine, and purge receipts. Next.js now exposes the catalog read route, review submission, and a server-evaluated activity submission route for vocabulary acknowledgement and objective listening answers. The first interactive vocabulary acknowledgement slice is now live on both web and Expo mobile; the remaining learning mutation routes and full interactive learner flows are still pending.
-- Phase 6A AI boundary: the web Node route authenticates each tutor turn, checks an exact completed replay before new provider configuration, requires the append-only provider-consent policy and `AI_TUTOR_ENABLED=true` for new work, reserves an idempotent private turn/quota row with a database-generated attempt lease, calls DeepSeek outside the DB transaction, and stores structured response/usage/cost or a normalized failure. The bounded JSON route is now consumed by both web cookie transport and Expo bearer transport through the shared API client. An uncertain retry retains its turn identity until a receipt, cancellation, or draft change; the client only exposes the Japanese beta pack while the server remains authoritative. It is deliberately disabled by default and does not yet provide grounded lesson retrieval, SSE, durable history, or offline tutor queues.
-- Validation: run the workspace gates below plus the two named pgTAP suites
-  before shipping learner-write changes. Historical review-boundary evidence is
-  retained in the engineering journal; it is not deployment evidence.
+- Web: Next.js App Router shell with protected learner pages, invite-only auth, a `/showcase` tour, catalog/review/placement/offline-media routes, browser IndexedDB + Background Sync queue code, and a bounded AI tutor route
+- Mobile: Expo shell on Expo `~57.0.9` / React Native `0.86.2` with protected session hydration, catalog-backed learning, onboarding/placement, review flow, SecureStore-backed durable syncing, and optional Expo BackgroundTask registration
+- Worker: Node worker with readiness logging and optional placement-scoring job draining when `PLACEMENT_SCORING_WORKER_ENABLED=true`
+- Shared packages: `packages/contracts`, `packages/ai`, `packages/design-tokens`, `packages/config`, `packages/testing`, `packages/auth`, `packages/api-client`, `packages/learning-engine`, `packages/sync`
+- Implemented routes: `GET /api/v1/health`, `GET /api/v1/auth/session`, `POST /api/v1/auth/email-otp`, `GET /auth/callback`, `POST /api/v1/auth/sign-out`, `GET /api/v1/learning/catalog`, `GET /api/v1/learning/offline-media`, `GET /api/v1/learning/reviews`, `POST /api/v1/learning/placement/sessions`, `GET /api/v1/learning/placement/sessions/[sessionId]`, `POST /api/v1/learning/placement/sessions/[sessionId]/answers`, `POST /api/v1/learning/placement/sessions/[sessionId]/submit`, `POST /api/v1/learning/activities/submit`, `POST /api/v1/learning/reviews/submit`, and `POST /api/v1/ai/tutor/turn`
+
+The placement submit route now accepts an exact empty JSON object. The auth session route returns only `userId` and a derived `sessionEpoch`, and it is served with no-store headers. Browser offline-sync identity compares the local session namespace to that same server-derived epoch.
+
+Placement routes expose only learner-safe prompts. The published Japanese N5 placement bank lives in `supabase/migrations/20260803002000_publish_japanese_n5_placement_and_scoring_jobs.sql`, while authored lesson/audio corpus content remains draft or review-only until content and media gates pass. Rubrics, answer keys, and internal scoring input stay private; the worker scoring path exists in source but is not yet proven in a deployed runtime. Browser IndexedDB + Background Sync and native Expo BackgroundTask code exist in source, but there is no real-device, browser, or deployed-worker proof yet.
+
+The bounded AI tutor route is authenticated, server-only, and deliberately disabled by default. It stores private turn and quota ledger rows, but it does not yet claim grounded lesson retrieval, SSE, durable history, or offline tutor queues.
 
 ## Visual references
+
+The credential-free project tour at local route `/showcase` explains what runs in the beta, what remains target state, and how to inspect the implementation.
 
 ![System architecture](docs/media/system-architecture.png)
 
@@ -26,15 +28,18 @@ Design handoff and Stitch exports:
 
 - [Stitch handoff](assets/designs/stitch/README.md)
 - [Design guidelines](docs/design-guidelines.md)
-- [System architecture doc](docs/system-architecture.md)
+- [System architecture](docs/system-architecture.md)
 - [Media sources and regeneration](docs/media/README.md)
+- [Docs index](docs/README.md)
+- [Operational runbooks](docs/operations/local-verification-runbook.md)
+- [Release docs](docs/release/README.md)
 
 ## Product status
 
 - Current product state: internal beta foundation only
 - Launch language priority: Japanese first
 - Supported exam contracts: JLPT N5-N1, HSK 1-6, TOPIK 1-6, including TOPIK I/II grouping
-- Active language-pack state: Japanese is active; Chinese and Korean are seeded as hidden packs until later release gates. The authored Japanese N5 corpus remains review-only until content, pedagogy, and audio gates pass.
+- Active language-pack state: Japanese is active; Chinese and Korean are seeded as hidden packs until later release gates
 - No claim of official exam certification
 - Adult-only closed beta is fail-closed pending named product/legal sign-off
 - Minors require a separate approved plan before any launch consideration
@@ -58,70 +63,62 @@ pnpm test
 pnpm build
 ```
 
+## Content and media generation
+
+```bash
+pnpm generate:ja-n5-content
+pnpm generate:offline-media-manifest
+pnpm content:lint
+```
+
 ## Supabase local workflow
 
 ```bash
 pnpm supabase:start
-pnpm supabase:status
 pnpm supabase:stop
 ```
 
-## GitHub About and container package
+Do not copy `pnpm supabase:status` into shared logs because its output can contain local development credentials.
 
-The repository About metadata is maintained on GitHub with the Vietnamese-first
-product description and language-learning topics. The web image is published as
-a public GitHub Container Registry package after every push to `main` (with
-SBOM/provenance enabled):
+## GitHub Actions and GHCR
+
+The repository publishes the web image from the `publish-container.yml` workflow. The workflow pushes branch and semver tags, an immutable `sha-<commit>` tag, and `latest` on the default branch.
 
 ```bash
-docker pull ghcr.io/jasontm17/ideogram-learning-app/web:main
 docker pull ghcr.io/jasontm17/ideogram-learning-app/web:latest
+docker pull ghcr.io/jasontm17/ideogram-learning-app/web:sha-<commit>
 ```
 
 - [GitHub About](https://github.com/JasonTM17/Ideogram_LearningApp)
 - [Public GHCR package](https://github.com/JasonTM17/Ideogram_LearningApp/pkgs/container/ideogram-learning-app%2Fweb)
-- The image contains no AI credential; runtime secrets must be injected by the
-  deployment platform.
+
+`latest` is only updated by the default branch. Prefer the immutable `sha-*` tag for release evidence, rollback, and reproducible deployment checks.
 
 ## Environment
 
 - Copy `.env.example` to a local ignored env file before running secret-backed features.
 - `DEEPSEEK_API_KEY` is server-only and must never be placed in `NEXT_PUBLIC_*` or `EXPO_PUBLIC_*`.
-- `AI_TUTOR_ENABLED` defaults to `false`. Enabling it requires owner approval,
-  a replacement secret loaded from a deployment secret store, an accepted
-  `AI_TUTOR_CONSENT_POLICY_KEY`, and the configured integer micro-USD price inputs.
-- `EXPO_PUBLIC_AUTH_CALLBACK_URL` is optional only in native development, where
-  `ideogram-learning://auth/callback` is the fallback. A production mobile
-  build must supply one exact claimed HTTPS Universal Link / App Link callback.
-- `EXPO_PUBLIC_API_ORIGIN` is public configuration for the mobile read client,
-  not a credential. It must be an HTTPS origin in production; development can
-  use loopback HTTP. A physical device needs a reachable HTTPS endpoint rather
-  than the device's loopback address.
-- `APP_ORIGIN` must exactly match the origin opened in the browser; local Supabase
-  and the example config use `http://127.0.0.1:3000`.
-- `LEARNING_DATABASE_URL` is server-only. Production must use the dedicated
-  `ideogram_learning_web_login` login, or a pooler-style suffix for that login
-  if the platform requires it, with `sslmode=verify-full` as the only query
-  parameter. Configure the Supabase CA in the runtime trust store.
-- `LEARNING_DATABASE_POOL_MAX` defaults to `2`, must stay between `1` and `5`,
-  and should keep `replicas * pool max` at or below `16` under the login's
-  20-connection limit.
-- Keep `TRUST_PROXY_IP_HEADERS=false` unless a trusted ingress overwrites
-  `x-forwarded-for` and `x-real-ip`.
-- `pnpm check:env` scans framework dotenv files without printing their values and
-  rejects accidental public AI-key exposure.
-- The shared DeepSeek contract is documented in `.env.example` and the related architecture decisions.
+- `AI_TUTOR_ENABLED` defaults to `false`. Enabling it requires owner approval, a replacement secret loaded from a deployment secret store, an accepted `AI_TUTOR_CONSENT_POLICY_KEY`, and configured integer micro-USD price inputs.
+- `EXPO_PUBLIC_AUTH_CALLBACK_URL` is optional only in native development, where `ideogram-learning://auth/callback` is the fallback. Production mobile builds must supply one exact claimed HTTPS Universal Link or App Link callback.
+- `EXPO_PUBLIC_API_ORIGIN` is public configuration for the mobile read client, not a credential. It must be an HTTPS origin in production; development can use loopback HTTP.
+- `APP_ORIGIN` must exactly match the origin opened in the browser; local Supabase and the example config use `http://127.0.0.1:3000`.
+- `LEARNING_DATABASE_URL` is server-only. Production must use the dedicated `ideogram_learning_web_login` login, or a pooler-style suffix for that login if the platform requires it, with `sslmode=verify-full` as the only query parameter.
+- `LEARNING_DATABASE_POOL_MAX` defaults to `2`, must stay between `1` and `5`, and should keep `replicas * pool max` at or below `16` under the login's `20`-connection limit.
+- Keep `TRUST_PROXY_IP_HEADERS=false` unless a trusted ingress overwrites `x-forwarded-for` and `x-real-ip`.
+- `pnpm check:env` scans framework dotenv files without printing their values and rejects accidental public AI-key exposure.
 
 ## What is not implemented yet
 
-- Other learning mutations, broader interactive lesson and review UI/offline sync, onboarding, placement, SRS queue UI, grounded/SSE AI chat, durable tutor history/offline queues, progress write flows, and admin workflows. The implemented vocabulary slice is intentionally narrow; durable mutation queues and reconciliation remain a later phase.
+- Broader lesson onboarding preferences/enrollment writes, a reviewed recorded-media release, grounded/SSE AI chat, durable tutor history/offline tutor queues, progress writes, and admin workflows
 - Activity evaluators beyond vocabulary acknowledgement and objective listening, including speaking and writing assessment
-- Production web runtime deployment or cloud provisioning (the public GHCR image is published, but no hosted runtime is configured)
+- Production web runtime deployment or cloud provisioning
 - Hosted production login credential setup for the learning write path; the provisioning SQL exists, but the secret credential and platform wiring remain external
-- Any additional endpoint beyond the implemented health, catalog, activity/review submission, and auth lifecycle routes
+- No additional API surface is claimed beyond the implemented health, auth,
+  catalog, offline-media, review, placement, activity, and tutor routes
 
 ## Docs
 
+- [Docs index](docs/README.md)
 - [Project overview and PDR](docs/project-overview-pdr.md)
 - [Code standards](docs/code-standards.md)
 - [Codebase summary](docs/codebase-summary.md)
@@ -142,4 +139,6 @@ docker pull ghcr.io/jasontm17/ideogram-learning-app/web:latest
 - [Learning engine contract](docs/learning-engine-contract.md)
 - [AI system and safety](docs/ai-system-and-safety.md)
 - [Review and sync contract](docs/review-and-sync-contract.md)
+- [Offline sync contract](docs/offline-sync-contract.md)
+- [Offline media contract](docs/offline-media-contract.md)
 - [Foundation engineering journal](docs/journals/2026-07-29-foundation-safety-rails.md)

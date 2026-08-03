@@ -5,9 +5,10 @@
 This document explains how learner actions will synchronize across client,
 database, and worker boundaries. Auth/catalog reads and protected SSR learner
 pages exist; review submission, scoped server-evaluated activity submission,
-and the first vocabulary acknowledgement activity slice are wired, but
-placement, broader interactive lesson/review flows, and client synchronization
-are still not wired.
+the first vocabulary acknowledgement activity slice, and protected web + Expo
+vocabulary queues and placement are wired. Web stores selected writes in
+IndexedDB; Expo uses SecureStore. Both use the same receipt-gated queue, and
+each has an optional background wake path when its platform supports one.
 
 ## Runtime boundaries
 
@@ -31,6 +32,13 @@ are still not wired.
   update stale UI.
 - Operation identity is replay metadata only. Authorization, release access,
   and evaluator decisions remain server-owned.
+- Web and Expo queue activity, review, placement-answer, and placement-submit writes only after a
+  network-uncertain response. They retain the exact original body and remove it
+  only after a server receipt. Queue records are namespaced by `(userId,
+sessionEpoch)`; a different account/session clears old records instead of
+  replaying them. Draining is sequential. Web may request browser Background
+  Sync and Expo may register a bounded BackgroundTask, but either runtime can
+  defer or skip a wake; foreground/manual sync remains the user-visible path.
 
 ## Learner-safe operations
 
@@ -72,6 +80,32 @@ The review route keeps the public payload small and the write boundary private:
 | `schedule.state`            | Review state: `learning`, `review`, `relearning`, or `suspended` |
 | `serverReceiptSequence`     | Monotonic receipt sequence for ordering                          |
 
+## Web and Expo vocabulary review loop
+
+After the evaluator records a first completed vocabulary attempt, it creates
+one immutable item for each published entry using the versioned
+`vocabulary-{position}` source key. The migration backfills the same items for
+eligible existing completions, including paused enrollments that may resume.
+An idempotent activity replay returns before
+this initialization path, and the database unique constraint makes a second
+item impossible.
+
+`GET /api/v1/learning/reviews` reads only the active learner's due,
+non-suspended vocabulary items through an RLS-bound client. Both the protected
+web queue and Expo session resolve each key to an answer-free catalog prompt
+and reveal one entry at a time. The learner chooses `again`, `hard`, `good`, or
+`easy` as an explicit self-assessment; neither client calculates the next
+schedule. The existing review submission receipt is the only UI authority for
+removing a card and describing its next due time. Expo retains a pending input
+only in memory for a safe retry and binds cancellation to the session/screen.
+Web and Expo also provide a durable queue for retryable activity, review,
+placement-answer, and placement-submit writes; a server receipt is still the
+only completion signal.
+The locked server transaction rejects a
+fresh mutation until `dueAt`, so two clients cannot advance a rescheduled item.
+Older/unsupported source keys stay out of the focused vocabulary flow rather
+than being fabricated as cards.
+
 ## Activity submission transaction
 
 `POST /api/v1/learning/activities/submit` shares the verified-session,
@@ -108,18 +142,22 @@ apps provide their platform storage adapters:
   instances; a future headless/background writer needs a transactional counter.
 - The identity is an idempotency/replay coordinate only; bearer session checks,
   learner authorization, release access, and evaluation remain server-owned.
-- No durable queue, retry scheduler, or reconciliation is included yet. An
-  offline operation must not be considered complete until the server receipt is
-  accepted by the later queue phase. The current vocabulary slice keeps retry
-  state in memory only.
+- A durable queue is included for retryable activity, review, placement-answer,
+  and placement-submit
+  writes. An offline operation must not be considered complete until its server
+  receipt is accepted. Background wake availability is not completion proof,
+  and offline tutor queues are outside this contract. Offline media uses its
+  own governed checksum-cache contract and never represents a learning write.
 
 ## Worker-only operations
 
-| Helper                                  | Semantics                                                      |
-| --------------------------------------- | -------------------------------------------------------------- |
-| `private.score_placement_session()`     | Writes the internal placement recommendation and confidence    |
-| `private.get_placement_scoring_input()` | Reads the rubric and answer data needed for scoring            |
-| `private.purge_learner_learning_data()` | Deletes learner learning state and writes an auditable receipt |
+| Helper                                     | Semantics                                                      |
+| ------------------------------------------ | -------------------------------------------------------------- |
+| `private.score_placement_session()`        | Writes the internal placement recommendation and confidence    |
+| `private.get_placement_scoring_input()`    | Reads the rubric and answer data needed for scoring            |
+| `private.claim_placement_scoring_job()`    | Leases one submitted session to the configured worker          |
+| `private.complete_placement_scoring_job()` | Completes only the matching active lease token                 |
+| `private.purge_learner_learning_data()`    | Deletes learner learning state and writes an auditable receipt |
 
 ## Idempotency and retry rules
 

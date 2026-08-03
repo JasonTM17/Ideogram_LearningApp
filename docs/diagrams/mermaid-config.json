@@ -1,0 +1,15 @@
+{
+  "theme": "base",
+  "themeVariables": {
+    "background": "#f8fafc",
+    "clusterBkg": "#f8fafc",
+    "clusterBorder": "#94a3b8",
+    "defaultLinkColor": "#475569",
+    "fontFamily": "Arial, sans-serif",
+    "lineColor": "#475569",
+    "primaryTextColor": "#0f172a",
+    "secondaryTextColor": "#0f172a",
+    "tertiaryTextColor": "#0f172a",
+    "titleColor": "#0f172a"
+  }
+}

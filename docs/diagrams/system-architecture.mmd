@@ -1,36 +1,51 @@
-flowchart TB
-  subgraph Clients["Trải nghiệm người học và vận hành"]
-    Web["Next.js Web"]
-    Mobile["Expo iOS / Android"]
+flowchart RL
+  subgraph Beta["Đã triển khai trong internal beta"]
+    direction TB
+    Web["Next.js Web\npublic site · auth · onboarding · placement"]
+    Mobile["Expo iOS / Android\nauth · catalog · placement\nreview/activity offline queue"]
+    API["Canonical API\nNext.js Route Handlers /api/v1"]
+    Auth["Supabase Auth\nJWT + RLS identity"]
+    Learning["Learning boundary\ncatalog · placement · reviews · activity attempts"]
+    BrowserSync["Browser durable sync\nIndexedDB · service worker · Background Sync when supported"]
+    NativeSync["Native durable sync\nSecureStore · Expo BackgroundTask when available"]
+    OfflineMedia["Governed offline media\nchecksum cache · explicit playback"]
+    Worker["Node placement scorer\nlease claim · service-role completion\nexplicitly enabled"]
+    Tutor["Bounded AI tutor turn\nJSON · consent · quota · receipts"]
+    Postgres[("Supabase Postgres + RLS\nprivate helpers · learner data")]
+
+    Web --> API
+    Mobile --> API
+    Web --> BrowserSync
+    Mobile --> NativeSync
+    Web --> OfflineMedia
+    Mobile --> OfflineMedia
+    BrowserSync --> API
+    NativeSync --> API
+    API <--> Auth
+    API --> Learning
+    API --> Tutor
+    Learning <--> Postgres
+    Worker --> Postgres
+    Tutor <--> Postgres
+  end
+
+  subgraph Target["Target state — chưa triển khai"]
+    direction TB
     Admin["Admin CMS-lite"]
+    AIGateway["Grounded AI gateway\nretrieval · direct SSE"]
+    Storage[("Private Storage\naudio · published content")]
+    DeepSeek["DeepSeek V4 Flash\nserver-only provider"]
+
+    API -. "future CMS" .-> Admin
+    API -. "future SSE" .-> AIGateway
+    OfflineMedia -. "awaiting approved asset + CDN proof" .-> Storage
+    AIGateway -.-> DeepSeek
   end
 
-  API["Canonical API\nNext.js Route Handlers /api/v1"]
-  Auth["Supabase Auth\nJWT + RLS identity"]
+  classDef implemented fill:#dbeafe,stroke:#1d4ed8,color:#0f172a,stroke-width:2px
+  classDef implementedData fill:#ccfbf1,stroke:#0f766e,color:#0f172a,stroke-width:2px
+  classDef target fill:#fff7ed,stroke:#c2410c,color:#7c2d12,stroke-width:2px,stroke-dasharray: 6 4
 
-  subgraph Core["Modular learning core"]
-    Learning["Learning domain\nPlacement · Lesson · SRS · Progress"]
-    AIGateway["AI gateway\nGrounding · Safety · Usage"]
-    Worker["Outbox worker\nEmbedding · Media · Heavy grading"]
-  end
-
-  subgraph Data["Data plane"]
-    Postgres[("Postgres + RLS\nFTS · pgvector")]
-    Storage[("Private Storage\nAudio · Content")]
-  end
-
-  DeepSeek["DeepSeek V4 Flash\nServer-only provider"]
-
-  Web --> API
-  Mobile --> API
-  Admin --> API
-  API <--> Auth
-  API --> Learning
-  API -->|"Live SSE"| AIGateway
-  Learning <--> Postgres
-  API <--> Storage
-  Learning -. "Transactional outbox" .-> Worker
-  AIGateway -->|"Tutor / feedback"| DeepSeek
-  Worker -->|"Async jobs"| DeepSeek
-  Worker <--> Postgres
-  Worker <--> Storage
+  class Web,Mobile,API,Auth,Learning,Tutor,BrowserSync,NativeSync,Worker,OfflineMedia implemented
+  class Postgres implementedData
+  class Admin,AIGateway,Storage,DeepSeek target

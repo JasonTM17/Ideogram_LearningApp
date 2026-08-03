@@ -2,16 +2,24 @@
 
 ## Current implemented endpoints
 
-| Method | Path                                 | Auth / boundary                                                                                                                                                                                       | Request                                        | Response                                 | Status                     |
-| ------ | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- | ---------------------------------------- | -------------------------- |
-| GET    | `/api/v1/health`                     | None                                                                                                                                                                                                  | None                                           | Shared health contract                   | Implemented                |
-| GET    | `/api/v1/learning/catalog`           | Verified Supabase bearer token or SSR cookie session                                                                                                                                                  | None                                           | Shared learner-catalog response contract | Implemented                |
-| POST   | `/api/v1/learning/activities/submit` | Verified Supabase bearer token or SSR cookie session; cookie mutations require same-origin policy                                                                                                     | JSON body with `activityAttemptInputSchema`    | Shared activity receipt contract         | Implemented                |
-| POST   | `/api/v1/learning/reviews/submit`    | Verified Supabase bearer token or SSR cookie session; cookie mutations require same-origin policy                                                                                                     | JSON body with `reviewSubmissionInputSchema`   | Shared review receipt contract           | Implemented                |
-| POST   | `/api/v1/ai/tutor/turn`              | Verified Supabase bearer token or SSR cookie session; cookie mutations require same-origin policy; exact completed replays are allowed, new turns require active learner, consent, and AI kill switch | JSON body with `tutorTurnRequestSchema`        | Shared completed tutor receipt contract  | Implemented (bounded JSON) |
-| POST   | `/api/v1/auth/email-otp`             | Same-origin cookie mutation; no verified session required                                                                                                                                             | JSON body with `email` and optional `returnTo` | Generic accepted response (`202`)        | Implemented                |
-| GET    | `/auth/callback`                     | Browser PKCE callback; handles optional `sb_flow_id`                                                                                                                                                  | `code` plus optional `sb_flow_id` query values | Safe `303` redirect                      | Implemented                |
-| POST   | `/api/v1/auth/sign-out`              | Verified cookie session only; bearer rejected                                                                                                                                                         | Empty JSON object                              | Generic signed-out response (`200`)      | Implemented                |
+| Method | Path                                                     | Auth / boundary                                                                                                                                                                                       | Request                                        | Response                                 | Status                     |
+| ------ | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- | ---------------------------------------- | -------------------------- |
+| GET    | `/api/v1/health`                                         | None                                                                                                                                                                                                  | None                                           | Shared health contract                   | Implemented                |
+| GET    | `/api/v1/learning/catalog`                               | Verified Supabase bearer token or SSR cookie session                                                                                                                                                  | None                                           | Shared learner-catalog response contract | Implemented                |
+| GET    | `/api/v1/auth/session`                                   | Verified Supabase bearer token or SSR cookie session                                                                                                                                                  | None                                           | `{ userId, sessionEpoch }`               | Implemented                |
+| GET    | `/api/v1/learning/offline-media`                         | Verified Supabase bearer token or SSR cookie session; published release and approved redistribution rights are rechecked                                                                              | None                                           | Shared offline-media manifest contract   | Implemented                |
+| GET    | `/api/v1/learning/placement`                             | Verified Supabase bearer token or SSR cookie session                                                                                                                                                  | None                                           | Shared placement catalog contract        | Implemented                |
+| POST   | `/api/v1/learning/placement/sessions`                    | Verified Supabase bearer token or SSR cookie session; cookie mutations require same-origin policy                                                                                                     | Shared placement start input                   | Placement start receipt                  | Implemented                |
+| GET    | `/api/v1/learning/placement/sessions/:sessionId`         | Verified Supabase bearer token or SSR cookie session                                                                                                                                                  | Path UUID                                      | Placement session receipt                | Implemented                |
+| POST   | `/api/v1/learning/placement/sessions/:sessionId/answers` | Verified Supabase bearer token or SSR cookie session; cookie mutations require same-origin policy                                                                                                     | Shared placement answer input                  | Placement answer receipt                 | Implemented                |
+| POST   | `/api/v1/learning/placement/sessions/:sessionId/submit`  | Verified Supabase bearer token or SSR cookie session; cookie mutations require same-origin policy                                                                                                     | Exact empty JSON object                        | Placement session receipt                | Implemented                |
+| GET    | `/api/v1/learning/reviews`                               | Verified Supabase bearer token or SSR cookie session                                                                                                                                                  | None                                           | Shared due-review queue contract         | Implemented                |
+| POST   | `/api/v1/learning/activities/submit`                     | Verified Supabase bearer token or SSR cookie session; cookie mutations require same-origin policy                                                                                                     | JSON body with `activityAttemptInputSchema`    | Shared activity receipt contract         | Implemented                |
+| POST   | `/api/v1/learning/reviews/submit`                        | Verified Supabase bearer token or SSR cookie session; cookie mutations require same-origin policy                                                                                                     | JSON body with `reviewSubmissionInputSchema`   | Shared review receipt contract           | Implemented                |
+| POST   | `/api/v1/ai/tutor/turn`                                  | Verified Supabase bearer token or SSR cookie session; cookie mutations require same-origin policy; exact completed replays are allowed, new turns require active learner, consent, and AI kill switch | JSON body with `tutorTurnRequestSchema`        | Shared completed tutor receipt contract  | Implemented (bounded JSON) |
+| POST   | `/api/v1/auth/email-otp`                                 | Same-origin cookie mutation; no verified session required                                                                                                                                             | JSON body with `email` and optional `returnTo` | Generic accepted response (`202`)        | Implemented                |
+| GET    | `/auth/callback`                                         | Browser PKCE callback; handles optional `sb_flow_id`                                                                                                                                                  | `code` plus optional `sb_flow_id` query values | Safe `303` redirect                      | Implemented                |
+| POST   | `/api/v1/auth/sign-out`                                  | Verified cookie session only; bearer rejected                                                                                                                                                         | Empty JSON object                              | Generic signed-out response (`200`)      | Implemented                |
 
 ## Health response shape
 
@@ -27,7 +35,17 @@ Shared contract source: `packages/contracts/src/api.ts`
 The route handler at `apps/web/src/app/api/v1/health/route.ts` returns this shared health contract via `Response.json(...)`.
 The auth lifecycle routes live under `apps/web/src/server/auth/*` and use route-specific envelopes or redirects rather than the shared health response shape.
 
+The session identity route returns a server-derived numeric `sessionEpoch`
+bound to the verified access-token session marker. Browser offline storage uses
+both fields as its replay namespace. Responses are private and `no-store`; the
+route never returns a token or raw session identifier.
+
 The catalog route at `apps/web/src/app/api/v1/learning/catalog/route.ts` authenticates the request with Supabase Auth verification, reads the allowlisted aggregate RPC `public.get_learner_catalog_data()`, and returns the shared learner-catalog contract through `jsonNoStore(...)`.
+The offline-media route returns an authenticated, private no-store manifest. It
+fails closed to an empty unavailable release unless content is published,
+rights are approved for all product uses, and each asset matches its governed
+release namespace.
+The review queue route at `apps/web/src/app/api/v1/learning/reviews/route.ts` authenticates the request, reads only the active learner's due non-suspended vocabulary items through the RLS-bound Supabase client, and returns `reviewQueueResponseSchema` through `jsonNoStore(...)`.
 The activity submission route at `apps/web/src/app/api/v1/learning/activities/submit/route.ts` authenticates first, validates the public activity envelope, and calls the database evaluator through the private transaction boundary.
 The review submission route at `apps/web/src/app/api/v1/learning/reviews/submit/route.ts` authenticates first, validates the exact review schema, and writes through the private transaction boundary with private no-store headers and an opaque request ID.
 
@@ -110,6 +128,17 @@ The JSON auth routes use the same shared error envelope on failure; the callback
   deletion.
 
 ## Review submission notes
+
+### Review queue read
+
+- `GET /api/v1/learning/reviews` has no request body and accepts the same
+  verified bearer or SSR cookie session as the catalog route.
+- It returns at most 50 due, non-suspended items whose source key matches the
+  supported `vocabulary-{position}` form. RLS remains the ownership boundary;
+  the route does not take a learner identifier.
+- The response is `reviewQueueResponseSchema`, with normalized ISO `dueAt`
+  values and private no-store headers. A client must resolve each item only
+  against its already learner-safe catalog activity; unknown keys are not cards.
 
 - `POST /api/v1/learning/reviews/submit` accepts only the exact
   `reviewSubmissionInputSchema` body:
@@ -217,7 +246,7 @@ Status behavior:
 
 ## Implemented learning database contracts
 
-Phase 3 added database-private learning helpers. They are the current truth for learning persistence.
+Database-private learning helpers are the current truth for learning persistence.
 
 | Surface                                        | Caller boundary             | Purpose                                                                      | Status                     |
 | ---------------------------------------------- | --------------------------- | ---------------------------------------------------------------------------- | -------------------------- |
@@ -231,13 +260,14 @@ Phase 3 added database-private learning helpers. They are the current truth for 
 | `private.initialize_review_item`               | `app_learning_api_executor` | Create a review item for a learner and release                               | Implemented DB helper      |
 | `private.score_placement_session`              | `service_role`              | Worker-only placement scoring and outcome writeback                          | Implemented DB helper      |
 | `private.get_placement_scoring_input`          | `service_role`              | Worker-only read path for placement scoring input                            | Implemented DB helper      |
+| `private.claim_placement_scoring_job`          | `service_role`              | Lease one submitted placement for bounded worker processing                  | Implemented DB helper      |
+| `private.complete_placement_scoring_job`       | `service_role`              | Fence and persist the claimed worker result                                  | Implemented DB helper      |
 | `private.purge_learner_learning_data`          | `service_role`              | Worker-only purge path for learner learning state                            | Implemented DB helper      |
 
 Notes:
 
-- These Postgres helpers are the persistence layer. The catalog read route,
-  review submission route, and server-evaluated activity submission route now
-  exist. The remaining learning mutation routes are still not implemented.
+- These Postgres helpers are the persistence layer. Catalog, placement, review,
+  offline-media, and server-evaluated activity route boundaries now exist.
 - The migration defines `app_learning_api_executor` as the narrow app executor
   boundary and grants it to `postgres` locally so pgTAP can `SET LOCAL ROLE`
   during tests. Production provisioning still needs a real login role.
@@ -248,7 +278,7 @@ Notes:
 
 Any future route should be versioned under `/api/v1` and documented here only after it exists in source.
 
-The shared client contracts still define request shapes for routes that are not implemented yet:
+Only the following shared request contract has no HTTP handler yet:
 
 | Method | Path                                    | Purpose                      | Status                |
 | ------ | --------------------------------------- | ---------------------------- | --------------------- |
@@ -256,10 +286,10 @@ The shared client contracts still define request shapes for routes that are not 
 
 `packages/api-client/src/auth/auth-api-requests.ts` currently exposes the email-OTP, sign-out, and data-subject request envelopes. There is no callback request builder because `GET /auth/callback` is a browser route handled by Supabase SSR.
 
-The learning catalog, activity submission, and review submission routes are
-live. Activity submission is intentionally scoped to vocabulary acknowledgement
-and objective listening evaluation; the other learning mutation routes and full
-interactive learner screens are still planned.
+The learning catalog, placement lifecycle, activity submission, review queue,
+review submission, and governed offline-media routes are live. Activity
+submission remains intentionally scoped to vocabulary acknowledgement and
+objective listening evaluation; speaking and writing evaluators are future work.
 
 ## Learning catalog contract
 
