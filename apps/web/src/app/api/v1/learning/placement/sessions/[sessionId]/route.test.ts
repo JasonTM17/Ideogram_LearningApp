@@ -5,7 +5,7 @@ import {
   type AuthenticatedSupabaseRequest,
 } from '@/lib/supabase/request-auth';
 
-import { createGetPlacementSessionRoute } from './route';
+import { createGetPlacementSessionRoute } from './route-handler';
 
 import type { PlacementSessionReceipt } from '@ideogram/contracts';
 import type { SupabaseClient, User } from '@supabase/supabase-js';

@@ -7,8 +7,8 @@ import {
 } from '@ideogram/ai';
 import type { AuthenticatedSupabaseRequest } from '@/lib/supabase/request-auth';
 import { ApiHttpError } from '@/server/http/api-response';
-import type { TutorTurnRouteDependencies } from './route';
-import { createPostTutorTurnRoute } from './route';
+import type { TutorTurnRouteDependencies } from './route-handler';
+import { createPostTutorTurnRoute } from './route-handler';
 
 const trustedOrigin = 'https://learn.example.test';
 const userId = '123e4567-e89b-42d3-a456-426614174000';

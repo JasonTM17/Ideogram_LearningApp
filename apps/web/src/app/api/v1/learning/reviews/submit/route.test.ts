@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { AuthenticatedSupabaseRequest } from '@/lib/supabase/request-auth';
 import { readJsonMutationBody } from '@/server/http/mutation-policy';
 
-import { createPostReviewSubmissionRoute } from './route';
+import { createPostReviewSubmissionRoute } from './route-handler';
 
 const trustedOrigin = 'https://learn.example.test';
 const request = new Request(`${trustedOrigin}/api/v1/learning/reviews/submit`, {

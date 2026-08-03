@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { createGetOfflineMediaManifestRoute } from './route';
+import { createGetOfflineMediaManifestRoute } from './route-handler';
 
 const authenticated = {
   client: {} as never,
