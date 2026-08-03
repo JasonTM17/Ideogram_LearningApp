@@ -167,19 +167,22 @@ content. Xem [`NOTICE.md`](NOTICE.md) và
 
 ## Package và release
 
-Web image hiện có trên GHCR:
+Web và worker images hiện có trên GHCR:
 
 ```bash
 docker pull ghcr.io/jasontm17/ideogram-learning-app/web:latest
 docker pull ghcr.io/jasontm17/ideogram-learning-app/web:sha-<commit>
+docker pull ghcr.io/jasontm17/ideogram-learning-app/worker:latest
+docker pull ghcr.io/jasontm17/ideogram-learning-app/worker:sha-<commit>
 ```
 
 Workflow mới phát hành tag `sha-*` đầy đủ 40 ký tự; các tag ngắn cũ có thể vẫn
 tồn tại trên registry. Tag vẫn có thể được đổi trỏ, nên luôn ưu tiên digest
-`sha256:*` bất biến khi kiểm chứng/rollback. Worker image,
-Docker Hub mirror, native EAS builds và source GitHub Release chưa được publish.
-Không tạo release chỉ để lấp sidebar; release đầu tiên phải vượt đúng các gate
-trong [`artifact-matrix.md`](docs/release/artifact-matrix.md).
+`sha256:*` bất biến khi kiểm chứng/rollback. Bản
+[`v0.1.0-alpha.1`](https://github.com/JasonTM17/Ideogram_LearningApp/releases/tag/v0.1.0-alpha.1)
+là repository/container preview, không phải production deployment. Docker Hub
+mirror chỉ được tạo khi release credentials được cấu hình; native EAS builds
+vẫn chưa được publish. Xem [`artifact-matrix.md`](docs/release/artifact-matrix.md).
 
 ## Documentation map
 
