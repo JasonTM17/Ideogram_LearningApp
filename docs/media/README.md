@@ -69,6 +69,16 @@ Copy-Item docs/media/project-tour.gif apps/web/public/showcase/project-tour.gif
 
 ![Project tour GIF](./project-tour.gif)
 
+## Authenticated browser runtime
+
+`browser-offline-runtime.png` is a credential-free capture from the local
+authenticated `/today` runtime used for the IndexedDB and Background Sync
+proof. The accompanying request/queue assertions are recorded in
+[`docs/release/validation-evidence.md`](../release/validation-evidence.md).
+It proves the local Chromium run only, not a deployed production host.
+
+![Authenticated browser runtime](./browser-offline-runtime.png)
+
 ## Mobile learning flow
 
 The GIF uses these Stitch exports in sequence:

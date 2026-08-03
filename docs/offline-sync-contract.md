@@ -25,8 +25,10 @@ Web shows a Vietnamese pending-sync card with a foreground “Đồng bộ ngay�
 action and registers a service worker / Background Sync when the browser
 supports it. Expo registers an OS-scheduled BackgroundTask when available; its
 task uses the same receipt-gated drain and caps one wake at five mutations.
-A queued write is never shown as server-complete. Browser and real-device
-execution remain validation work, because background scheduling is best-effort.
+A queued write is never shown as server-complete. Local authenticated Chromium
+proof now covers reload persistence and a receipt-gated Background Sync drain.
+Production-host, cross-browser, and real-device execution remain validation
+work because background scheduling is best-effort.
 Approved listening media has a separate checksum-bound web/Expo cache contract;
 the current governed manifest intentionally remains unavailable until a reviewed
 recording and redistribution rights are published. Offline tutor turns are not

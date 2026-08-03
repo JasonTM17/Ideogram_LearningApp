@@ -20,6 +20,36 @@
 - The placement scorer exists in `apps/worker/src/placement-scorer.ts` and `apps/worker/src/placement-scoring-worker.ts`.
 - The published Japanese N5 placement bank exists in `supabase/migrations/20260803002000_publish_japanese_n5_placement_and_scoring_jobs.sql`.
 
+## 2026-08-03 service-role worker proof
+
+`pnpm --filter @ideogram/worker test:integration:placement` passed against the
+local Supabase runtime. The integration creates a submitted placement, invokes
+the real worker through the public PostgREST surface with the local service-role
+credential, and verifies `submitted -> claimed -> scored`, an `N4` result with
+`0.950` confidence, and one proficiency snapshot. It then removes its fixture.
+
+This run exposed and fixed a real deployment gap: PostgREST exposes `public`,
+not the worker's `private` schema. Migration
+`20260803003000_expose_placement_scoring_service_rpc.sql` now provides three
+narrow public RPC wrappers executable only by `service_role`. pgTAP proves an
+authenticated learner cannot call them.
+
+## 2026-08-03 authenticated browser proof
+
+A real Chromium session on `http://127.0.0.1:3001` confirmed:
+
+- secure context, Service Worker, SyncManager, Web Locks, and IndexedDB support;
+- a session-bound `placement-submit` queue record survived a full reload;
+- the service worker did not replay a record while session identity was unavailable;
+- with the verified cookie session, Background Sync submitted the placement,
+  the server reported `sessionStatus: submitted`, and IndexedDB reached zero
+  queued mutations only after the HTTP receipt;
+- the nested placement catalog returned one published question set through RLS.
+
+The authenticated runtime screenshot is
+[`docs/media/browser-offline-runtime.png`](../media/browser-offline-runtime.png).
+This is local Chromium proof, not production-host or cross-browser certification.
+
 ## 2026-08-03 local verification
 
 The following commands passed from this checkout after the placement, durable
@@ -36,6 +66,9 @@ pnpm --filter @ideogram/worker build
 pnpm content:lint
 pnpm check:env
 pnpm audit --prod
+pnpm peers check
+pnpm --filter @ideogram/mobile exec expo install --check
+pnpm --filter @ideogram/worker test:integration:placement
 node .claude/scripts/validate-docs.cjs docs/
 pnpm exec supabase test db supabase/tests/placement_lifecycle_test.sql
 pnpm exec supabase test db supabase/tests/review_idempotency_test.sql
@@ -43,15 +76,13 @@ pnpm test:db:review-lock-order
 git diff --check
 ```
 
-The workspace format script was not used as final evidence because it scans the
-large, intentionally retained local working tree past this verification
-window. Every changed text source in this slice was formatted directly with
-Prettier before the tests above; `pnpm lint` and the builds are passing.
+`pnpm format:check` also passed after the documentation refresh.
 
 ## Do not overstate
 
 - Do not say the worker is live unless a deployed worker was actually run.
-- Do not say browser sync was proven unless a browser run was captured.
+- Browser sync is proven only for the captured local Chromium run; do not widen
+  that claim to production hosting or every browser.
 - Do not say native background sync was proven unless a real device run was captured.
 - Do not claim hosted CI as the only proof when local reruns are missing.
 

@@ -3,9 +3,11 @@
 ## Current boundaries
 
 - No hosted production runtime is provisioned in this repo.
-- No deployed worker proof exists for placement scoring.
+- No deployed production worker proof exists for placement scoring; local
+  service-role PostgREST integration now passes.
 - No real-device proof exists for native background sync.
-- No browser proof exists for the IndexedDB plus Background Sync path.
+- Local authenticated Chromium proof exists for IndexedDB plus Background Sync;
+  production-host and cross-browser certification remain open.
 - Japanese N5 placement content is published, but the authored lesson/audio corpus remains draft or review-only.
 - The AI tutor is still bounded JSON, not direct SSE.
 - Durable history, grounded lesson retrieval, and offline tutor queues are not shipped.
@@ -24,8 +26,8 @@
 
 ## Next proof needed
 
-- Deployed worker execution of placement scoring
+- Deployed production worker execution of placement scoring
 - Real-device native sync validation
-- Browser sync validation in a real browser session
+- Production-host and cross-browser sync validation
 - Hosted runtime and secret-manager wiring
 - Final content and audio review gates for learner-visible release
