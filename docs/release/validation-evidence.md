@@ -32,7 +32,8 @@ This run exposed and fixed a real deployment gap: PostgREST exposes `public`,
 not the worker's `private` schema. Migration
 `20260803003000_expose_placement_scoring_service_rpc.sql` now provides three
 narrow public RPC wrappers executable only by `service_role`. pgTAP proves an
-authenticated learner cannot call them.
+authenticated learner cannot call them. Unsupported scoring input is quarantined
+through a fenced failure RPC so a malformed rubric cannot starve the queue.
 
 ## 2026-08-03 authenticated browser proof
 

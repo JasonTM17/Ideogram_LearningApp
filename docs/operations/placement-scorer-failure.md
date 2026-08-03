@@ -4,7 +4,8 @@
 
 - `apps/worker` logs `placement scoring worker could not start.`
 - `apps/worker` logs repeated `placement scoring cycle failed.`
-- `private.placement_scoring_jobs` keeps `pending` or `processing` rows while submitted placement sessions do not reach `scored`
+- `private.placement_scoring_jobs` keeps `pending` or stale `processing` rows while submitted placement sessions do not reach `scored`
+- `private.placement_scoring_jobs` contains `failed` rows with a bounded `failure_code` after unsupported scoring input is quarantined
 - A placement session stays in `submitted` state longer than expected
 
 ## Safe checks
@@ -12,7 +13,7 @@
 1. Confirm the worker was started with `PLACEMENT_SCORING_WORKER_ENABLED=true`.
 2. Confirm `PLACEMENT_SCORING_POLL_INTERVAL_MS` is between `1000` and `300000`.
 3. Inspect whether the worker has a valid `PLACEMENT_SCORING_WORKER_ID`.
-4. Check `private.placement_scoring_jobs` for stale `processing` leases or queued rows.
+4. Check `private.placement_scoring_jobs` for stale `processing` leases, pending rows, or quarantined `failed` rows.
 5. Check the matching `public.placement_sessions` row for `submitted`, `scored`, or `completed` status.
 6. Confirm the placement bank exists from `supabase/migrations/20260803002000_publish_japanese_n5_placement_and_scoring_jobs.sql`.
 
