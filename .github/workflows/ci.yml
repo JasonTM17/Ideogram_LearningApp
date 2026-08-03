@@ -114,8 +114,13 @@ jobs:
         run: |
           pnpm exec supabase status -o json > supabase-status.json
           database_url="$(node -e "const value = JSON.parse(require('node:fs').readFileSync('supabase-status.json', 'utf8')).DB_URL; if (!value) throw new Error('Supabase status did not return DB_URL.'); process.stdout.write(value);")"
+          api_url="$(node -e "const value = JSON.parse(require('node:fs').readFileSync('supabase-status.json', 'utf8')).API_URL; if (!value) throw new Error('Supabase status did not return API_URL.'); process.stdout.write(value);")"
+          service_role_key="$(node -e "const value = JSON.parse(require('node:fs').readFileSync('supabase-status.json', 'utf8')).SERVICE_ROLE_KEY; if (!value) throw new Error('Supabase status did not return SERVICE_ROLE_KEY.'); process.stdout.write(value);")"
           echo "::add-mask::$database_url"
+          echo "::add-mask::$service_role_key"
           echo "SUPABASE_DB_URL=$database_url" >> "$GITHUB_ENV"
+          echo "SUPABASE_URL=$api_url" >> "$GITHUB_ENV"
+          echo "SUPABASE_SERVICE_ROLE_KEY=$service_role_key" >> "$GITHUB_ENV"
           rm supabase-status.json
 
       - name: Run pgTAP learning access-boundary tests
@@ -126,6 +131,9 @@ jobs:
 
       - name: Run pgTAP placement lifecycle tests
         run: pnpm exec supabase test db supabase/tests/placement_lifecycle_test.sql
+
+      - name: Run placement worker through service-role RPC
+        run: pnpm --filter @ideogram/worker test:integration:placement
 
       - name: Run pgTAP tutor ledger tests
         run: pnpm exec supabase test db supabase/tests/ai_tutor_turn_ledger_test.sql

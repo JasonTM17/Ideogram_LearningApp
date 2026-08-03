@@ -9,12 +9,15 @@
   "scripts": {
     "build": "tsup src/main.ts --format esm --platform node --target node24 --out-dir dist --clean --sourcemap",
     "dev": "tsx watch src/main.ts",
-    "lint": "eslint src --max-warnings=0",
+    "lint": "eslint src scripts --max-warnings=0",
     "start": "node dist/main.js",
     "test": "vitest run",
+    "test:integration:placement": "tsx scripts/placement-scoring.integration.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@types/pg": "8.20.0",
+    "pg": "8.22.0",
     "tsup": "8.5.1",
     "tsx": "4.23.1",
     "vitest": "4.1.10"

@@ -98,7 +98,6 @@ export const createPlacementScoringWorkerFromEnvironment = (
   }
   const client = createClient(supabaseUrl, serviceRoleKey, {
     auth: { autoRefreshToken: false, persistSession: false },
-    db: { schema: 'private' },
   });
   const placementClient: PlacementScoringRpcClient = {
     rpc: async <T>(functionName: string, parameters: Record<string, unknown>) => {

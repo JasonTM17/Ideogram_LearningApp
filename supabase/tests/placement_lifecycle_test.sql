@@ -1,6 +1,6 @@
 begin;
 
-select plan(33);
+select plan(37);
 
 select ok(
   (
@@ -215,6 +215,14 @@ select lives_ok(
   $$,
   'an active learner can read the placement prompt projection'
 );
+select lives_ok(
+  $$
+    select placement_question_set_id, status
+    from public.placement_questions
+    where placement_question_id = '42000000-0000-0000-0000-000000000001'
+  $$,
+  'an active learner can project the safe relation columns required by PostgREST'
+);
 select throws_ok(
   $$
     select scoring_rubric
@@ -245,6 +253,36 @@ select throws_ok(
   '42501',
   null,
   'an active learner cannot invoke the worker-only scoring reader'
+);
+select throws_ok(
+  $$ select * from public.claim_placement_scoring_job('82000000-0000-0000-0000-000000000001') $$,
+  '42501',
+  null,
+  'an active learner cannot claim through the PostgREST worker RPC'
+);
+select throws_ok(
+  $$
+    select *
+    from public.get_placement_scoring_input('00000000-0000-0000-0000-000000000000')
+  $$,
+  '42501',
+  null,
+  'an active learner cannot read scoring input through the PostgREST worker RPC'
+);
+select throws_ok(
+  $$
+    select *
+    from public.complete_placement_scoring_job(
+      '82000000-0000-0000-0000-000000000001',
+      '00000000-0000-0000-0000-000000000000',
+      'N5',
+      0.5,
+      '{}'::jsonb
+    )
+  $$,
+  '42501',
+  null,
+  'an active learner cannot complete through the PostgREST worker RPC'
 );
 
 reset role;
