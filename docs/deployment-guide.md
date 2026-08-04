@@ -10,14 +10,15 @@ artifact before registry login or publication. The workflow tags and pushes the
 same loaded image without rebuilding, checks that every registry tag resolves
 to one digest, pulls that digest back, and confirms its image identity matches
 the tested local image. It then attaches a CycloneDX SBOM and GitHub build
-provenance to that digest. The `v0.1.0-alpha.1` repository preview is pinned to
-commit `666606f5e753a2e837cbde724d58f04f6e931d94`. GitHub Actions run
-`30832398321` is the tag proof; run `30831885227` is the final main proof.
+provenance to that digest. The `v0.1.0-alpha.2` repository preview is pinned to
+commit `81d2b1239077877846d6b3cf78398c679f1652d2`. GitHub Actions run
+`30873588546` is the tag proof; run `30873262910` is the final main proof.
 Docker Hub was not published for this release because the protected credentials
-were unavailable, and no checksum asset was attached. This is image/package
-release evidence, not proof that a public runtime or Supabase production
-project has been provisioned. The worker check proves enabled startup and
-process liveness; it does not claim database readiness.
+were unavailable, and the deterministic source tar.gz plus `SHA256SUMS.txt`
+were attached with source checksum `940cda41d98d519540f3d583576cfa7d7abe34c05e46c91599888e0625a34002`.
+This is image/package release evidence, not proof that a public runtime or
+Supabase production project has been provisioned. The worker check proves
+enabled startup and process liveness; it does not claim database readiness.
 
 Package: `ghcr.io/jasontm17/ideogram-learning-app/web`
 
@@ -107,10 +108,10 @@ content rights in `NOTICE.md`.
 Pull the published images:
 
 ```bash
-docker pull ghcr.io/jasontm17/ideogram-learning-app/web:v0.1.0-alpha.1
-docker pull ghcr.io/jasontm17/ideogram-learning-app/web@sha256:0e51a7b62bab56714892a5f81580c741489d2dbeae80fa6c161a82285c53d148
-docker pull ghcr.io/jasontm17/ideogram-learning-app/worker:v0.1.0-alpha.1
-docker pull ghcr.io/jasontm17/ideogram-learning-app/worker@sha256:09472638a09bef3c0945a42fb111efb7fbc3df8320a6b30661b256718a1b4d50
+docker pull ghcr.io/jasontm17/ideogram-learning-app/web:v0.1.0-alpha.2
+docker pull ghcr.io/jasontm17/ideogram-learning-app/web@sha256:a0f5ba12566ee2a08e249d6189782be24075fcad8996a82b91077dc4cb043926
+docker pull ghcr.io/jasontm17/ideogram-learning-app/worker:v0.1.0-alpha.2
+docker pull ghcr.io/jasontm17/ideogram-learning-app/worker@sha256:e481ec304406ad512a400531469784ed7e36f57cacae630a486f1e3192bf4764
 docker pull ghcr.io/jasontm17/ideogram-learning-app/web:latest
 docker pull ghcr.io/jasontm17/ideogram-learning-app/worker:latest
 ```

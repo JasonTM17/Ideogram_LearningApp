@@ -4,14 +4,15 @@ Use this page as the first stop when you need the current repo shape, operationa
 
 ## Current Repository Preview
 
-- [GitHub prerelease `v0.1.0-alpha.1`](https://github.com/JasonTM17/Ideogram_LearningApp/releases/tag/v0.1.0-alpha.1)
+- [GitHub prerelease `v0.1.0-alpha.2`](https://github.com/JasonTM17/Ideogram_LearningApp/releases/tag/v0.1.0-alpha.2)
 - [Exact release evidence](./release/validation-evidence.md)
 - [Known limitations](./release/known-limitations.md)
 - [Project roadmap](./project-roadmap.md)
 - [Changelog](../CHANGELOG.md)
 
-This release proves the repository and GHCR package pipeline. It does not prove
-a production deployment, native-device release, or approved media catalog.
+This release proves the repository, GHCR package, and deterministic source
+artifact pipeline. It does not prove a production deployment, native-device
+release, or approved media catalog.
 
 ## By Role
 
