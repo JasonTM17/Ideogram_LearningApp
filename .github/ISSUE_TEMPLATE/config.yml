@@ -4,5 +4,5 @@ contact_links:
     url: https://github.com/JasonTM17/Ideogram_LearningApp/security
     about: Use private vulnerability reporting; never post secrets publicly.
   - name: Documentation index
-    url: https://github.com/JasonTM17/Ideogram_LearningApp/tree/main/docs
-    about: Check architecture, setup, contracts, and known limitations first.
+    url: https://github.com/JasonTM17/Ideogram_LearningApp/blob/main/docs/README.md
+    about: Start with the docs index, then follow release evidence and runbooks.

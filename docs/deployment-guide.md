@@ -10,13 +10,14 @@ artifact before registry login or publication. The workflow tags and pushes the
 same loaded image without rebuilding, checks that every registry tag resolves
 to one digest, pulls that digest back, and confirms its image identity matches
 the tested local image. It then attaches a CycloneDX SBOM and GitHub build
-provenance to that digest. Version-tag releases are mirrored to Docker Hub only when the protected
-namespace and credentials exist, keeping semantic and full-SHA digest evidence
-aligned across both registries. No unverified candidate tag is exposed in a
-public registry. This is image/package release evidence, not
-proof that a public runtime or Supabase production project has been
-provisioned. The worker check proves enabled startup and process liveness; it
-does not claim database readiness.
+provenance to that digest. The `v0.1.0-alpha.1` repository preview is pinned to
+commit `666606f5e753a2e837cbde724d58f04f6e931d94`. GitHub Actions run
+`30832398321` is the tag proof; run `30831885227` is the final main proof.
+Docker Hub was not published for this release because the protected credentials
+were unavailable, and no checksum asset was attached. This is image/package
+release evidence, not proof that a public runtime or Supabase production
+project has been provisioned. The worker check proves enabled startup and
+process liveness; it does not claim database readiness.
 
 Package: `ghcr.io/jasontm17/ideogram-learning-app/web`
 
@@ -97,11 +98,21 @@ For an existing login, the provisioning script fails closed if it finds elevated
 
 The workflow publishes `main`, semver tags (`v*.*.*`), an immutable commit SHA tag, and `latest` on the default branch. It uses the ephemeral workflow token; no registry credential is stored in the repository. The current package is public, so anonymous pulls work; authenticating to GHCR is still recommended for higher rate limits and private forks.
 
-Pull the published image:
+Newly built images expose OCI `version`, `revision`, `created`, and `licenses`
+labels. CI derives `created` from the release commit timestamp, uses the full
+commit SHA for `revision`, and records `MIT` for project-authored container
+source. These labels describe the image build; they do not broaden the media or
+content rights in `NOTICE.md`.
+
+Pull the published images:
 
 ```bash
+docker pull ghcr.io/jasontm17/ideogram-learning-app/web:v0.1.0-alpha.1
+docker pull ghcr.io/jasontm17/ideogram-learning-app/web@sha256:0e51a7b62bab56714892a5f81580c741489d2dbeae80fa6c161a82285c53d148
+docker pull ghcr.io/jasontm17/ideogram-learning-app/worker:v0.1.0-alpha.1
+docker pull ghcr.io/jasontm17/ideogram-learning-app/worker@sha256:09472638a09bef3c0945a42fb111efb7fbc3df8320a6b30661b256718a1b4d50
 docker pull ghcr.io/jasontm17/ideogram-learning-app/web:latest
-docker run --rm --env-file .env -p 3000:3000 ghcr.io/jasontm17/ideogram-learning-app/web:latest
+docker pull ghcr.io/jasontm17/ideogram-learning-app/worker:latest
 ```
 
 If the package visibility changes, authenticate first with a token that has `read:packages`:

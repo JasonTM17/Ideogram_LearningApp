@@ -2,6 +2,17 @@
 
 Use this page as the first stop when you need the current repo shape, operational steps, or release evidence. The docs are organized by role so readers can land on the narrowest useful surface first.
 
+## Current Repository Preview
+
+- [GitHub prerelease `v0.1.0-alpha.1`](https://github.com/JasonTM17/Ideogram_LearningApp/releases/tag/v0.1.0-alpha.1)
+- [Exact release evidence](./release/validation-evidence.md)
+- [Known limitations](./release/known-limitations.md)
+- [Project roadmap](./project-roadmap.md)
+- [Changelog](../CHANGELOG.md)
+
+This release proves the repository and GHCR package pipeline. It does not prove
+a production deployment, native-device release, or approved media catalog.
+
 ## By Role
 
 | Role                           | Read first                                                                                                                                                                                                                                                | Why                                                             |
@@ -15,6 +26,7 @@ Use this page as the first stop when you need the current repo shape, operationa
 ## Quick Paths
 
 - [Project status](./project-overview-pdr.md)
+- [Project roadmap](./project-roadmap.md)
 - [Architecture](./system-architecture.md)
 - [API surface](./api-contract.md)
 - [Authentication](./authentication-guide.md)
@@ -25,6 +37,9 @@ Use this page as the first stop when you need the current repo shape, operationa
 - [Release docs](./release/README.md)
 - [Artifact and package matrix](./release/artifact-matrix.md)
 - [Release checklist](./release/release-checklist.md)
+- [Known limitations](./release/known-limitations.md)
+- [Validation evidence](./release/validation-evidence.md)
+- [Changelog](../CHANGELOG.md)
 - [Media sources and regeneration](./media/README.md)
 
 ## Operational Notes

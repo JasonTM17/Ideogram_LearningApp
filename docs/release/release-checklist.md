@@ -1,10 +1,11 @@
 # Release Checklist
 
-Use this checklist for the first honest beta release. A checked item requires
-evidence from the exact release commit; local source existence is not enough.
-The `0.1.0-alpha.1` repository preview applies repository and container gates
-only. Product beta remains blocked by the unchecked browser, device, hosted
-runtime, and content/media items below.
+Use this checklist for the first honest repository preview release. A checked
+item requires evidence from the exact release commit; local source existence is
+not enough. The `v0.1.0-alpha.1` repository preview is a pre-beta foundation
+and applies repository and container gates only. Product release remains
+blocked by the unchecked browser, device, hosted runtime, and content/media
+items below.
 
 ## Repository package
 
@@ -14,7 +15,10 @@ runtime, and content/media items below.
 - [x] Protected `main` requires a pull request, fresh quality/database checks,
       linear history, and resolved conversations; force-push and deletion are
       disabled.
-- [ ] Changelog entry and GitHub release notes match the selected commit.
+- [x] Changelog entry and GitHub release notes match release commit
+      `666606f5e753a2e837cbde724d58f04f6e931d94`.
+- [ ] Attach a checksum manifest for deterministic source artifacts; the current
+      prerelease only exposes GitHub-generated archives.
 
 ## Quality gates
 
@@ -34,7 +38,7 @@ runtime, and content/media items below.
 
 ## Release notes must say
 
-- internal beta or production status;
+- repository preview or production status;
 - implemented surfaces and exact limitations;
 - image/package tags plus immutable digest;
 - validation commit and CI run;
