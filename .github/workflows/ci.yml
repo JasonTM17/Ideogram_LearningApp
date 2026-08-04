@@ -51,9 +51,23 @@ jobs:
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')
         env:
           BEFORE_SHA: ${{ github.event.before }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
           HEAD_SHA: ${{ github.sha }}
         run: |
           if [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ]; then
+            COMMIT_RANGE="$HEAD_SHA"
+          else
+            COMMIT_RANGE="$BEFORE_SHA..$HEAD_SHA"
+          fi
+
+          if [ "$GITHUB_REF_NAME" = "$DEFAULT_BRANCH" ]; then
+            # Pull requests validate complete messages before merge. GitHub may
+            # reflow a generated squash body, so the protected default branch
+            # validates the Conventional Commit subject of each merged commit.
+            git rev-list --reverse "$COMMIT_RANGE" | while read -r commit_sha; do
+              git show -s --format=%s "$commit_sha" | pnpm exec commitlint --verbose
+            done
+          elif [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ]; then
             git rev-list --reverse "$HEAD_SHA" | while read -r commit_sha; do
               git show -s --format=%B "$commit_sha" | pnpm exec commitlint --verbose
             done
