@@ -2,7 +2,7 @@
 
 Use this checklist for the first honest repository preview release. A checked
 item requires evidence from the exact release commit; local source existence is
-not enough. The `v0.1.0-alpha.1` repository preview is a pre-beta foundation
+not enough. The `v0.1.0-alpha.2` repository preview is a pre-beta foundation
 and applies repository and container gates only. Product release remains
 blocked by the unchecked browser, device, hosted runtime, and content/media
 items below.
@@ -16,9 +16,9 @@ items below.
       linear history, and resolved conversations; force-push and deletion are
       disabled.
 - [x] Changelog entry and GitHub release notes match release commit
-      `666606f5e753a2e837cbde724d58f04f6e931d94`.
-- [ ] Attach a checksum manifest for deterministic source artifacts; the current
-      prerelease only exposes GitHub-generated archives.
+      `81d2b1239077877846d6b3cf78398c679f1652d2`.
+- [x] Attach a checksum manifest for deterministic source artifacts; the
+      prerelease now exposes a deterministic source tar.gz and `SHA256SUMS.txt`.
 
 ## Quality gates
 

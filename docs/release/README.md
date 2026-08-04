@@ -7,12 +7,12 @@ production claim.
 
 ## Current Prerelease
 
-[`v0.1.0-alpha.1`](https://github.com/JasonTM17/Ideogram_LearningApp/releases/tag/v0.1.0-alpha.1)
+[`v0.1.0-alpha.2`](https://github.com/JasonTM17/Ideogram_LearningApp/releases/tag/v0.1.0-alpha.2)
 is the current repository/container preview. It points to commit
-`666606f5e753a2e837cbde724d58f04f6e931d94`; see
-[validation evidence](./validation-evidence.md) for final tag/main CI runs and
-immutable GHCR digests. Docker Hub and source checksum assets were not published
-for this prerelease.
+`81d2b1239077877846d6b3cf78398c679f1652d2`; see
+[validation evidence](./validation-evidence.md) for final tag/main CI runs,
+immutable GHCR digests, and the deterministic source checksum. Docker Hub
+remains unpublished for this prerelease.
 
 ## Contents
 

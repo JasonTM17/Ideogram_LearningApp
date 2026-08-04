@@ -145,26 +145,28 @@ Trivy `0.73.0` scanned both final local images with vulnerability-only scanning,
 `HIGH,CRITICAL`, and `ignore-unfixed`. Both reports returned zero matching OS or
 Node-package vulnerabilities. This proves the local image contents only.
 
-## 2026-08-04 repository preview release proof
+## 2026-08-04 alpha.2 repository preview release proof
 
 The final repository preview tag is
-[`v0.1.0-alpha.1`](https://github.com/JasonTM17/Ideogram_LearningApp/releases/tag/v0.1.0-alpha.1),
-cut from commit `666606f5e753a2e837cbde724d58f04f6e931d94`.
+[`v0.1.0-alpha.2`](https://github.com/JasonTM17/Ideogram_LearningApp/releases/tag/v0.1.0-alpha.2),
+cut from commit `81d2b1239077877846d6b3cf78398c679f1652d2`.
 
-- Tag CI run: [30832398321](https://github.com/JasonTM17/Ideogram_LearningApp/actions/runs/30832398321)
-- Final main run: [30831885227](https://github.com/JasonTM17/Ideogram_LearningApp/actions/runs/30831885227)
+- Tag CI run: [30873588546](https://github.com/JasonTM17/Ideogram_LearningApp/actions/runs/30873588546)
+- Final main run: [30873262910](https://github.com/JasonTM17/Ideogram_LearningApp/actions/runs/30873262910)
 
 That release published the same tested images to GHCR and verified the
 immutable digests below:
 
 | Package | Verified GHCR digest                                                      |
 | ------- | ------------------------------------------------------------------------- |
-| Web     | `sha256:0e51a7b62bab56714892a5f81580c741489d2dbeae80fa6c161a82285c53d148` |
-| Worker  | `sha256:09472638a09bef3c0945a42fb111efb7fbc3df8320a6b30661b256718a1b4d50` |
+| Web     | `sha256:a0f5ba12566ee2a08e249d6189782be24075fcad8996a82b91077dc4cb043926` |
+| Worker  | `sha256:e481ec304406ad512a400531469784ed7e36f57cacae630a486f1e3192bf4764` |
 
 Docker Hub was not published for this release because the protected
-credentials were unavailable. No checksum asset was attached. Worker database
-readiness and public runtime deployment also remain unproven.
+credentials were unavailable. The deterministic source tar.gz and
+`SHA256SUMS.txt` were attached, with source checksum
+`940cda41d98d519540f3d583576cfa7d7abe34c05e46c91599888e0625a34002`. Worker
+database readiness and public runtime deployment also remain unproven.
 
 ## Do not overstate
 

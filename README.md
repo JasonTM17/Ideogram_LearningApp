@@ -207,21 +207,22 @@ content. Xem [`NOTICE.md`](NOTICE.md) và
 Web và worker images hiện có trên GHCR:
 
 ```bash
-docker pull ghcr.io/jasontm17/ideogram-learning-app/web:v0.1.0-alpha.1
-docker pull ghcr.io/jasontm17/ideogram-learning-app/web@sha256:0e51a7b62bab56714892a5f81580c741489d2dbeae80fa6c161a82285c53d148
+docker pull ghcr.io/jasontm17/ideogram-learning-app/web:v0.1.0-alpha.2
+docker pull ghcr.io/jasontm17/ideogram-learning-app/web@sha256:a0f5ba12566ee2a08e249d6189782be24075fcad8996a82b91077dc4cb043926
 docker pull ghcr.io/jasontm17/ideogram-learning-app/web:latest
-docker pull ghcr.io/jasontm17/ideogram-learning-app/worker:v0.1.0-alpha.1
-docker pull ghcr.io/jasontm17/ideogram-learning-app/worker@sha256:09472638a09bef3c0945a42fb111efb7fbc3df8320a6b30661b256718a1b4d50
+docker pull ghcr.io/jasontm17/ideogram-learning-app/worker:v0.1.0-alpha.2
+docker pull ghcr.io/jasontm17/ideogram-learning-app/worker@sha256:e481ec304406ad512a400531469784ed7e36f57cacae630a486f1e3192bf4764
 docker pull ghcr.io/jasontm17/ideogram-learning-app/worker:latest
 ```
 
 Workflow mới phát hành tag `sha-*` đầy đủ 40 ký tự; các tag ngắn cũ có thể vẫn
 tồn tại trên registry. Tag vẫn có thể được đổi trỏ, nên luôn ưu tiên digest
 `sha256:*` bất biến khi kiểm chứng/rollback. Bản
-[`v0.1.0-alpha.1`](https://github.com/JasonTM17/Ideogram_LearningApp/releases/tag/v0.1.0-alpha.1)
+[`v0.1.0-alpha.2`](https://github.com/JasonTM17/Ideogram_LearningApp/releases/tag/v0.1.0-alpha.2)
 là repository/container preview, không phải production deployment. Docker Hub
 mirror chưa được publish cho release này vì protected credentials không khả
-dụng; native EAS builds vẫn chưa được publish. Xem
+dụng; deterministic source tar.gz, `SHA256SUMS.txt`, social PNG, và
+project-tour GIF đã được attach. Native EAS builds vẫn chưa được publish. Xem
 [`artifact-matrix.md`](docs/release/artifact-matrix.md).
 
 ## Documentation map

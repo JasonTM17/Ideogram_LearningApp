@@ -5,6 +5,22 @@ and versions use Semantic Versioning when a GitHub release is actually cut.
 
 ## Unreleased
 
+## [0.1.0-alpha.2] - 2026-08-04
+
+### Added
+
+- Repository preview `v0.1.0-alpha.2` cut from commit
+  `81d2b1239077877846d6b3cf78398c679f1652d2`.
+- Deterministic source archive assets with `SHA256SUMS.txt` and source checksum
+  `940cda41d98d519540f3d583576cfa7d7abe34c05e46c91599888e0625a34002`.
+- Updated release docs, artifact matrix, deployment guide, and validation
+  evidence to the alpha.2 release evidence.
+
+### Security
+
+- Production release remains blocked until the browser/device, hosted runtime,
+  media-rights, and release gates are verified.
+
 ## [0.1.0-alpha.1] - 2026-08-03
 
 ### Added
