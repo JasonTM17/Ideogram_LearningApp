@@ -237,6 +237,12 @@ jobs:
             echo "DOCKERHUB_ENABLED=false" >> "$GITHUB_ENV"
           fi
 
+      - name: Resolve immutable OCI metadata
+        shell: bash
+        run: |
+          echo "OCI_CREATED=$(git show -s --format=%cI "$GITHUB_SHA")" >> "$GITHUB_ENV"
+          echo "OCI_VERSION=${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
+
       - name: Build local verification image once
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
         with:
@@ -245,9 +251,21 @@ jobs:
           load: true
           push: false
           tags: ${{ env.LOCAL_IMAGE }}
+          build-args: |
+            OCI_CREATED=${{ env.OCI_CREATED }}
+            OCI_REVISION=${{ github.sha }}
+            OCI_VERSION=${{ env.OCI_VERSION }}
           provenance: false
           cache-from: type=gha,scope=${{ matrix.name }}
           cache-to: type=gha,mode=max,scope=${{ matrix.name }}
+
+      - name: Verify immutable OCI metadata
+        shell: bash
+        run: |
+          test "$(docker image inspect "$LOCAL_IMAGE" --format '{{ index .Config.Labels "org.opencontainers.image.created" }}')" = "$OCI_CREATED"
+          test "$(docker image inspect "$LOCAL_IMAGE" --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}')" = "$GITHUB_SHA"
+          test "$(docker image inspect "$LOCAL_IMAGE" --format '{{ index .Config.Labels "org.opencontainers.image.version" }}')" = "$OCI_VERSION"
+          test "$(docker image inspect "$LOCAL_IMAGE" --format '{{ index .Config.Labels "org.opencontainers.image.licenses" }}')" = 'MIT'
 
       - name: Smoke-test local web artifact
         if: matrix.name == 'web'
