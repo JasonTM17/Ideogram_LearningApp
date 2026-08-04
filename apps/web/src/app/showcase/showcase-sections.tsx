@@ -41,7 +41,7 @@ export function ShowcaseSections() {
           <figure className="showcase-architecture">
             <Image
               alt="Sơ đồ kiến trúc Ideogram Learning, dùng nét liền cho phần beta đã triển khai và nét đứt cho target state."
-              height={716}
+              height={735}
               priority
               src="/showcase/system-architecture.png"
               width={1784}
@@ -53,11 +53,11 @@ export function ShowcaseSections() {
           </figure>
           <figure className="showcase-runtime-tour">
             <Image
-              alt="GIF quay từ project tour chạy tại localhost, lần lượt cho thấy phần mở đầu, bằng chứng kiến trúc và roadmap."
+              alt="GIF quay từ project tour chạy tại localhost, lần lượt cho thấy phần mở đầu, capability boundaries, bằng chứng kiến trúc và roadmap."
               height={720}
               src="/showcase/project-tour.gif"
               unoptimized
-              width={1280}
+              width={1262}
             />
             <figcaption>
               <strong>Runtime tour được quay từ app.</strong> GIF dùng ảnh chụp localhost của chính
@@ -135,7 +135,7 @@ export function ShowcaseSections() {
 export function ShowcaseFooter() {
   return (
     <footer className="showcase-footer">
-      <p>Ideogram Learning · Japanese-first · internal beta foundation</p>
+      <p>Ideogram Learning · Japanese-first · repository preview</p>
       <Link href="/">Về trang giới thiệu</Link>
     </footer>
   );

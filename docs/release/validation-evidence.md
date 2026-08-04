@@ -145,27 +145,26 @@ Trivy `0.73.0` scanned both final local images with vulnerability-only scanning,
 `HIGH,CRITICAL`, and `ignore-unfixed`. Both reports returned zero matching OS or
 Node-package vulnerabilities. This proves the local image contents only.
 
-## 2026-08-03 hosted main package proof
+## 2026-08-04 repository preview release proof
 
-[GitHub Actions run 30830758867](https://github.com/JasonTM17/Ideogram_LearningApp/actions/runs/30830758867)
-passed quality/build, database regressions, and both container jobs for commit
-`7f237cc3bec504e6e7b1602e23424534d25f9401`.
+The final repository preview tag is
+[`v0.1.0-alpha.1`](https://github.com/JasonTM17/Ideogram_LearningApp/releases/tag/v0.1.0-alpha.1),
+cut from commit `666606f5e753a2e837cbde724d58f04f6e931d94`.
 
-Each container job built and loaded one local artifact, ran its startup smoke,
-failed on any fixable HIGH/CRITICAL Trivy finding, and generated a CycloneDX
-SBOM before registry login. It then pushed that same image, compared every
-published tag digest, pulled the GHCR digest, and confirmed that its image ID
-matched the tested local artifact. GitHub build-provenance and SBOM attestations
-were attached to both subject digests:
+- Tag CI run: [30832398321](https://github.com/JasonTM17/Ideogram_LearningApp/actions/runs/30832398321)
+- Final main run: [30831885227](https://github.com/JasonTM17/Ideogram_LearningApp/actions/runs/30831885227)
+
+That release published the same tested images to GHCR and verified the
+immutable digests below:
 
 | Package | Verified GHCR digest                                                      |
 | ------- | ------------------------------------------------------------------------- |
-| Web     | `sha256:f2ba6e2107a6d01e52e595d888deb7a645c46eb787d98dd5c2b7a202092d8529` |
+| Web     | `sha256:0e51a7b62bab56714892a5f81580c741489d2dbeae80fa6c161a82285c53d148` |
 | Worker  | `sha256:09472638a09bef3c0945a42fb111efb7fbc3df8320a6b30661b256718a1b4d50` |
 
-Docker Hub credentials were not available in this default-branch run, so no
-dual-registry publication or digest-alignment claim is made here. Worker
-database readiness and public runtime deployment also remain unproven.
+Docker Hub was not published for this release because the protected
+credentials were unavailable. No checksum asset was attached. Worker database
+readiness and public runtime deployment also remain unproven.
 
 ## Do not overstate
 

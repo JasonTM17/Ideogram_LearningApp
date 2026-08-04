@@ -5,7 +5,7 @@
 [![Node 24](https://img.shields.io/badge/Node-24.12%2B-339933?logo=node.js&logoColor=white)](package.json)
 [![pnpm 11](https://img.shields.io/badge/pnpm-11.0.9-f69220?logo=pnpm&logoColor=white)](package.json)
 [![GHCR web](https://img.shields.io/badge/GHCR-web%20image-2563eb?logo=github)](https://github.com/JasonTM17/Ideogram_LearningApp/pkgs/container/ideogram-learning-app%2Fweb)
-[![Status: internal beta](https://img.shields.io/badge/status-internal%20beta-f59e0b)](docs/release/known-limitations.md)
+[![Status: repository preview](https://img.shields.io/badge/status-repository%20preview-f59e0b)](docs/release/known-limitations.md)
 
 ![Ideogram Learning project preview](docs/media/ideogram-learning-social-preview.png)
 
@@ -14,44 +14,81 @@ Next.js web, Expo mobile, Supabase/PostgreSQL, worker chấm placement, AI tutor
 có giới hạn và đồng bộ offline bền vững. Chinese và Korean đã có contract nhưng
 đang được khóa sau release gate riêng.
 
-> **Trạng thái:** source đủ cho internal beta và portfolio review; chưa phải
-> production deployment. Repo không giả lập bài học đã phát hành, audio đã được
-> cấp quyền, native background execution hay hosted runtime khi chưa có bằng
-> chứng thật.
+> **Trạng thái:** source đủ cho repository preview và portfolio review; vẫn là
+> pre-beta foundation, chưa phải production deployment. Repo không giả lập bài
+> học đã phát hành, audio đã được cấp quyền, native background execution hay
+> hosted runtime khi chưa có bằng chứng thật.
 
-[Xem project tour](docs/media/showcase-project-tour.png) ·
+[Xem project tour](docs/media/README.md) ·
+[Docs index](docs/README.md) ·
 [Đọc kiến trúc](docs/system-architecture.md) ·
 [Chạy local](#chạy-local) ·
+[Release docs](docs/release/README.md) ·
 [Xem release checklist](docs/release/release-checklist.md) ·
 [Known limitations](docs/release/known-limitations.md)
 
 ## Visual tour
 
 Project tour dưới đây được chụp từ route `/showcase` chạy thật và không cần tài
-khoản. GIF trình bày tổng quan sản phẩm, bằng chứng kỹ thuật và roadmap còn mở.
-
-![Ideogram Learning project tour](docs/media/project-tour.gif)
+khoản. Bốn ảnh tĩnh là tour chính; `project-tour.gif` chỉ là bản động tùy chọn.
 
 <table>
   <tr>
-    <td width="58%">
-      <img src="docs/media/browser-offline-runtime.png" alt="Authenticated web learner shell with honest content-review empty state" />
-      <br /><strong>Web learner runtime</strong><br />Authenticated local browser proof; content remains gated until review.
+    <td width="50%">
+      <a href="docs/media/project-tour-hero.png"><img src="docs/media/project-tour-hero.png" alt="Repository preview hero from the public showcase route" /></a>
+      <br /><strong>Hero</strong><br />Public preview entry point and visual identity.
     </td>
-    <td width="42%">
-      <img src="docs/media/mobile-learning-flow.gif" alt="Stitch-derived Expo design handoff across Today, Review, AI Tutor, Progress, and Profile" />
-      <br /><strong>Expo design handoff</strong><br />Stitch-derived design sequence, not device-runtime proof.
+    <td width="50%">
+      <a href="docs/media/project-tour-foundation.png"><img src="docs/media/project-tour-foundation.png" alt="Foundation surface and implemented source boundaries" /></a>
+      <br /><strong>Foundation</strong><br />Implemented slices and pre-beta foundation scope.
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <a href="docs/media/project-tour-evidence.png"><img src="docs/media/project-tour-evidence.png" alt="Visual evidence section with the project architecture diagram" /></a>
+      <br /><strong>Evidence</strong><br />Architecture proof and the boundary between implemented and target state.
+    </td>
+    <td width="50%">
+      <a href="docs/media/project-tour-roadmap.png"><img src="docs/media/project-tour-roadmap.png" alt="Roadmap panel showing the remaining open release gates" /></a>
+      <br /><strong>Roadmap</strong><br />Still-open browser, device, hosted, and media gates.
     </td>
   </tr>
 </table>
 
+<details>
+  <summary><strong>Mở project tour dạng GIF (4 frame)</strong></summary>
+  <br />
+  <img src="docs/media/project-tour.gif" alt="Animated four-frame tour of the Ideogram Learning repository preview" />
+</details>
+
+### Bằng chứng web runtime
+
+Ảnh dưới được chụp từ Chromium local sau khi đăng nhập để kiểm chứng IndexedDB,
+offline queue và trạng thái Background Sync. Đây không phải bằng chứng hosted
+production hay cross-browser certification.
+
+<a href="docs/media/browser-offline-runtime.png"><img src="docs/media/browser-offline-runtime.png" alt="Authenticated local browser runtime showing offline learning state" /></a>
+
+### Mobile design handoff
+
+Năm màn hình Today, Review, AI tutor, Progress và Profile được chuẩn hóa vào
+cùng một khung điện thoại. Đây là Stitch design handoff, không phải native-device
+runtime proof.
+
+<p align="center">
+  <img src="docs/media/mobile-learning-flow.gif" width="256" alt="Five-frame mobile learning design flow in a stable phone viewport" />
+</p>
+
 ### Kiến trúc hệ thống
 
-![Ideogram Learning system architecture](docs/media/system-architecture.png)
+<a href="docs/media/system-architecture.svg"><img src="docs/media/system-architecture.svg" alt="Ideogram Learning system architecture" /></a>
+
+[Mở sơ đồ SVG đầy đủ](docs/media/system-architecture.svg) ·
+[Đọc giải thích kiến trúc](docs/system-architecture.md)
 
 ### Luồng học và đồng bộ offline
 
-![Learning and offline sync flow](docs/media/learning-and-sync-flow.png)
+<a href="docs/media/learning-and-sync-flow.svg"><img src="docs/media/learning-and-sync-flow.svg" alt="Learning and offline sync flow" /></a>
 
 Các hình trên là bằng chứng ở phạm vi khác nhau. Xem
 [`docs/media/README.md`](docs/media/README.md) để biết nguồn, cách tái tạo và
@@ -170,10 +207,12 @@ content. Xem [`NOTICE.md`](NOTICE.md) và
 Web và worker images hiện có trên GHCR:
 
 ```bash
+docker pull ghcr.io/jasontm17/ideogram-learning-app/web:v0.1.0-alpha.1
+docker pull ghcr.io/jasontm17/ideogram-learning-app/web@sha256:0e51a7b62bab56714892a5f81580c741489d2dbeae80fa6c161a82285c53d148
 docker pull ghcr.io/jasontm17/ideogram-learning-app/web:latest
-docker pull ghcr.io/jasontm17/ideogram-learning-app/web:sha-<commit>
+docker pull ghcr.io/jasontm17/ideogram-learning-app/worker:v0.1.0-alpha.1
+docker pull ghcr.io/jasontm17/ideogram-learning-app/worker@sha256:09472638a09bef3c0945a42fb111efb7fbc3df8320a6b30661b256718a1b4d50
 docker pull ghcr.io/jasontm17/ideogram-learning-app/worker:latest
-docker pull ghcr.io/jasontm17/ideogram-learning-app/worker:sha-<commit>
 ```
 
 Workflow mới phát hành tag `sha-*` đầy đủ 40 ký tự; các tag ngắn cũ có thể vẫn
@@ -181,8 +220,9 @@ tồn tại trên registry. Tag vẫn có thể được đổi trỏ, nên luô
 `sha256:*` bất biến khi kiểm chứng/rollback. Bản
 [`v0.1.0-alpha.1`](https://github.com/JasonTM17/Ideogram_LearningApp/releases/tag/v0.1.0-alpha.1)
 là repository/container preview, không phải production deployment. Docker Hub
-mirror chỉ được tạo khi release credentials được cấu hình; native EAS builds
-vẫn chưa được publish. Xem [`artifact-matrix.md`](docs/release/artifact-matrix.md).
+mirror chưa được publish cho release này vì protected credentials không khả
+dụng; native EAS builds vẫn chưa được publish. Xem
+[`artifact-matrix.md`](docs/release/artifact-matrix.md).
 
 ## Documentation map
 
@@ -197,10 +237,10 @@ vẫn chưa được publish. Xem [`artifact-matrix.md`](docs/release/artifact-m
 
 ## Roadmap còn mở
 
-- Fix account-switch isolation khi browser offline queue đang drain.
 - Real-device BackgroundTask và native build/release pipeline.
 - Approved audio, checksum registry và browser/device playback proof.
 - Hosted web/worker/database, observability, restore và rollback drills.
+- Browser/device cross-account E2E, accessibility, and release product gates.
 - Grounded/SSE tutor, durable history, broader evaluators và admin workflows.
 
 ## Cộng tác và chính sách

@@ -25,8 +25,10 @@ const requiredRepositoryFiles = [
   '.github/PULL_REQUEST_TEMPLATE.md',
   'docs/media/ideogram-learning-social-preview.png',
   'docs/media/project-tour.gif',
+  'docs/media/project-tour-foundation.png',
   'docs/media/system-architecture.png',
   'docs/media/learning-and-sync-flow.png',
+  'scripts/generate-readme-media.ps1',
 ];
 
 const markdownFiles = [];

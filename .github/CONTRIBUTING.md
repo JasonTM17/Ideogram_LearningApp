@@ -1,7 +1,7 @@
 # Contributing
 
 Thanks for helping improve Ideogram Learning. The repository is Vietnamese-first,
-Japanese-first for launch, and currently an internal-beta foundation.
+Japanese-first for launch, and currently published as a repository preview.
 
 ## Before opening a change
 

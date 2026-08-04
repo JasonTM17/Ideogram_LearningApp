@@ -15,8 +15,9 @@ and versions use Semantic Versioning when a GitHub release is actually cut.
 
 ### Security
 
-- Production release remains blocked until account-switch offline-sync
-  isolation and the release gates in the checklist are verified.
+- Production release remains blocked until the remaining browser/device,
+  hosted runtime, media-rights, and release gates in the checklist are
+  verified.
 
 ## Source baseline
 
@@ -25,5 +26,5 @@ and versions use Semantic Versioning when a GitHub release is actually cut.
 - Local validation and GHCR web-image evidence.
 
 The workspace packages remain versioned `0.1.0`. The `0.1.0-alpha.1` GitHub
-prerelease records repository and container packaging only; it is not a
-production deployment or product-beta certification.
+prerelease records repository and container packaging only; it is a repository
+preview, not a production deployment or product-beta certification.

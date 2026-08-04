@@ -26,9 +26,11 @@
 ## Current release posture
 
 - This repo is not production-deployed.
-- The launch plan remains internal beta first.
+- The launch plan remains repository preview first, as a pre-beta foundation.
 - Adult-only eligibility must remain fail-closed until the decision record is approved.
-- Foundation workspace and app-shell code are present, but hosted CI and business approvals remain release dependencies.
+- Foundation workspace and app-shell code are present, and hosted CI passed for
+  the release commit. Hosted runtime certification and business approvals remain
+  product-release dependencies.
 - Identity/security work remains active. The learning persistence layer, protected catalog/review/media reads, web/Expo onboarding-placement flow, activity/review writes, browser/native durable mutation queues, offline-media controls, and optional placement-scoring worker path are implemented in source. Local authenticated Chromium proof exists for browser Background Sync, and pure native executor plus owned-storage tests now cover the v2 queue key, shared locking, legacy migration, race re-checks, stale-A/correct-B ownership, abort-retryability, and retry/failure mapping. Grounded tutor context, direct SSE, durable history, an approved audio release, deployed-worker proof, real-device native sync validation, cross-browser certification, and broader lesson UI remain pending.
 
 ## Open questions

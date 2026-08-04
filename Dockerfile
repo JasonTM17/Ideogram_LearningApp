@@ -42,8 +42,16 @@ RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack 
 
 WORKDIR /app
 
-LABEL org.opencontainers.image.source="https://github.com/JasonTM17/Ideogram_LearningApp"
-LABEL org.opencontainers.image.description="Vietnamese-first AI language learning platform for Japanese, Chinese and Korean"
+ARG OCI_CREATED="unknown"
+ARG OCI_REVISION="unknown"
+ARG OCI_VERSION="dev"
+
+LABEL org.opencontainers.image.source="https://github.com/JasonTM17/Ideogram_LearningApp" \
+  org.opencontainers.image.description="Vietnamese-first AI language learning platform for Japanese, Chinese and Korean" \
+  org.opencontainers.image.licenses="MIT" \
+  org.opencontainers.image.created="$OCI_CREATED" \
+  org.opencontainers.image.revision="$OCI_REVISION" \
+  org.opencontainers.image.version="$OCI_VERSION"
 
 COPY --from=builder --chown=nextjs:nodejs /workspace/apps/web/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /workspace/apps/web/.next/static ./apps/web/.next/static

@@ -2,9 +2,10 @@
 
 ## Architectural direction
 
-The platform is a modular monolith with three client runtimes and one shared API layer:
+The platform is a modular monolith with two client runtimes, one worker, and a
+shared Next.js API host:
 
-- Next.js web is the canonical `/api/v1` host
+- Next.js web is the canonical `/api/v1` host and shared API layer
 - Expo native mobile is a separate runtime
 - Node worker handles deferred or heavy background work
 - Supabase is the data plane for auth, Postgres, storage, and row-level security
@@ -12,7 +13,12 @@ The platform is a modular monolith with three client runtimes and one shared API
 
 ## Current state
 
-The source tree now includes the foundation web/mobile experiences plus the first learner-write paths. Implemented behavior includes catalog reads, review reads, placement start/answer/submit, activity/review submission, offline sync, offline media gating, and a bounded tutor turn. Placement scoring, media release, and tutor retrieval are still source-only or pending deployment proof.
+The source tree now includes the foundation web/mobile experiences plus the
+first learner-write paths. Implemented behavior includes catalog reads, review
+reads, placement start/answer/submit, activity/review submission, offline sync,
+offline media gating, and a bounded tutor turn. Placement scoring is locally
+integration-tested, but deployed-worker proof remains pending; media release and
+tutor retrieval are still source-only or pending deployment proof.
 
 ### Auth and session identity
 
